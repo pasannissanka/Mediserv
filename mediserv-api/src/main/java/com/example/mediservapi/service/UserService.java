@@ -1,15 +1,15 @@
 package com.example.mediservapi.service;
 
-import com.example.mediservapi.dto.model.pharmacy.PharmacyDto;
-import com.example.mediservapi.dto.model.user.SignUpData;
-import com.example.mediservapi.dto.model.user.UserDto;
-import com.example.mediservapi.model.pharmacy.Pharmacy;
+import com.example.mediservapi.controller.request.CreateUpdateUserRequest;
+import com.example.mediservapi.model.user.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
-    SignUpData signUp(UserDto userDto, Pharmacy pharmacy);
-    UserDto findByEmail(String email);
-    UserDto updateProfile(UserDto userDto);
-    List<UserDto> findAll();
+    User signUp(CreateUpdateUserRequest userData);
+    Optional<User>  findByEmail(String email);
+    Optional<User> findById(String id);
+    User updateProfile(String id, CreateUpdateUserRequest userData);
+    List<User> findAll();
 }
