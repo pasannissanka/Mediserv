@@ -20,8 +20,7 @@ public class CreateUpdateCustomerRequest {
     @Email
     private String email;
 
-    private AdminType userType;
-
+    @NotBlank
     private Address address;
 
 }
