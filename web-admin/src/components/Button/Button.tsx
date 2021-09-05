@@ -1,51 +1,61 @@
-import * as React from "react";
+import React from "react";
 
-export interface ButtonProps {
+export type ButtonProps = {
   /**
-   * Is this the principal call to action on the page?
+   * Button varient
+   * 'primary', 'secondary', 'warn', 'outline-primary', 'outline-secondary', 'outline-warn', 'flat'
    */
-  primary?: boolean;
+  varient?:
+    | ""
+    | "primary"
+    | "secondary"
+    | "warn"
+    | "outline"
+    | "outline-primary"
+    | "outline-secondary"
+    | "outline-warn"
+    | "flat";
   /**
-   * Button contents
+   * Button icons
    */
-  label: string;
-  /**
-   * Optional click handler
-   */
-  onClick?: () => void;
+  size?: "sm" | "md" | "full";
   /**
    * Button icons
    */
   children?: React.ReactNode;
-}
+  className?: string;
+  rounded?: boolean;
+} & React.ButtonHTMLAttributes<HTMLButtonElement>;
 
-/**
- * Primary UI component for user interaction
- */
-export const Button: React.FC<ButtonProps> = ({
-  primary = false,
-  label,
-  children,
-  ...props
-}) => {
-  return (
-    <button
-      type='button'
-      className={`shadow rounded-lg inline-flex items-center  focus:outline-none focus:shadow-outline font-semibold py-2 px-2 md:px-5 text-sm
-      ${
-        primary
-          ? "bg-yellow-500 hover:bg-yellow-600 text-white"
-          : "bg-white text-gray-500 hover:text-yellow-500"
-      }
-      `}
-      {...props}
-    >
-      <span
-        className={`${children !== undefined ? "hidden md:block mr-2" : ""}`}
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  (
+    {
+      varient = "",
+      size = "md",
+      children,
+      rounded = true,
+      ...props
+    }: ButtonProps,
+    ref
+  ) => {
+    const sizeStyle =
+      size === "sm"
+        ? "py-1 px-1"
+        : size === "full"
+        ? "w-full py-2 px-4"
+        : "py-2 px-4  font-medium";
+    return (
+      <button
+        ref={ref}
+        {...props}
+        className={`${sizeStyle} inline-flex h-full justify-center text-sm focus:ring-1 focus:ring-primary-200 transition-colors duration-300
+          btn-${varient} ${props.className} ${rounded && "rounded-md"}
+        `}
       >
-        {label}
-      </span>
-      {children}
-    </button>
-  );
-};
+        {children}
+      </button>
+    );
+  }
+);
+
+export default Button;

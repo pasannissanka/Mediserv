@@ -1,3 +1,54 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* @apply text-primary-900 bg-primary-100 hover:bg-primary-200; */
+.btn {
+  @apply bg-primary-500 hover:bg-primary-600 text-white border;
+}
+.btn-primary {
+  @apply bg-primary-500 hover:bg-primary-600 text-white border;
+}
+.btn-secondary {
+  @apply bg-secondary-500 hover:bg-secondary-600 text-black border;
+}
+.btn-warn {
+  @apply bg-warn-500 hover:bg-warn-600 text-white border;
+}
+.btn-outline {
+  @apply text-black hover:bg-gray-200 bg-gray-50 border border-gray-300;
+}
+.btn-outline-primary {
+  @apply text-primary-700 hover:bg-primary-200 bg-gray-50 border border-gray-300;
+}
+.btn-outline-secondary {
+  @apply text-secondary-700 hover:bg-secondary-200 bg-gray-50 border border-gray-300;
+}
+.btn-outline-warn {
+  @apply text-warn-700 hover:bg-warn-300 bg-gray-50 border border-gray-300;
+}
+.btn-flat {
+  @apply text-black hover:bg-gray-200 bg-white;
+}
+
+@layer base {
+  input[type="text"],
+  input[type="password"],
+  input[type="email"],
+  input[type="number"],
+  input[type="url"],
+  input[type="date"],
+  input[type="datetime-local"],
+  input[type="month"],
+  input[type="week"],
+  input[type="time"],
+  input[type="search"],
+  input[type="tel"],
+  input[type="checkbox"],
+  input[type="radio"],
+  select,
+  select[multiple],
+  textarea {
+    @apply focus:border-primary-300 focus:ring-primary-200 block px-2 py-2 border-gray-300 border rounded shadow-sm focus:ring-1 focus:ring-opacity-50;
+  }
+}

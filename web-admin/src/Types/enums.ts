@@ -1,0 +1,4 @@
+export enum ADMIN_TYPES {
+  PHARMACY_ADMIN,
+  DELIVERY_ADMIN,
+}

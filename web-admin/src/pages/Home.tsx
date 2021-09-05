@@ -4,6 +4,7 @@ import { Drawer } from "../components/Drawer/Drawer";
 import { Footer } from "../components/Footer/Footer";
 import { NavBar } from "../components/NavBar/NavBar";
 import { NotFound } from "./NotFound";
+import { Users } from "./Users/Users";
 
 export const Home = () => {
   const [isDrawerOpen, setDrawerOpenState] = useState(true);
@@ -24,7 +25,7 @@ export const Home = () => {
                 <div>Dashboard</div>
               </Route>
               <Route exact path='/users'>
-                <div>Users</div>
+                <Users />
               </Route>
               <Route exact path='/orders'>
                 <div>Orders</div>
