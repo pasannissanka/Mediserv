@@ -20,7 +20,11 @@ public class CustomerServiceImpl implements CustomerService {
     public Customer signUp(CreateUpdateCustomerRequest customerData) {
         Optional<Customer> customer = customerRepository.findByEmail(customerData.getEmail());
         if (customer.isEmpty()) {
-            Customer newCustomer = new Customer(); // create new customer
+            Customer newCustomer = new Customer()
+                    .setName(customerData.getName())
+                    .setEmail(customerData.getEmail())
+                    .setBillingAddress(customerData.getBillingAddress())
+                    .setDeliveryAddress(customerData.getDeliveryAddress()); // create new customer
             return customerRepository.save(newCustomer);
         }
         return null;
