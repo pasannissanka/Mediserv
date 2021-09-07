@@ -20,10 +20,8 @@ public class CreateUpdateCustomerRequest {
     @Email
     private String email;
 
-    @NotBlank
     private Address deliveryAddress;
 
-    @NotBlank
     private Address billingAddress;
 
 }
