@@ -26,7 +26,4 @@ public class User {
 
     private AdminType userType;
     private Address address;
-
-    @DBRef
-    private Pharmacy pharmacy;
 }

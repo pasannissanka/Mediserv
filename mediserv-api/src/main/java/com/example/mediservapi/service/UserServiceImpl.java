@@ -1,10 +1,6 @@
 package com.example.mediservapi.service;
 
-import com.example.mediservapi.dto.mapper.UserMapper;
-import com.example.mediservapi.dto.model.pharmacy.PharmacyDto;
-import com.example.mediservapi.dto.model.user.SignUpData;
-import com.example.mediservapi.dto.model.user.UserDto;
-import com.example.mediservapi.model.pharmacy.Pharmacy;
+import com.example.mediservapi.controller.request.CreateUpdateUserRequest;
 import com.example.mediservapi.model.user.User;
 import com.example.mediservapi.repository.pharmacy.PharmacyRepository;
 import com.example.mediservapi.repository.user.UserRepository;
@@ -12,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Component
 public class UserServiceImpl implements UserService {
@@ -24,36 +20,42 @@ public class UserServiceImpl implements UserService {
     private PharmacyRepository pharmacyRepository;
 
     @Override
-    public SignUpData signUp(UserDto userDto, Pharmacy pharmacy) {
-        User user = userRepository.findByEmail(userDto.getEmail());
-        if (user == null) {
-            Pharmacy newPharma = pharmacyRepository.save(pharmacy);
-            System.out.println(newPharma);
-            user = new User()
-                    .setEmail(userDto.getEmail())
-                    .setUserType(userDto.getUserType())
-                    .setAddress(userDto.getAddress())
-                    .setName(userDto.getName())
-                    .setPharmacy(newPharma);
-            UserDto newUser = UserMapper.toUserDto(userRepository.save(user));
-            return new SignUpData().setUser(newUser).setPharmacy(newPharma);
+    public User signUp(CreateUpdateUserRequest userData) {
+        Optional<User> user = userRepository.findByEmail(userData.getEmail());
+        if (user.isEmpty()) {
+            User newUser = new User()
+                    .setEmail(userData.getEmail())
+                    .setUserType(userData.getUserType())
+                    .setAddress(userData.getAddress())
+                    .setName(userData.getName());
+            return userRepository.save(newUser);
         }
         return null;
     }
 
 
     @Override
-    public UserDto findByEmail(String email) {
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    @Override
+    public Optional<User> findById(String id) {
+        return userRepository.findById(id);
+    }
+
+    @Override
+    public User updateProfile(String id, CreateUpdateUserRequest userData) {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isPresent()) {
+            user.get().setName(userData.getName()).setAddress(userData.getAddress());
+            return userRepository.save(user.get());
+        }
         return null;
     }
 
     @Override
-    public UserDto updateProfile(UserDto userDto) {
-        return null;
-    }
-
-    @Override
-    public List<UserDto> findAll() {
-        return userRepository.findAll().stream().map(UserMapper::toUserDto).collect(Collectors.toList());
+    public List<User> findAll() {
+        return userRepository.findAll();
     }
 }
