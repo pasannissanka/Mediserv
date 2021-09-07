@@ -12,34 +12,15 @@ export const NavBar = (props: NavBarProps) => {
   return (
     <React.Fragment>
       <header className='flex-shrink-0 max-h-16 bg-gray-100 border-b'>
-        <div className='flex items-center justify-between p-2'>
-          {/* Drawer toggle */}
-          {/* <div className='flex items-center space-x-3'>
-            <span className='p-2 text-xl font-semibold tracking-wider uppercase lg:hidden'>
-              TL;RL
-            </span>
-            <button
-              onClick={handleDrawerOpen}
-              className='p-2 rounded-md focus:outline-none focus:ring'
-            >
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                className='w-4 h-4 text-gray-600'
-                fill='none'
-                viewBox='0 0 24 24'
-                stroke='currentColor'
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  strokeWidth={2}
-                  d='M4 6h16M4 12h16M4 18h16'
-                />
-              </svg>
-            </button>
-          </div> */}
+        <div className='flex items-center justify-between p-1'>
+          <Link
+            to='/'
+            className='p-2 text-xl font-semibold leading-8 tracking-wider uppercase whitespace-nowrap'
+          >
+            Medi Serv
+          </Link>
 
-          <div className='hidden items-center justify-center px-2 space-x-2 md:flex md:flex-1 md:ml-5 md:mr-auto'>
+          <div className='hidden items-center justify-center px-2 space-x-2 md:flex md:flex-1'>
             <span>
               <svg
                 className='w-5 h-5 text-gray-500'
@@ -66,12 +47,26 @@ export const NavBar = (props: NavBarProps) => {
           <div className='flex items-center space-x-3'>
             <div>
               <Menu as='div' className='relative inline-block'>
-                <Menu.Button className='p-1 bg-gray-200 rounded-full focus:outline-none focus:ring'>
-                  <img
-                    className='w-8 h-8 rounded-full object-cover'
-                    alt='User Name'
-                    src='https://avataaars.io/?avatarStyle=Circle&topType=LongHairStraight&accessoriesType=Blank&hairColor=BrownDark&facialHairType=Blank&clotheType=BlazerShirt&eyeType=Default&eyebrowType=Default&mouthType=Default&skinColor=Light'
-                  />
+                <Menu.Button
+                  as={"button"}
+                  className='p-2 rounded-full inline-flex h-full justify-center text-sm focus:ring-1 focus:ring-primary-200 transition-colors duration-300 text-gray-500 hover:bg-gray-200 bg-gray-100'
+                >
+                  <span>
+                    <svg
+                      xmlns='http://www.w3.org/2000/svg'
+                      className='h-8 w-8'
+                      fill='none'
+                      viewBox='0 0 24 24'
+                      stroke='currentColor'
+                    >
+                      <path
+                        strokeLinecap='round'
+                        strokeLinejoin='round'
+                        strokeWidth={2}
+                        d='M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z'
+                      />
+                    </svg>
+                  </span>
                 </Menu.Button>
                 <div className='absolute bottom-3 right-0 p-1 bg-green-400 rounded-full animate-ping'></div>
                 <div className='absolute bottom-3 right-0 p-1 bg-green-400 border border-white rounded-full'></div>
@@ -97,7 +92,6 @@ export const NavBar = (props: NavBarProps) => {
                   >
                     Another Link
                   </Menu.Item>
-                  <Menu.Item as={Button}>Logout</Menu.Item>
                 </Menu.Items>
               </Menu>
             </div>
