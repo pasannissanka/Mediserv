@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Route, Switch } from "react-router";
+import { Route, Switch, useRouteMatch } from "react-router";
 import { Drawer } from "../components/Drawer/Drawer";
 import { Footer } from "../components/Footer/Footer";
 import { NavBar } from "../components/NavBar/NavBar";
@@ -7,6 +7,8 @@ import { NotFound } from "./NotFound";
 import { Users } from "./Users/Users";
 
 export const Home = () => {
+  const { path, url } = useRouteMatch();
+
   const [isDrawerOpen, setDrawerOpenState] = useState(true);
 
   const handelDrawer = () => {
