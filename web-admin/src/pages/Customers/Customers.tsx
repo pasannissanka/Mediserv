@@ -9,10 +9,10 @@ import Button from "../../components/Button/Button";
 import { useFetch } from "../../Hooks/useFetch";
 import { UserData, IResponse } from "../../Types/types";
 
-export const Users = () => {
+export const Customers = () => {
   const [dataList, setdataList] = useState<any>([]);
   const { data, isLoading } = useFetch<IResponse<UserData[]>>(
-    "http://localhost:8080/api/users/",
+    "http://localhost:8080/api/customers/",
     {
       method: "GET",
     }
@@ -124,7 +124,7 @@ export const Users = () => {
   return (
     <>
       <div className='container mx-auto px-4'>
-        <h1 className='text-3xl py-4 mb-1'>Users</h1>
+        <h1 className='text-3xl py-4 mb-1'>Customers</h1>
         <DataTable
           {...{
             eleActions,

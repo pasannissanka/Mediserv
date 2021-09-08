@@ -3,6 +3,7 @@ import { Route, Switch, useRouteMatch } from "react-router";
 import { Drawer } from "../components/Drawer/Drawer";
 import { Footer } from "../components/Footer/Footer";
 import { NavBar } from "../components/NavBar/NavBar";
+import { Customers } from "./Customers/Customers";
 import { NotFound } from "./NotFound";
 import { Users } from "./Users/Users";
 
@@ -32,8 +33,8 @@ export const Home = () => {
               <Route exact path='/orders'>
                 <div>Orders</div>
               </Route>
-              <Route exact path='/activities'>
-                <div>Activities</div>
+              <Route exact path='/customers'>
+                <Customers />
               </Route>
               <Route exact path='/profile'>
                 <div>Profile</div>
