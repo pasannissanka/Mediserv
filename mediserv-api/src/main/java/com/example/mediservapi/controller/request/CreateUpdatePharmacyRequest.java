@@ -14,11 +14,7 @@ import javax.validation.constraints.NotEmpty;
 public class CreateUpdatePharmacyRequest {
     @NotBlank
     @NotEmpty
-    private String name;
-
-    @NotBlank
-    @Email
-    private String email;
+    private String title;
 
     private Address address;
 

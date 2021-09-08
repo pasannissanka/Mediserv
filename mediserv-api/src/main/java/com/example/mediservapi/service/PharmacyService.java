@@ -10,8 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PharmacyService {
-    Pharmacy signUp(CreateUpdatePharmacyRequest pharmacyData);
-    Optional<Pharmacy>  findByEmail(String email);
+    Pharmacy createNew(CreateUpdatePharmacyRequest pharmacyData);
     Optional<Pharmacy> findById(String id);
     Pharmacy updatePharmacy(String id, CreateUpdatePharmacyRequest pharmacyData);
     List<Pharmacy> findAll();

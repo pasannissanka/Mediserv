@@ -1,5 +1,6 @@
 package com.example.mediservapi.model.order;
 
+import com.example.mediservapi.model.address.Address;
 import com.example.mediservapi.model.customer.Customer;
 import com.example.mediservapi.model.pharmacy.Pharmacy;
 import lombok.Data;
@@ -17,6 +18,7 @@ public class Order {
 
     @DBRef
     private Customer customer;
+    private Address deliveryAddress;
 
     @DBRef
     private Pharmacy pharmacy;

@@ -4,12 +4,13 @@ import com.example.mediservapi.controller.request.CreateUpdateCustomerRequest;
 import com.example.mediservapi.model.customer.Customer;
 import com.example.mediservapi.repository.Customer.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
-@Service
+@Component
 public class CustomerServiceImpl implements CustomerService {
 
     @Autowired
