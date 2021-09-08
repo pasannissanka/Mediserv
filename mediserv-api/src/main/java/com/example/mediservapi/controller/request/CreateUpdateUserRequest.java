@@ -11,7 +11,7 @@ import javax.validation.constraints.NotEmpty;
 
 @Data
 @Accessors(chain = true)
-public class CreateUpdateUserRequest {
+public class CreateUpdateUserRequest { //validators
 
     @NotBlank
     @NotEmpty
