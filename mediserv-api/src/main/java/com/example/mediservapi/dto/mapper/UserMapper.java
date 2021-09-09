@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Set;
 
 import static java.util.stream.Collectors.toSet;
 import static org.mapstruct.NullValueCheckStrategy.ALWAYS;
@@ -22,6 +23,10 @@ public abstract class UserMapper {
 
     public abstract UserDto toUserDto(User user);
     public abstract List<UserDto> toUserDto(List<User> users);
+    public abstract Set<String> mapAuthorities(Set<Role> value);
+    public String mapAuthority(Role value) {
+        return value.getAuthority();
+    }
 
     @Mapping(target = "authorities", ignore = true)
     public abstract User createUser(CreateUpdateUserRequest request);

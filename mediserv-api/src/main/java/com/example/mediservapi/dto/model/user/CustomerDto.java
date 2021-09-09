@@ -6,10 +6,15 @@ import lombok.Data;
 import java.util.Set;
 
 @Data
-public class UserDto {
+public class CustomerDto {
     private String id;
 
     private String email;
     private String name;
-    private Set<String> authorities;
+//    private Set<String> authorities;
+
+    // For customer
+    private Address deliveryAddress;
+    private Address billingAddress;
+
 }

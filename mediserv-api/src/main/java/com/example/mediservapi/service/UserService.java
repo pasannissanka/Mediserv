@@ -1,6 +1,7 @@
 package com.example.mediservapi.service;
 
 import com.example.mediservapi.controller.request.CreateUpdateUserRequest;
+import com.example.mediservapi.dto.model.user.CustomerDto;
 import com.example.mediservapi.dto.model.user.UserDto;
 import com.example.mediservapi.model.user.User;
 
@@ -13,4 +14,7 @@ public interface UserService {
     UserDto findById(String id);
     UserDto updateProfile(String id, CreateUpdateUserRequest requestData);
     List<UserDto> findAll();
+
+    List<CustomerDto> findAllCustomers();
+    CustomerDto findCustomerById(String id);
 }

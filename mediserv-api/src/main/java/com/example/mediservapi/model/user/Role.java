@@ -12,4 +12,9 @@ public class Role implements GrantedAuthority {
     public static final String REG_CUSTOMER = "REG_CUSTOMER";
 
     private String authority;
+
+    @Override
+    public String toString() {
+        return authority;
+    }
 }

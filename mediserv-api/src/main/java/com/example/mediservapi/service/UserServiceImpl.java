@@ -1,7 +1,9 @@
 package com.example.mediservapi.service;
 
 import com.example.mediservapi.controller.request.CreateUpdateUserRequest;
+import com.example.mediservapi.dto.mapper.CustomerMapper;
 import com.example.mediservapi.dto.mapper.UserMapper;
+import com.example.mediservapi.dto.model.user.CustomerDto;
 import com.example.mediservapi.dto.model.user.UserDto;
 import com.example.mediservapi.model.user.User;
 import com.example.mediservapi.repository.pharmacy.PharmacyRepository;
@@ -9,6 +11,7 @@ import com.example.mediservapi.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -28,6 +31,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
+    private final CustomerMapper customerMapper;
 
     private Logger logger;
 
@@ -93,6 +97,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public List<UserDto> findAll() {
         return userMapper.toUserDto(userRepository.findAll());
+    }
+
+    @Override
+    public List<CustomerDto> findAllCustomers() {
+        return customerMapper.toCustomerDto(userRepository.findAllCustomers());
+    }
+
+    @Override
+    public CustomerDto findCustomerById(String id) {
+        return customerMapper.toCustomerDto(userRepository.findCustomerById(id));
     }
 
     @Override

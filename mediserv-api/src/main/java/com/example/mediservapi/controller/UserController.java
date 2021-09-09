@@ -20,7 +20,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping(value = "/")
+    @PostMapping
     public ResponseEntity<UserDto> saveNewUser(@RequestBody @Valid CreateUpdateUserRequest user) {
         UserDto data = userService.create(user);
         return ResponseEntity.ok(data);
@@ -32,13 +32,13 @@ public class UserController {
         return ResponseEntity.ok(data);
     }
 
-    @GetMapping(value = "/")
+    @GetMapping
     public ResponseEntity<List<UserDto>> getAllUsers() {
         List<UserDto> data = userService.findAll();
         return ResponseEntity.ok(data);
     }
 
-    @GetMapping(value = "/id/{id}")
+    @GetMapping(value = "/{id}")
     public ResponseEntity<UserDto> getUserById(@PathVariable String id) {
         UserDto data = userService.findById(id);
         return ResponseEntity.ok(data);
