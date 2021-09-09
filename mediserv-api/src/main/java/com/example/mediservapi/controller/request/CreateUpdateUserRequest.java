@@ -1,27 +1,32 @@
 package com.example.mediservapi.controller.request;
 
 import com.example.mediservapi.model.address.Address;
-import com.example.mediservapi.model.user.AdminType;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
+import java.util.Set;
 
 @Data
 @Accessors(chain = true)
-public class CreateUpdateUserRequest { //validators
+public class CreateUpdateUserRequest {
 
     @NotBlank
-    @NotEmpty
     private String name;
 
-    @NotBlank
-    @Email
+    @NotBlank @Email
     private String email;
 
-    private AdminType userType;
+    @NotBlank
+    private String password;
 
-    private Address address;
+    @NotBlank
+    private String rePassword;
+
+    private Set<String> authorities;
+
+    // For customer
+    private Address deliveryAddress;
+    private Address billingAddress;
 }

@@ -1,8 +1,8 @@
 package com.example.mediservapi.model.order;
 
 import com.example.mediservapi.model.address.Address;
-import com.example.mediservapi.model.customer.Customer;
 import com.example.mediservapi.model.pharmacy.Pharmacy;
+import com.example.mediservapi.model.user.User;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -17,7 +17,7 @@ public class Order {
     private String id;
 
     @DBRef
-    private Customer customer;
+    private User customer;
     private Address deliveryAddress;
 
     @DBRef
