@@ -1,4 +1,4 @@
-package com.example.mediservapi.dto.model;
+package com.example.mediservapi.dto.model.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

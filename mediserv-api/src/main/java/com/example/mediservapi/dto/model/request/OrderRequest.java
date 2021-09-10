@@ -1,4 +1,4 @@
-package com.example.mediservapi.controller.request;
+package com.example.mediservapi.dto.model.request;
 
 import com.example.mediservapi.model.address.Address;
 import com.example.mediservapi.model.order.OrderItems;

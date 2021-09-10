@@ -1,6 +1,6 @@
 package com.example.mediservapi.controller;
 
-import com.example.mediservapi.controller.request.CreateUpdateUserRequest;
+import com.example.mediservapi.dto.model.request.CreateUpdateUserRequest;
 import com.example.mediservapi.dto.model.user.UserDto;
 import com.example.mediservapi.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

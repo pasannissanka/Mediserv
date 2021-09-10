@@ -1,6 +1,5 @@
-package com.example.mediservapi.controller.request;
+package com.example.mediservapi.dto.model.request;
 
-import com.example.mediservapi.dto.model.Page;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

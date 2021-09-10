@@ -1,7 +1,7 @@
 package com.example.mediservapi.service;
 
-import com.example.mediservapi.controller.request.OrderRequest;
-import com.example.mediservapi.dto.model.Page;
+import com.example.mediservapi.dto.model.request.OrderRequest;
+import com.example.mediservapi.dto.model.request.Page;
 import com.example.mediservapi.dto.model.order.OrderDto;
 import com.example.mediservapi.dto.model.order.OrderSearchQuery;
 

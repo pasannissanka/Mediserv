@@ -1,6 +1,6 @@
 package com.example.mediservapi.dto.mapper;
 
-import com.example.mediservapi.controller.request.CreateUpdateUserRequest;
+import com.example.mediservapi.dto.model.request.CreateUpdateUserRequest;
 import com.example.mediservapi.dto.model.user.UserDto;
 import com.example.mediservapi.model.user.Role;
 import com.example.mediservapi.model.user.User;

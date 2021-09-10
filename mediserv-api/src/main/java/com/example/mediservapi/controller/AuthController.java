@@ -1,8 +1,8 @@
 package com.example.mediservapi.controller;
 
 import com.example.mediservapi.configuration.security.JwtTokenUtil;
-import com.example.mediservapi.controller.request.AuthRequest;
-import com.example.mediservapi.controller.request.CreateUpdateUserRequest;
+import com.example.mediservapi.dto.model.request.AuthRequest;
+import com.example.mediservapi.dto.model.request.CreateUpdateUserRequest;
 import com.example.mediservapi.dto.mapper.UserMapper;
 import com.example.mediservapi.dto.model.user.UserDto;
 import com.example.mediservapi.dto.response.AuthResponse;

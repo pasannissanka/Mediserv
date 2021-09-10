@@ -1,4 +1,4 @@
-package com.example.mediservapi.controller.request;
+package com.example.mediservapi.dto.model.request;
 
 import lombok.Data;
 import org.jetbrains.annotations.NotNull;

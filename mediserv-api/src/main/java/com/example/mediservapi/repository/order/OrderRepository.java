@@ -1,6 +1,6 @@
 package com.example.mediservapi.repository.order;
 
-import com.example.mediservapi.dto.model.Page;
+import com.example.mediservapi.dto.model.request.Page;
 import com.example.mediservapi.dto.model.order.OrderSearchQuery;
 import com.example.mediservapi.model.order.Order;
 import lombok.RequiredArgsConstructor;

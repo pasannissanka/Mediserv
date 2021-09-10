@@ -1,6 +1,6 @@
 package com.example.mediservapi.service;
 
-import com.example.mediservapi.controller.request.CreateUpdatePharmacyRequest;
+import com.example.mediservapi.dto.model.request.CreateUpdatePharmacyRequest;
 import com.example.mediservapi.model.pharmacy.Pharmacy;
 import com.example.mediservapi.repository.pharmacy.PharmacyRepository;
 import org.springframework.beans.factory.annotation.Autowired;

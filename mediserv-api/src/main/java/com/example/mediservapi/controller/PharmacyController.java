@@ -1,6 +1,6 @@
 package com.example.mediservapi.controller;
 
-import com.example.mediservapi.controller.request.CreateUpdatePharmacyRequest;
+import com.example.mediservapi.dto.model.request.CreateUpdatePharmacyRequest;
 import com.example.mediservapi.dto.response.Response;
 import com.example.mediservapi.model.pharmacy.Pharmacy;
 import com.example.mediservapi.model.user.Role;
