@@ -2,7 +2,9 @@ package com.example.mediservapi.service;
 
 import com.example.mediservapi.controller.request.OrderRequest;
 import com.example.mediservapi.dto.mapper.OrderMapper;
+import com.example.mediservapi.dto.model.Page;
 import com.example.mediservapi.dto.model.order.OrderDto;
+import com.example.mediservapi.dto.model.order.OrderSearchQuery;
 import com.example.mediservapi.model.order.Order;
 import com.example.mediservapi.repository.order.OrderRepository;
 import com.example.mediservapi.repository.pharmacy.PharmacyRepository;
@@ -52,5 +54,10 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<OrderDto> findAll() {
         return orderMapper.toOrderDto(orderRepository.findAll());
+    }
+
+    @Override
+    public List<OrderDto> search(Page page, OrderSearchQuery searchQuery) {
+        return orderMapper.toOrderDto(orderRepository.searchOrders(page, searchQuery));
     }
 }
