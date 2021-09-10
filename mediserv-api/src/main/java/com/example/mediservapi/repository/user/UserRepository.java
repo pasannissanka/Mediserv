@@ -17,5 +17,5 @@ public interface UserRepository extends MongoRepository<User, String > {
     List<User> findAllCustomers(Sort sort);
 
     @org.springframework.data.mongodb.repository.Query(value = "{ 'authorities': { $elemMatch: { 'authority' : 'REG_CUSTOMER' } }, 'id': ?0}")
-    User findCustomerById(String id);
+    Optional<User> findCustomerById(String id);
 }

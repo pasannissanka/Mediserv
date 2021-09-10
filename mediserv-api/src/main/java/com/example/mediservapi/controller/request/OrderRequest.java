@@ -1,34 +1,33 @@
-package com.example.mediservapi.dto.model.order;
+package com.example.mediservapi.controller.request;
 
-import com.example.mediservapi.dto.model.user.CustomerDto;
 import com.example.mediservapi.model.address.Address;
 import com.example.mediservapi.model.order.OrderItems;
 import com.example.mediservapi.model.order.OrderStatus;
 import com.example.mediservapi.model.order.PaymentMethod;
 import lombok.Data;
-import lombok.experimental.Accessors;
+import org.jetbrains.annotations.NotNull;
 
-
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
-//data transfer objects
 @Data
-@Accessors(chain = true)
-public class OrderDto {
-    private String id;
-
-    private CustomerDto customer;
+public class OrderRequest {
+    @NotNull @NotBlank
+    private String customerId;
+    private Address deliveryAddress;
+    @NotNull @NotBlank
     private String pharmacyId;
 
-    private Address deliveryAddress;
-
     private PaymentMethod paymentMethod;
+
     private String prescriptionImgUrl;
+
     private List<OrderItems> items;
 
     private double subTotal;
     private double shippingCost;
     private double tax;
     private double total;
-    private OrderStatus status;
+
+    private OrderStatus status = OrderStatus.NEW;
 }

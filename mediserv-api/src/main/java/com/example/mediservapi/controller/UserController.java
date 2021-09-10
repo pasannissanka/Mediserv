@@ -2,8 +2,6 @@ package com.example.mediservapi.controller;
 
 import com.example.mediservapi.controller.request.CreateUpdateUserRequest;
 import com.example.mediservapi.dto.model.user.UserDto;
-import com.example.mediservapi.dto.response.Response;
-import com.example.mediservapi.model.user.User;
 import com.example.mediservapi.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")

@@ -5,6 +5,7 @@ import com.example.mediservapi.controller.request.AuthRequest;
 import com.example.mediservapi.controller.request.CreateUpdateUserRequest;
 import com.example.mediservapi.dto.mapper.UserMapper;
 import com.example.mediservapi.dto.model.user.UserDto;
+import com.example.mediservapi.dto.response.AuthResponse;
 import com.example.mediservapi.model.user.User;
 import com.example.mediservapi.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -32,16 +33,16 @@ public class AuthController {
     private final UserService userService;
 
     @PostMapping("login")
-    public ResponseEntity<UserDto> login(@RequestBody @Valid AuthRequest request) {
+    public ResponseEntity<AuthResponse> login(@RequestBody @Valid AuthRequest request) {
         try {
             Authentication authentication = authenticationManager
                     .authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
-            System.out.println(authentication);
+
             User user = (User) authentication.getPrincipal();
-            System.out.println(user);
+            String authToken = jwtTokenUtil.generateAccessToken(user);
             return ResponseEntity.ok()
-                    .header(HttpHeaders.AUTHORIZATION, jwtTokenUtil.generateAccessToken(user))
-                    .body(userMapper.toUserDto(user));
+                    .header(HttpHeaders.AUTHORIZATION, authToken)
+                    .body(new AuthResponse(userMapper.toUserDto(user), authToken));
         } catch (BadCredentialsException ex) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }

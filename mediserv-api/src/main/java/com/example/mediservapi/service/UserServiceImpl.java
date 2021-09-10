@@ -6,12 +6,9 @@ import com.example.mediservapi.dto.mapper.UserMapper;
 import com.example.mediservapi.dto.model.user.CustomerDto;
 import com.example.mediservapi.dto.model.user.UserDto;
 import com.example.mediservapi.model.user.User;
-import com.example.mediservapi.repository.pharmacy.PharmacyRepository;
 import com.example.mediservapi.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -22,19 +19,17 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.validation.ValidationException;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserRepository userRepository;
-    private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
+    private final UserMapper userMapper;
     private final CustomerMapper customerMapper;
 
     private Logger logger;
-
 
     @Override @Transactional
     public User signUp(CreateUpdateUserRequest requestData) {
@@ -47,10 +42,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         if (requestData.getAuthorities() == null) {
             requestData.setAuthorities(new HashSet<>());
         }
-
         User user = userMapper.createUser(requestData);
         user.setPassword(passwordEncoder.encode((requestData.getPassword())));
-
         user = userRepository.save(user);
         return user;
     }
@@ -66,11 +59,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         if (requestData.getAuthorities() == null) {
             requestData.setAuthorities(new HashSet<>());
         }
-
         User user = userMapper.createUser(requestData);
-
         user.setPassword(passwordEncoder.encode((requestData.getPassword())));
-
         user = userRepository.save(user);
         return userMapper.toUserDto(user);
     }
@@ -106,7 +96,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public CustomerDto findCustomerById(String id) {
-        return customerMapper.toCustomerDto(userRepository.findCustomerById(id));
+        return customerMapper.toCustomerDto(userRepository.findCustomerById(id).orElseThrow(
+                () -> new ValidationException("Customer Id Not found")
+        ));
     }
 
     @Override

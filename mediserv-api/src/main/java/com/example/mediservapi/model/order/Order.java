@@ -4,6 +4,7 @@ import com.example.mediservapi.model.address.Address;
 import com.example.mediservapi.model.pharmacy.Pharmacy;
 import com.example.mediservapi.model.user.User;
 import lombok.Data;
+import lombok.experimental.Accessors;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -11,6 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.List;
 
 @Data
+@Accessors(chain = true)
 @Document(collection = "Orders")
 public class Order {
     @Id
