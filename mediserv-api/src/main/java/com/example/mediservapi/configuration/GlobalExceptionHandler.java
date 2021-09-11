@@ -15,10 +15,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ValidationException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static java.util.Optional.ofNullable;
 
@@ -101,7 +98,7 @@ public class GlobalExceptionHandler {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class ApiCallError<T> {
-
+        private final Date timestamp = new Date();
         private String message;
         private List<T> details;
 

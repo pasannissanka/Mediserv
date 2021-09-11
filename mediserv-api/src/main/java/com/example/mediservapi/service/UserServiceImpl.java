@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public UserDto findById(String id) {
         User user =  userRepository.findById(id).orElseThrow(
-                () -> new ValidationException("Email already exists")
+                () -> new ValidationException("User not found")
         );
         return userMapper.toUserDto(user);
     }
@@ -87,6 +87,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public List<UserDto> findAll() {
         return userMapper.toUserDto(userRepository.findAll());
+    }
+
+    @Override
+    public UserDto findByEmail(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> new ValidationException("User not found")
+        );
+        return userMapper.toUserDto(user);
     }
 
     @Override

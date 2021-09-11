@@ -5,6 +5,8 @@ import com.example.mediservapi.dto.model.user.UserDto;
 import com.example.mediservapi.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -39,5 +41,11 @@ public class UserController {
     public ResponseEntity<UserDto> getUserById(@PathVariable String id) {
         UserDto data = userService.findById(id);
         return ResponseEntity.ok(data);
+    }
+
+    @GetMapping("user")
+    public ResponseEntity<UserDto> currentUser(Authentication authentication) {
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        return ResponseEntity.ok(userService.findByEmail(userDetails.getUsername()));
     }
 }
