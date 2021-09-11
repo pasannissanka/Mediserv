@@ -1,12 +1,14 @@
 package com.example.mediservapi.controller;
 
-import com.example.mediservapi.controller.request.CreateUpdatePharmacyRequest;
+import com.example.mediservapi.dto.model.request.CreateUpdatePharmacyRequest;
 import com.example.mediservapi.dto.response.Response;
 import com.example.mediservapi.model.pharmacy.Pharmacy;
+import com.example.mediservapi.model.user.Role;
 import com.example.mediservapi.service.PharmacyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +29,7 @@ public class PharmacyController {
         return Response.notFound().setErrors("Pharmacy creation failed!");
     }
 
+    @RolesAllowed({Role.PHARMACY_USER, Role.SUPER_ADMIN})
     @PutMapping(value = "/{id}")
     public Response updatePharmacy(@PathVariable String id, @RequestBody @Valid CreateUpdatePharmacyRequest pharmacyData) {
         Pharmacy data = pharmacyService.updatePharmacy(id, pharmacyData);

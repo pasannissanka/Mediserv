@@ -1,5 +1,6 @@
-import React from "react";
-import { Link as RouterLink } from "react-router-dom";
+import React, { useContext } from "react";
+import { Link as RouterLink, useHistory } from "react-router-dom";
+import { AuthContext } from "../../Context/AuthContext";
 
 type DrawerProps = {
   isDrawerOpen: boolean;
@@ -7,6 +8,17 @@ type DrawerProps = {
 };
 
 export const Drawer = ({ isDrawerOpen, handleDrawerOpen }: DrawerProps) => {
+  const { setUser, setToken } = useContext(AuthContext);
+
+  const history = useHistory();
+
+  const handleLogout = () => {
+    localStorage.removeItem("auth-token");
+    setUser(undefined);
+    setToken(null);
+    history.push("/");
+  };
+
   return (
     <React.Fragment>
       <aside
@@ -156,7 +168,10 @@ export const Drawer = ({ isDrawerOpen, handleDrawerOpen }: DrawerProps) => {
           </ul>
         </nav>
         <div className='flex-shrink-0 p-2 border-t max-h-14'>
-          <button className='flex items-center justify-center w-full px-4 py-2 space-x-1 font-medium tracking-wider uppercase bg-gray-100 border rounded-md focus:outline-none focus:ring'>
+          <button
+            onClick={handleLogout}
+            className='flex items-center justify-center w-full px-4 py-2 space-x-1 font-medium tracking-wider uppercase bg-gray-100 border rounded-md focus:outline-none focus:ring hover:bg-warn-500 hover:text-white transition duration-300'
+          >
             <span>
               <svg
                 className='w-6 h-6'

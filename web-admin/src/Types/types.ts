@@ -1,10 +1,27 @@
 import { ADMIN_TYPES } from "./enums";
 
+export interface AuthContextState {
+  user?: UserData;
+  setUser: React.Dispatch<React.SetStateAction<UserData | undefined>>;
+  isLoading: boolean;
+  token: string | null;
+  setToken: React.Dispatch<React.SetStateAction<string | null>>;
+}
+
 export interface IResponse<T> {
   status: string;
   payload: T;
   errors: any;
   metadata: any;
+}
+
+export interface ErrorResponse {
+  timestamp: Date;
+  status?: number;
+  error?: string;
+  message?: string;
+  path?: string;
+  details?: string[];
 }
 
 export interface AddressData {
@@ -20,10 +37,14 @@ export interface AddressData {
 
 export interface UserData {
   id: string;
-  name: string;
   email: string;
-  userType: ADMIN_TYPES;
-  address: AddressData;
+  name: string;
+  authorities: ADMIN_TYPES[];
+}
+
+export interface LoginResponse {
+  user: UserData;
+  token: string;
 }
 
 export interface LocationAPIData {

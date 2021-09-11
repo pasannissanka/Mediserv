@@ -1,6 +1,8 @@
 import { Menu } from "@headlessui/react";
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useContext } from "react";
+import { Link, useHistory } from "react-router-dom";
+import { AuthContext } from "../../Context/AuthContext";
+import Button from "../Button/Button";
 
 type NavBarProps = {
   isDrawerOpen: boolean;
@@ -8,6 +10,17 @@ type NavBarProps = {
 };
 
 export const NavBar = ({ handleDrawerOpen, isDrawerOpen }: NavBarProps) => {
+  const { setUser, setToken } = useContext(AuthContext);
+
+  const history = useHistory();
+
+  const handleLogout = () => {
+    localStorage.removeItem("auth-token");
+    setUser(undefined);
+    setToken(null);
+    history.push("/");
+  };
+
   return (
     <React.Fragment>
       <header className='flex-shrink-0 border-b bg-white'>
@@ -165,10 +178,13 @@ export const NavBar = ({ handleDrawerOpen, isDrawerOpen }: NavBarProps) => {
                     Another Link
                   </Menu.Item>
                   <Menu.Item
-                    as='div'
-                    className='flex items-center justify-center p-4 text-blue-700 underline border-t'
+                    as={Button}
+                    varient='flat'
+                    rounded={false}
+                    className='flex items-center p-4 border-t w-full py-2 text-base rounded-b-md'
+                    onClick={handleLogout}
                   >
-                    <button>Logout</button>
+                    Logout
                   </Menu.Item>
                 </Menu.Items>
               </Menu>
