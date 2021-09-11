@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   DataTable,
   ElementAction,
@@ -6,22 +6,29 @@ import {
   SearchFields,
 } from "../../components";
 import Button from "../../components/Button/Button";
+import { AuthContext } from "../../Context/AuthContext";
 import { useFetch } from "../../Hooks/useFetch";
-import { UserData, IResponse } from "../../Types/types";
+import { UserData } from "../../Types/types";
 
 export const Customers = () => {
+  const { token } = useContext(AuthContext);
+
   const [dataList, setdataList] = useState<any>([]);
-  const { data, isLoading } = useFetch<IResponse<UserData[]>>(
+
+  const { data, isLoading } = useFetch<UserData[]>(
     "http://localhost:8080/api/customers/",
     {
       method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     }
   );
 
   useEffect(() => {
-    if (data?.payload) {
+    if (!!data) {
       setdataList([
-        ...data!.payload.map((user) => {
+        ...data!.map((user) => {
           return {
             ...user,
             selected: false,
@@ -129,7 +136,7 @@ export const Customers = () => {
           {...{
             eleActions,
             loading: isLoading,
-            totalCount: data?.payload.length,
+            totalCount: data?.length,
             setSearch,
             search,
             dataList,

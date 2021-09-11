@@ -11,8 +11,11 @@ export const useFetch = <T,>(url: string, options: RequestInit) => {
       try {
         const response = await fetch(url, options);
         const data: T = await response.json();
-
-        setData(data);
+        if (response.ok) {
+          setData(data);
+        } else {
+          setServerError(data as any);
+        }
         setIsLoading(false);
       } catch (error) {
         setServerError(error as any);
