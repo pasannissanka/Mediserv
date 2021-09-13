@@ -1,10 +1,9 @@
-package com.example.mediservapi.controller.request;
+package com.example.mediservapi.dto.model.request;
 
 import com.example.mediservapi.model.address.Address;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 

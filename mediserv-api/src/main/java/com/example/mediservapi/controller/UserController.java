@@ -1,15 +1,16 @@
 package com.example.mediservapi.controller;
 
-import com.example.mediservapi.controller.request.CreateUpdateUserRequest;
-import com.example.mediservapi.dto.response.Response;
-import com.example.mediservapi.model.user.User;
+import com.example.mediservapi.dto.model.request.CreateUpdateUserRequest;
+import com.example.mediservapi.dto.model.user.UserDto;
 import com.example.mediservapi.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
@@ -18,50 +19,33 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping(value = "/")
-    public Response saveNewUser(@RequestBody @Valid CreateUpdateUserRequest user) {
-        User data = userService.signUp(user);
-        System.out.println(data);
-        if (data == null) {
-            return Response.duplicateEntity().setErrors("Email already exists");
-        }
-        return Response.ok().setPayload(data);
+    @PostMapping
+    public ResponseEntity<UserDto> saveNewUser(@RequestBody @Valid CreateUpdateUserRequest user) {
+        UserDto data = userService.create(user);
+        return ResponseEntity.ok(data);
     }
 
     @PutMapping(value = "/{id}")
-    public Response updateUser(@PathVariable String id, @RequestBody CreateUpdateUserRequest user) {
-        User data = userService.updateProfile(id, user);
-        System.out.println(data);
-        if (data == null) {
-            return Response.duplicateEntity().setErrors("User not found");
-        }
-        return Response.ok().setPayload(data);
+    public ResponseEntity<UserDto> updateUser(@PathVariable String id, @RequestBody CreateUpdateUserRequest user) {
+        UserDto data = userService.updateProfile(id, user);
+        return ResponseEntity.ok(data);
     }
 
-    @GetMapping(value = "/")
-    public Response getAllUsers() {
-        List<User> data = userService.findAll();
-        if (data == null) {
-            return Response.notFound().setErrors("No data found");
-        }
-        return Response.ok().setPayload(data);
+    @GetMapping
+    public ResponseEntity<List<UserDto>> getAllUsers() {
+        List<UserDto> data = userService.findAll();
+        return ResponseEntity.ok(data);
     }
 
-    @GetMapping(value = "/email/{email}")
-    public Response getUserByEmail(@PathVariable String email) {
-        Optional<User> data = userService.findByEmail(email);
-        if (data.isEmpty()) {
-            return Response.notFound().setErrors("User not found");
-        }
-        return Response.ok().setPayload(data);
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<UserDto> getUserById(@PathVariable String id) {
+        UserDto data = userService.findById(id);
+        return ResponseEntity.ok(data);
     }
 
-    @GetMapping(value = "/id/{id}")
-    public Response getUserById(@PathVariable String id) {
-        Optional<User> data = userService.findById(id);
-        if (data.isEmpty()) {
-            return Response.notFound().setErrors("User not found");
-        }
-        return Response.ok().setPayload(data);
+    @GetMapping("user")
+    public ResponseEntity<UserDto> currentUser(Authentication authentication) {
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        return ResponseEntity.ok(userService.findByEmail(userDetails.getUsername()));
     }
 }

@@ -1,7 +1,9 @@
-import React from "react";
+import { ErrorMessage, Field, Form, Formik } from "formik";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-import { Formik, Field, ErrorMessage, Form } from "formik";
 import Button from "../../components/Button/Button";
+import { AuthContext } from "../../Context/AuthContext";
+import { LoginResponse } from "../../Types/types";
 
 interface LoginForm {
   email: string;
@@ -10,6 +12,7 @@ interface LoginForm {
 }
 
 export const Login = () => {
+  const { setUser, setToken } = useContext(AuthContext);
   return (
     <>
       <div className='flex-col w-1/3 m-auto'>
@@ -17,14 +20,40 @@ export const Login = () => {
         <div className=''>
           <Formik<LoginForm>
             initialValues={{ email: "", password: "", rememberMe: false }}
-            onSubmit={(values, { setSubmitting }) => {
+            onSubmit={async (values, { setSubmitting }) => {
+              console.log(values);
               setSubmitting(true);
+              try {
+                const response = await fetch(
+                  "http://localhost:8080/api/public/login",
+                  {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                      email: values.email,
+                      password: values.password,
+                    }),
+                  }
+                );
+                const data: LoginResponse = await response.json();
+                setSubmitting(false);
+                if (data) {
+                  setUser(data.user);
+                  localStorage.setItem("auth-token", data.token);
+                  setToken(data.token);
+                }
+              } catch (error) {
+                setSubmitting(false);
+                console.log(error);
+              }
             }}
           >
             {({ isSubmitting }) => (
               <Form className='mt-8 space-y-4'>
                 <Field
-                  className='appearance-none rounded-md relative block w-full sm:text-sm'
+                  className='w-full sm:text-sm'
                   name='email'
                   type='email'
                   placeholder='Email'
@@ -32,7 +61,7 @@ export const Login = () => {
                 <ErrorMessage name='email' />
 
                 <Field
-                  className='appearance-none rounded-md relative block w-full sm:text-sm'
+                  className='w-full sm:text-sm'
                   name='password'
                   type='password'
                   placeholder='Password'
