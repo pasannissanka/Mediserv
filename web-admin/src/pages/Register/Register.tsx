@@ -5,6 +5,7 @@ import { StepperHeading } from "../../components/Stepper/StepperHeading";
 import { LocationAPIData } from "../../Types/types";
 import { RegisterPage01 } from "./RegisterPage01";
 import { RegisterPage02 } from "./RegisterPage02";
+import { RegisterPage03 } from "./RegisterPage03";
 
 export interface RegisterForm {
   name: string;
@@ -19,13 +20,13 @@ export interface RegisterForm {
   town: string;
 }
 
-const formPages = [RegisterPage01, RegisterPage02];
+const formPages = [RegisterPage01, RegisterPage02, RegisterPage03];
 
 export const Register = () => {
   const [stepper, setStepper] = useState(0);
 
   const handleNext = () => {
-    if (stepper < 1) {
+    if (stepper < 2) {
       setStepper(stepper + 1);
     }
   };
@@ -35,17 +36,18 @@ export const Register = () => {
   return (
     <>
       <div className='flex-col w-3/5 m-auto'>
-        <h1 className='font-bold text-4xl text-center mb-20'>Medi Serv</h1>
+        <h1 className='font-bold text-4xl text-center mb-16'>Medi Serv</h1>
 
         <StepperHeading
           steps={[
             {
-              title: "Step 01",
-              description: "Owner details",
+              title: "Owner details",
             },
             {
-              title: "Step 02",
-              description: "Location details",
+              title: "Pharmacy details",
+            },
+            {
+              title: "Location details",
             },
           ]}
           selectedIdx={stepper}
@@ -78,7 +80,7 @@ export const Register = () => {
                   setFieldValue={setFieldValue}
                 />
 
-                {stepper === 0 ? (
+                {stepper !== 2 ? (
                   <span className='flex justify-end'>
                     <Button varient='primary' onClick={handleNext}>
                       Next
