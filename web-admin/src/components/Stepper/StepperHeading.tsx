@@ -2,7 +2,6 @@ import React from "react";
 
 interface StepperData {
   title: string;
-  description: string;
 }
 
 type StepperHeadingProps = {
@@ -18,25 +17,37 @@ export const StepperHeading = ({
 }: StepperHeadingProps) => {
   return (
     <>
-      <div
-        className={`grid grid-cols-${steps.length} gap-4 w-full my-2 cursor-pointer transition duration-200`}
-      >
+      <div className='flex items-center mx-4 p-4 pb-6'>
         {steps.map((step, idx) => {
           return (
-            <div
-              onClick={() => setStepper(idx)}
-              key={idx}
-              className={`border-t-4 ${
-                selectedIdx >= idx ? "border-primary-500" : "border-gray-200"
-              } pt-4`}
-            >
-              <p className='uppercase text-purple-500 font-medium'>
-                {step.title}
-              </p>
-              <p className='font-semibold text-sm truncate'>
-                {step.description}
-              </p>
-            </div>
+            <>
+              <div
+                className='flex items-center text-black relative cursor-pointer'
+                onClick={() => setStepper(idx)}
+              >
+                <div
+                  className={`rounded-full flex flex-wrap justify-center content-center text-center transition duration-200 ease-in-out h-10 w-10 border-2 border-gray-200
+                  ${selectedIdx >= idx ? "bg-primary-700 text-white" : ""}
+                `}
+                >
+                  <span className='text-lg text-center'>{idx + 1}</span>
+                </div>
+                <div className='absolute top-0 -ml-10 text-center mt-14 w-32 text-xs font-medium uppercase text-gray-700'>
+                  {step.title}
+                </div>
+              </div>
+              {idx !== steps.length - 1 && (
+                <div
+                  className={`flex-auto border-t-2 transition duration-500 ease-in-out
+                  ${
+                    selectedIdx >= idx + 1
+                      ? "border-primary-500"
+                      : " border-gray-200"
+                  }
+                `}
+                ></div>
+              )}
+            </>
           );
         })}
       </div>
