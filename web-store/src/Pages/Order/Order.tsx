@@ -2,16 +2,12 @@ import React, { useState } from "react";
 import { Login } from "../Login/Login";
 
 //type OrderTypes = {};
-type UserLogedIn = {
-  status: boolean;
-};
 
 export const Order = () => {
+  const [isOpen, setIsOpen] = useState(UserlogingStatus);
   function UserlogingStatus() {
     return true;
   }
-
-  const [isOpen, setIsOpen] = useState(UserlogingStatus);
   return (
     <>
       <div className="container mx-auto">
