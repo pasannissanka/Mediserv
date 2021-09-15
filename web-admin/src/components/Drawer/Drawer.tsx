@@ -87,6 +87,32 @@ export const Drawer = ({ isDrawerOpen, handleDrawerOpen }: DrawerProps) => {
                 </span>
               </RouterLink>
               <RouterLink
+                to='/orders'
+                className={`flex items-center p-2 space-x-2 rounded-md hover:bg-gray-100 ${
+                  isDrawerOpen ? "justify-center" : ""
+                }`}
+              >
+                <span>
+                  <svg
+                    className='w-6 h-6 text-gray-400'
+                    xmlns='http://www.w3.org/2000/svg'
+                    fill='none'
+                    viewBox='0 0 24 24'
+                    stroke='currentColor'
+                  >
+                    <path
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                      strokeWidth='2'
+                      d='M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z'
+                    />
+                  </svg>
+                </span>
+                <span className={`${isDrawerOpen ? "lg:hidden" : ""}`}>
+                  Orders
+                </span>
+              </RouterLink>
+              <RouterLink
                 to='/users'
                 className={`flex items-center p-2 space-x-2 rounded-md hover:bg-gray-100 ${
                   isDrawerOpen ? "justify-center" : ""

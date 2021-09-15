@@ -8,15 +8,15 @@ import {
 import Button from "../../components/Button/Button";
 import { AuthContext } from "../../Context/AuthContext";
 import { useFetch } from "../../Hooks/useFetch";
-import { UserData } from "../../Types/types";
+import { OrderData, UserData } from "../../Types/types";
 
-export const Users = () => {
+export const Order = () => {
   const { token } = useContext(AuthContext);
 
   const [dataList, setdataList] = useState<any>([]);
 
-  const { data, isLoading } = useFetch<UserData[]>(
-    "http://localhost:8080/api/users/",
+  const { data, isLoading } = useFetch<OrderData[]>(
+    "http://localhost:8080/api/orders/",
     {
       method: "GET",
       headers: {
@@ -28,38 +28,37 @@ export const Users = () => {
   useEffect(() => {
     if (!!data) {
       setdataList([
-        ...data!.map((user) => {
+        ...data!.map((order) => {
           return {
-            ...user,
+            ...order,
             selected: false,
+            customerName: order?.customer.name,
           };
         }),
       ]);
     }
   }, [data]);
 
-  const [search, setSearch] = useState<SearchFields>({
-    search: "",
-    searchBy: "name",
-    limit: 10,
-    offset: 0,
-  });
-
   const [labelState, setLabelState] = useState<LabelKeyValue[]>([
     {
-      key: "email",
-      value: "Email",
+      key: "pharmacyId",
+      value: "Pharmacy Id",
       selected: true,
     },
     {
-      key: "name",
-      value: "Name",
+      key: "status",
+      value: "Status",
       selected: true,
     },
     {
       key: "id",
       value: "ID",
       selected: false,
+    },
+    {
+      key: "customerName",
+      value: "Customer Full Name",
+      selected: true,
     },
   ]);
 
@@ -80,6 +79,13 @@ export const Users = () => {
       selected: false,
     },
   ]);
+
+  const [search, setSearch] = useState<SearchFields>({
+    search: "",
+    searchBy: "name",
+    limit: 10,
+    offset: 0,
+  });
 
   const eleActions: ElementAction[] = [
     {
@@ -129,46 +135,23 @@ export const Users = () => {
   ];
 
   return (
-    <>
-      <div className='container mx-auto px-4'>
-        <h1 className='text-3xl py-4 mb-1'>Users</h1>
-        <DataTable
-          {...{
-            eleActions,
-            loading: isLoading,
-            totalCount: data?.length,
-            setSearch,
-            search,
-            dataList,
-            setdataList,
-            labelState,
-            setLabelState,
-            searchFields,
-            setSearchFields,
-          }}
-          globalActions={
-            <div className='ml-2'>
-              <Button varient='outline'>
-                <span className='hidden md:block'>Add</span>
-                <svg
-                  className='w-5 h-5 ml-1'
-                  xmlns='http://www.w3.org/2000/svg'
-                  fill='none'
-                  viewBox='0 0 24 24'
-                  stroke='currentColor'
-                >
-                  <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth={2}
-                    d='M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z'
-                  />
-                </svg>
-              </Button>
-            </div>
-          }
-        />
-      </div>
-    </>
+    <div className='container mx-auto px-4'>
+      <h1 className='text-3xl py-4 mb-1'>Orders</h1>
+      <DataTable
+        {...{
+          eleActions,
+          loading: isLoading,
+          totalCount: data?.length,
+          setSearch,
+          search,
+          dataList,
+          setdataList,
+          labelState,
+          setLabelState,
+          searchFields,
+          setSearchFields,
+        }}
+      />
+    </div>
   );
 };

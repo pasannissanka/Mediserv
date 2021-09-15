@@ -52,7 +52,7 @@ export function SearchFilter(props: SearchFilterProps) {
       ...search!,
       offset: 0,
       search: searchQ.search,
-      searchBy: selectedSearch!.key,
+      searchBy: selectedSearch?.key,
     });
     // history.push({
     //   search: `?${selectedSearch?.key}=${searchQ.search.toString()}`,

@@ -5,6 +5,7 @@ import { Footer } from "../components/Footer/Footer";
 import { NavBar } from "../components/NavBar/NavBar";
 import { Customers } from "./Customers/Customers";
 import { NotFound } from "./NotFound";
+import { Order } from "./Order/Order";
 import { Users } from "./Users/Users";
 
 export const Home = () => {
@@ -31,7 +32,7 @@ export const Home = () => {
                 <Users />
               </Route>
               <Route exact path='/orders'>
-                <div>Orders</div>
+                <Order />
               </Route>
               <Route exact path='/customers'>
                 <Customers />

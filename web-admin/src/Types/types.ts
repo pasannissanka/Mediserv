@@ -35,6 +35,21 @@ export interface AddressData {
   latitude: number;
 }
 
+export interface OrderData {
+  customer: UserData;
+  deliveryAddress: AddressData;
+  id: string;
+  items: any[];
+  paymentMethod: string;
+  status: string;
+  pharmacyId: string;
+  prescriptionImgUrl: string;
+  shippingCost: number;
+  subTotal: number;
+  tax: number;
+  total: number;
+}
+
 export interface UserData {
   id: string;
   email: string;
