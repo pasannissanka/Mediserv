@@ -3,6 +3,7 @@ import React, { Fragment } from "react";
 import Button from "../../Components/Button/Button";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { Link } from "react-router-dom";
+import * as Yup from "yup";
 
 interface LoginForm {
   email: string;
@@ -16,6 +17,10 @@ type LoginProps = {
 };
 
 export const Login = ({ isOpen, setIsOpen }: LoginProps) => {
+  const validate = Yup.object({
+    email: Yup.string().email("Email is invalid").required("Email is required"),
+    password: Yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
+  });
   function closeModal() {
     setIsOpen(false);
   }
@@ -66,11 +71,14 @@ export const Login = ({ isOpen, setIsOpen }: LoginProps) => {
                         setSubmitting(true);
                         closeModal();
                       }}
+                      validationSchema={validate}
                     >
                       {({ isSubmitting }) => (
                         <Form className="mt-8 space-y-4">
                           <Field className="w-80 mx-auto sm:text-sm" name="email" type="email" placeholder="Email" />
-                          <ErrorMessage name="email" />
+                          <ErrorMessage name="email">
+                            {(msg) => <div style={{ color: "red", paddingLeft: "3rem" }}>{msg}</div>}
+                          </ErrorMessage>
 
                           <Field
                             className="w-80 mx-auto sm:text-sm"
@@ -78,7 +86,9 @@ export const Login = ({ isOpen, setIsOpen }: LoginProps) => {
                             type="password"
                             placeholder="Password"
                           />
-                          <ErrorMessage name="password" />
+                          <ErrorMessage name="password" className="pl-80">
+                            {(msg) => <div style={{ color: "red", paddingLeft: "3rem" }}>{msg}</div>}
+                          </ErrorMessage>
 
                           <div className="w-80 mx-auto flex items-center justify-between">
                             <div className="flex items-center">
