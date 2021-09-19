@@ -1,7 +1,6 @@
 import { Menu } from "@headlessui/react";
 import React from "react";
 import { Link } from "react-router-dom";
-import Button from "../Button/Button";
 
 type NavBarProps = {
   // isDrawerOpen: boolean;
@@ -14,7 +13,7 @@ export const NavBar = (props: NavBarProps) => {
       <header className="flex-shrink-0 max-h-16 bg-gray-100 border-b">
         <div className="flex items-center justify-between p-1">
           <Link to="/" className="p-2 text-xl font-semibold leading-8 tracking-wider whitespace-nowrap">
-            MediServ
+            MediServ Store
           </Link>
 
           <div className="hidden items-center justify-center px-2 space-x-2 md:flex md:flex-1">
