@@ -1,14 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
+import { useHistory } from "react-router";
 import {
   DataTable,
   ElementAction,
   LabelKeyValue,
   SearchFields,
 } from "../../components";
-import Button from "../../components/Button/Button";
 import { AuthContext } from "../../Context/AuthContext";
 import { useFetch } from "../../Hooks/useFetch";
-import { OrderData, UserData } from "../../Types/types";
+import { OrderData } from "../../Types/types";
 
 export const Order = () => {
   const { token } = useContext(AuthContext);
@@ -24,6 +24,8 @@ export const Order = () => {
       },
     }
   );
+
+  const history = useHistory();
 
   useEffect(() => {
     if (!!data) {
@@ -91,8 +93,9 @@ export const Order = () => {
     {
       action: (key: number, event?: any) => {
         console.log("1", key);
+        history.push(`/orders/${key}`);
       },
-      title: "Test Action 1",
+      title: "View Order",
       svg: (
         <svg
           xmlns='http://www.w3.org/2000/svg'
