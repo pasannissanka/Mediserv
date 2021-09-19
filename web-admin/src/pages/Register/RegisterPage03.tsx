@@ -1,131 +1,73 @@
 import { ErrorMessage, Field } from "formik";
-import React, { useEffect, useState } from "react";
-import Select from "react-select";
-import { LocationAPIData } from "../../Types/types";
+import React, { useEffect } from "react";
+import { MapContainer, TileLayer, useMap } from "react-leaflet";
 import { RegisterForm } from "./Register";
-import { RegisterPageProps } from "./RegisterPage01";
+import { GeoSearchControl, OpenStreetMapProvider } from "leaflet-geosearch";
+import L from "leaflet";
+import "leaflet-geosearch/dist/geosearch.css";
+import "leaflet/dist/leaflet.css";
 
-export const RegisterPage03 = ({
-  values,
-  setFieldValue,
-}: RegisterPageProps<RegisterForm>) => {
-  const [locationData, setLocationData] = useState<{
-    province: any[];
-    district: any[];
-    town: any[];
-  }>({ district: [], province: [], town: [] });
+export interface RegisterPageProps<T> {
+  values: T;
+  setFieldValue: (field: string, value: any) => void;
+}
 
-  useEffect(() => {
-    async function fetchData() {
-      const response = await fetch(
-        "https://locatesrilanka.herokuapp.com/provinces",
-        {
-          method: "GET",
-        }
-      );
-      const dataProvinces: LocationAPIData[] = await response.json();
-      setLocationData({
-        ...locationData,
-        province: dataProvinces?.map((item) => {
-          return {
-            id: item.id,
-            value: item.name_en,
-            label: item.name_en,
-          };
-        }) as any[],
-      });
-    }
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    async function fetchData() {
-      if ((values?.province as LocationAPIData).id) {
-        const response = await fetch(
-          `https://locatesrilanka.herokuapp.com/districts/byprovince/${
-            (values?.province as LocationAPIData).id
-          }`,
-          {
-            method: "GET",
-          }
-        );
-        const district: LocationAPIData[] = await response.json();
-        setLocationData({
-          ...locationData,
-          district: district?.map((item) => {
-            return {
-              id: item.id,
-              value: item.name_en,
-              label: item.name_en,
-            };
-          }) as any[],
-        });
-      }
-    }
-    fetchData();
-  }, [values.province]);
-
+export const RegisterPage03 = (props: RegisterPageProps<RegisterForm>) => {
   return (
     <>
-      <div className='flex'>
-        <Select
-          name='province'
-          styles={{
-            input: (base) => ({
-              ...base,
-              "input:focus": {
-                boxShadow: "none",
-              },
-            }),
-          }}
-          placeholder='Province'
-          onChange={(option) => setFieldValue("province", option)}
-          options={locationData.province}
-          className='appearance-none rounded-md relative block w-1/2 my-2 mr-1 sm:text-sm'
+      <Field
+        className='focus:border-primary-300 focus:ring-primary-700 px-2 py-2 border-gray-300 border shadow-sm focus:ring-1 focus:ring-opacity-50appearance-none rounded-md relative block w-full my-2 sm:text-sm max-h-48'
+        name='Adress'
+        type='text'
+        placeholder='Address'
+        as='textarea'
+        rows={3}
+      />
+      <ErrorMessage name='Addres' />
+      <MapContainer
+        className='h-80'
+        center={{ lat: 7.8731, lng: 80.7718 }}
+        zoom={6}
+        scrollWheelZoom={true}
+      >
+        <TileLayer
+          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+          url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
         />
-        <ErrorMessage name='province' />
-
-        <Select
-          name='district'
-          styles={{
-            input: (base) => ({
-              ...base,
-              "input:focus": {
-                boxShadow: "none",
-              },
-            }),
-          }}
-          placeholder='District'
-          onChange={(option) => setFieldValue("district", option)}
-          options={locationData.district}
-          className='appearance-none rounded-md relative block w-1/2 my-2 ml-1 sm:text-sm'
-        />
-        <ErrorMessage name='district' />
-      </div>
-
-      <Field
-        className='appearance-none rounded-md relative block w-full sm:text-sm'
-        name='town'
-        type='text'
-        placeholder='Town'
-      />
-      <ErrorMessage name='town' />
-
-      <Field
-        className='appearance-none rounded-md relative block w-full my-2 sm:text-sm'
-        name='lineOne'
-        type='text'
-        placeholder='Address line 01'
-      />
-      <ErrorMessage name='lineOne' />
-
-      <Field
-        className='appearance-none rounded-md relative block w-full my-2 sm:text-sm'
-        name='lineTwo'
-        type='text'
-        placeholder='Address line 02'
-      />
-      <ErrorMessage name='lineTwo' />
+        <LeafletgeoSearch />
+      </MapContainer>
     </>
   );
 };
+
+function LeafletgeoSearch() {
+  const map = useMap();
+
+  useEffect(() => {
+    const provider = new OpenStreetMapProvider({
+      params: {
+        countrycodes: "lk",
+      },
+    });
+
+    const searchControl = GeoSearchControl({
+      provider,
+      marker: {
+        icon: L.icon({
+          iconSize: [25, 41],
+          iconAnchor: [10, 41],
+          popupAnchor: [2, -40],
+          iconUrl: "https://unpkg.com/leaflet@1.6/dist/images/marker-icon.png",
+        }),
+      },
+    });
+
+    map.addControl(searchControl);
+
+    return () => {
+      map.removeControl(searchControl);
+    };
+  }, []);
+
+  return null;
+}
