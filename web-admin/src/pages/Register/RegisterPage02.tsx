@@ -1,5 +1,6 @@
 import { ErrorMessage, Field } from "formik";
 import React from "react";
+
 import { RegisterForm } from "./Register";
 
 export interface RegisterPageProps<T> {
@@ -12,6 +13,7 @@ export interface RegisterPageProps<T> {
 }
 
 export const RegisterPage02 = (props: RegisterPageProps<RegisterForm>) => {
+  const position = [51.505, -0.09];
   return (
     <>
       <Field
@@ -26,9 +28,14 @@ export const RegisterPage02 = (props: RegisterPageProps<RegisterForm>) => {
         name='discription'
         type='email'
         placeholder='Discription'
+        as='textarea'
+        rows={14}
+        rowsMax={20}
       />
       <ErrorMessage name='email' />
-      
+
+     
+
     </>
   );
 };
