@@ -12,7 +12,7 @@ export interface SearchFields {
   /**
    * search field
    */
-  searchBy: string;
+  searchBy?: string;
   /**
    * limit - useed for pagination
    */
@@ -36,7 +36,7 @@ export interface ActionItemProp {
 }
 
 /**
- * Types for DataTableContext 
+ * Types for DataTableContext
  */
 export interface DataTableState {
   /**
@@ -89,7 +89,7 @@ export interface DataTableProps extends DataTableState {
   globalActions?: React.ReactNode;
   /**
    * Actions applies to individual data elements
-   * @todo : implement filter method to filter actions based on 
+   * @todo : implement filter method to filter actions based on
    *        state/ status of data element.
    * @todo : add to context if possible
    */
@@ -99,13 +99,12 @@ export interface DataTableProps extends DataTableState {
 export interface TableProps {
   /**
    * Actions applies to individual data elements
-   * TODO : implement filter method to filter actions based on 
+   * TODO : implement filter method to filter actions based on
    *        state/ status of data element.
    * TODO : add to context if possible
    */
   eleActions?: ElementAction[];
 }
-
 
 export interface SearchFilterProps {
   /**
@@ -113,7 +112,6 @@ export interface SearchFilterProps {
    */
   globalActions?: React.ReactNode;
 }
-
 
 export interface FilterMenuProps {
   type: "checkbox" | "radio";
