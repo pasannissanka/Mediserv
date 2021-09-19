@@ -1,38 +1,45 @@
-import React, { useRef, useState } from "react";
-import Button from "../../../Components/Button/Button";
+import React, { useState } from "react";
+import { FileUploader } from "react-drag-drop-files";
+
+const fileTypes = ["JPG", "PNG", "JPEG"];
 
 export const Prescription = () => {
-  const inputRef = useRef<HTMLInputElement>(null);
+  // const inputRef = useRef<HTMLInputElement>(null);
 
-  const [fileState, setFileState] = useState<File>();
+  // const [fileState, setFileState] = useState<File>();
 
-  const filesSelectedHandler = (event: any) => {
-    setFileState(event.target.files[0]);
-  };
+  // const filesSelectedHandler = (event: any) => {
+  //   setFileState(event.target.files[0]);
+  // };
 
-  const fileUploadHandler = () => {
-    console.log(fileState);
-  };
+  // const onPickfileBtnClick = () => {
+  //   inputRef.current?.click();
+  // };
 
-  const onPickfileBtnClick = () => {
-    inputRef.current?.click();
+  const [file, setFile] = useState<File>();
+  const handleChange = (file: File) => {
+    setFile(file);
   };
 
   return (
     <>
-      <div className="container mx-auto">
+      <div className="container mx-auto pt-2">
         Upload prescription here
         <div>
           <div>
-            <input
+            {/* <input
               style={{ display: "none" }}
               type="file"
               onChange={filesSelectedHandler}
               ref={inputRef}
               accept="image/png, image/jpeg"
-            />
+            /> */}
 
-            <div onClick={onPickfileBtnClick} className="py-14 bg-gray-200 w-11/12 mx-auto sm:px-6 lg:px-8 mt-2">
+            <div className="w-10/12 mx-auto mt-2">
+              <FileUploader handleChange={handleChange} name="file" types={fileTypes} classes="bg-gray-200" />
+            </div>
+
+            {/* <div onClick={onPickfileBtnClick} className="py-14 bg-gray-200 w-11/12 mx-auto sm:px-6 lg:px-8 mt-2">
               <div className="flex flex-col border-2 border-dashed border-gray-400 rounded-md py-2  items-center">
                 <svg
                   className="w-3/12 p-2"
@@ -62,11 +69,9 @@ export const Prescription = () => {
 
                 <p className="text-gray-500 py-2">Drop files to upload or select</p>
               </div>
-            </div>
-            <span className="flex justify-center pt-2">
-              <Button type="button" className="bg-gray-300" onClick={fileUploadHandler}>
-                Upload
-              </Button>
+            </div> */}
+            <span className="flex justify-center pt-2 text-gray- text-gray-600">
+              <p>{file ? `File name: ${file.name}` : "No prescription uploaded yet"}</p>
             </span>
           </div>
 

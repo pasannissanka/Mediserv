@@ -13,11 +13,11 @@ export interface RegisterForm {
   name: string;
   email: string;
   password: string;
+  phoneNumber: string;
   retypePassword: string;
   houseNo: string;
   lineOne: string;
   lineTwo: string;
-
   town: string;
 }
 
@@ -25,8 +25,9 @@ const formPages = [Prescription, DeliveryInformation, PaymentDetails, Summery];
 
 export const Order = () => {
   const [isOpen, setIsOpen] = useState(UserlogingStatus);
+  //for open login only
   function UserlogingStatus() {
-    return false;
+    return true;
   }
 
   const [stepper, setStepper] = useState(0);
@@ -70,6 +71,7 @@ export const Order = () => {
                 name: "",
                 email: "",
                 password: "",
+                phoneNumber: "",
                 retypePassword: "",
                 houseNo: "",
                 lineOne: "",
@@ -83,7 +85,7 @@ export const Order = () => {
             >
               {({ isSubmitting, values, setFieldValue }) => (
                 <Form className="mt-8 space-y-4">
-                  <CurrentStepForm />
+                  <CurrentStepForm values={values} setFieldValue={setFieldValue} />
                   <span className="flex justify-end">
                     <Button varient="primary" onClick={handleNext}>
                       Next
