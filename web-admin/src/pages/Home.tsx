@@ -5,8 +5,8 @@ import { Footer } from "../components/Footer/Footer";
 import { NavBar } from "../components/NavBar/NavBar";
 import { Customers } from "./Customers/Customers";
 import { NotFound } from "./NotFound";
+import { Orders } from "./Order/Orders";
 import { Order } from "./Order/Order";
-import { OrderItem } from "./Order/OrderItem";
 import { Users } from "./Users/Users";
 
 export const Home = () => {
@@ -31,10 +31,10 @@ export const Home = () => {
                 <Users />
               </Route>
               <Route exact path='/orders'>
-                <Order />
+                <Orders />
               </Route>
               <Route exact path='/orders/:orderId'>
-                <OrderItem />
+                <Order />
               </Route>
               <Route exact path='/customers'>
                 <Customers />
