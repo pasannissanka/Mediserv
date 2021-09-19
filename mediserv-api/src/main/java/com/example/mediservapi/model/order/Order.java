@@ -5,10 +5,14 @@ import com.example.mediservapi.model.pharmacy.Pharmacy;
 import com.example.mediservapi.model.user.User;
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -34,4 +38,12 @@ public class Order {
     private double tax;
     private double total;
     private OrderStatus status;
+
+    @DateTimeFormat(style = "M-")
+    @CreatedDate
+    private Date createdAt;
+
+    @DateTimeFormat(style = "M-")
+    @LastModifiedDate
+    private Date modifiedAt;
 }

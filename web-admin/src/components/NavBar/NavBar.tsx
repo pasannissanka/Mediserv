@@ -2,6 +2,10 @@ import { Menu } from "@headlessui/react";
 import React, { useContext } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { AuthContext } from "../../Context/AuthContext";
+import {
+  createImageFromInitials,
+  getRandomColor,
+} from "../../Utils/ImgFromInitials";
 import Button from "../Button/Button";
 
 type NavBarProps = {
@@ -10,7 +14,7 @@ type NavBarProps = {
 };
 
 export const NavBar = ({ handleDrawerOpen, isDrawerOpen }: NavBarProps) => {
-  const { setUser, setToken } = useContext(AuthContext);
+  const { setUser, setToken, user } = useContext(AuthContext);
 
   const history = useHistory();
 
@@ -147,7 +151,11 @@ export const NavBar = ({ handleDrawerOpen, isDrawerOpen }: NavBarProps) => {
                 <Menu.Button className='p-1 bg-gray-200 rounded-full focus:outline-none focus:ring'>
                   <img
                     className='object-cover w-8 h-8 rounded-full'
-                    src='https://avataaars.io/?avatarStyle=Circle&topType=LongHairStraight&accessoriesType=Blank&hairColor=BrownDark&facialHairType=Blank&clotheType=BlazerShirt&eyeType=Default&eyebrowType=Default&mouthType=Default&skinColor=Light'
+                    src={createImageFromInitials(
+                      500,
+                      user?.name!,
+                      getRandomColor()
+                    )}
                     alt='User Name'
                   />
                 </Menu.Button>
@@ -158,9 +166,8 @@ export const NavBar = ({ handleDrawerOpen, isDrawerOpen }: NavBarProps) => {
                     as='div'
                     className='flex flex-col p-4 space-y-1 font-medium border-b'
                   >
-                    <span className='text-gray-800'>First name Last name</span>
-                    {/* <span className="text-sm text-gray-300">{me?.me.user.username}</span> */}
-                    <span className='text-sm text-gray-400'>Email</span>
+                    <span className='text-gray-800'>{user?.name}</span>
+                    <span className='text-sm text-gray-400'>{user?.email}</span>
                   </Menu.Item>
 
                   <Menu.Item

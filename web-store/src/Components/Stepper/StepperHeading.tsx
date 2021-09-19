@@ -13,15 +13,11 @@ type StepperHeadingProps = {
 export const StepperHeading = ({ steps, selectedIdx, setStepper }: StepperHeadingProps) => {
   return (
     <>
-      <div className="flex items-center mx-4 p-4 pb-6">
+      <div key="" className="flex items-center mx-4 p-4 pb-6">
         {steps.map((step, idx) => {
           return (
-            <>
-              <div
-                key=""
-                className="flex items-center text-black relative cursor-pointer"
-                onClick={() => setStepper(idx)}
-              >
+            <React.Fragment key={idx}>
+              <div className="flex items-center text-black relative cursor-pointer" onClick={() => setStepper(idx)}>
                 <div
                   className={`rounded-full flex flex-wrap justify-center content-center text-center transition duration-200 ease-in-out h-10 w-10 border-2 border-gray-200
                   ${selectedIdx >= idx ? "bg-primary-700 text-white" : ""}
@@ -40,7 +36,7 @@ export const StepperHeading = ({ steps, selectedIdx, setStepper }: StepperHeadin
                 `}
                 ></div>
               )}
-            </>
+            </React.Fragment>
           );
         })}
       </div>
