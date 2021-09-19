@@ -67,6 +67,7 @@ export const Register = () => {
               province: "",
               district: "",
               town: "",
+              
             }}
             onSubmit={(values, { setSubmitting }) => {
               setSubmitting(true);
