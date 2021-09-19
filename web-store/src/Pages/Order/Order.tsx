@@ -3,13 +3,14 @@ import React, { useState } from "react";
 import Button from "../../Components/Button/Button";
 import { StepperHeading } from "../../Components/Stepper/StepperHeading";
 import { Login } from "../Login/Login";
-import { DeliveryInformation } from "./Order-details/Delivery-information";
-import { PaymentDetails } from "./Order-details/Payment-details";
-import { Prescription } from "./Order-details/Prescription-upload";
-import { Summery } from "./Order-details/Summery";
+import { DeliveryInformation } from "./OrderSteps/DeliveryInformationStep";
+import { PaymentDetails } from "./OrderSteps/PaymentDetailsStep";
+import { Img, Prescription } from "./OrderSteps/PrescriptionStep";
+import { Summery } from "./OrderSteps/SummeryStep";
 
 //type OrderTypes = {};
 export interface RegisterForm {
+  prescriptionImg: Img[] | any[];
   name: string;
   email: string;
   password: string;
@@ -41,33 +42,35 @@ export const Order = () => {
 
   return (
     <>
-      <div className="container mx-auto p-0">
-        Order
+      <div className='container mx-auto p-0'>
         <Login isOpen={isOpen} setIsOpen={setIsOpen} />
         {/* stepper */}
-        <div className="flex-col w-3/5 mx-auto">
-          <StepperHeading
-            steps={[
-              {
-                title: "Prescription",
-              },
-              {
-                title: "Delivery information",
-              },
-              {
-                title: "Payment details",
-              },
-              {
-                title: "Summery",
-              },
-            ]}
-            selectedIdx={stepper}
-            setStepper={setStepper}
-          />
+        <div className='flex-col w-3/5 mx-auto bg-white rounded-lg'>
+          <div className='mx-4 py-4'>
+            <StepperHeading
+              steps={[
+                {
+                  title: "Prescription",
+                },
+                {
+                  title: "Delivery information",
+                },
+                {
+                  title: "Payment details",
+                },
+                {
+                  title: "Summery",
+                },
+              ]}
+              selectedIdx={stepper}
+              setStepper={setStepper}
+            />
+          </div>
 
-          <div className="w-4/5 m-auto">
+          <div className='w-4/5 m-auto'>
             <Formik<RegisterForm>
               initialValues={{
+                prescriptionImg: [],
                 name: "",
                 email: "",
                 password: "",
@@ -84,10 +87,13 @@ export const Order = () => {
               }}
             >
               {({ isSubmitting, values, setFieldValue }) => (
-                <Form className="mt-8 space-y-4">
-                  <CurrentStepForm values={values} setFieldValue={setFieldValue} />
-                  <span className="flex justify-end">
-                    <Button varient="primary" onClick={handleNext}>
+                <Form className='mt-8 space-y-4'>
+                  <CurrentStepForm
+                    values={values}
+                    setFieldValue={setFieldValue}
+                  />
+                  <span className='flex justify-end py-4'>
+                    <Button varient='primary' onClick={handleNext}>
                       Next
                     </Button>
                   </span>
