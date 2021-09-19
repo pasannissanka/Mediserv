@@ -49,6 +49,6 @@
   select,
   select[multiple],
   textarea {
-    @apply focus:border-primary-300 focus:ring-primary-200 block px-2 py-2 border-gray-300 border rounded shadow-sm focus:ring-1 focus:ring-opacity-50;
+    @apply focus:border-primary-300 focus:ring-primary-700 block px-2 py-2 border-gray-300 border rounded shadow-sm focus:ring-1 focus:ring-opacity-50;
   }
 }
