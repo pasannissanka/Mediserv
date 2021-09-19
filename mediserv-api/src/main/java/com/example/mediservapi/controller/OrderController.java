@@ -32,6 +32,13 @@ public class OrderController {
         return ResponseEntity.ok(orders);
     }
 
+    @GetMapping(value = "/{id}")
+    @PreAuthorize("hasAuthority('PHARMACY_USER') or hasAuthority('SUPER_ADMIN')")
+    public ResponseEntity<OrderDto> getOrderById(@PathVariable String id) {
+        OrderDto data = orderService.findById(id);
+        return ResponseEntity.ok(data);
+    }
+
     @PostMapping("search")
     @PreAuthorize("hasAuthority('PHARMACY_USER') or hasAuthority('SUPER_ADMIN')")
     public ResponseEntity<List<OrderDto>> search(@RequestBody @Valid SearchRequest<OrderSearchQuery> request) {

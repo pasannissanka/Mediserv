@@ -95,7 +95,9 @@ public class OrderMapper {
                 .setStatus(order.getStatus())
                 .setItems(order.getItems())
                 .setPharmacyId(order.getPharmacy().getId())
-                .setCustomer(customerMapper.toCustomerDto(order.getCustomer()));
+                .setCustomer(customerMapper.toCustomerDto(order.getCustomer()))
+                .setCreatedAt(order.getCreatedAt())
+                .setModifiedAt(order.getModifiedAt());
     }
 
     public List<OrderDto> toOrderDto(List<Order> orders) {

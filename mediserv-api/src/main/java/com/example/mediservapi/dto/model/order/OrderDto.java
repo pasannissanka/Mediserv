@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 
+import java.util.Date;
 import java.util.List;
 
 //data transfer objects
@@ -31,4 +32,7 @@ public class OrderDto {
     private double tax;
     private double total;
     private OrderStatus status;
+
+    private Date createdAt;
+    private Date modifiedAt;
 }
