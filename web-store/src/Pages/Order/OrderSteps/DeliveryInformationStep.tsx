@@ -1,9 +1,10 @@
-import { ErrorMessage, Field, Form } from "formik";
-import React, { useState } from "react";
+import { ErrorMessage, Field, Form, yupToFormErrors } from "formik";
+import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import Button from "../../../Components/Button/Button";
 import { Card } from "../../../Components/Card/Card";
 import { RegisterForm } from "../Order";
+
 
 export interface DeliveryPageProps<T> {
   values: T;
@@ -24,6 +25,8 @@ export const DeliveryInformation = ({
     town: any[];
   }>({ district: [], province: [], town: [] });
 
+  
+
   return (
     <>
       <div className='container grid grid-cols-2 pt-2'>
@@ -37,13 +40,14 @@ export const DeliveryInformation = ({
               placeholder='Name'
             />
             <ErrorMessage name='name' />
+            
 
             <Field
               className='appearance-none rounded-md relative block w-full my-2 sm:text-sm'
               name='email'
               type='email'
               placeholder='Email'
-            />
+            />           
             <ErrorMessage name='email' />
 
             <Field
@@ -103,8 +107,10 @@ export const DeliveryInformation = ({
               placeholder='Address line 01'
             />
             <ErrorMessage name='lineOne' />
-            <Button varient='outline-primary'>Submit</Button>
+            
+            
           </Form>
+          
         </div>
         <span className='w-3/4 m-auto'>
           <Card></Card>
