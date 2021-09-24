@@ -9,7 +9,6 @@ import java.util.List;
 
 public interface UserService {
     UserDto create(CreateUpdateUserRequest requestData);
-    User signUp(CreateUpdateUserRequest requestData);
     UserDto findById(String id);
     UserDto updateProfile(String id, CreateUpdateUserRequest requestData);
     List<UserDto> findAll();

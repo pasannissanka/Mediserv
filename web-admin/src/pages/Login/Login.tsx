@@ -21,7 +21,6 @@ export const Login = () => {
           <Formik<LoginForm>
             initialValues={{ email: "", password: "", rememberMe: false }}
             onSubmit={async (values, { setSubmitting }) => {
-              console.log(values);
               setSubmitting(true);
               try {
                 const response = await fetch(
