@@ -1,4 +1,4 @@
-import { Form, Formik } from "formik";
+import { Form, Formik, FormikErrors, FormikTouched } from "formik";
 import React, { useState } from "react";
 import Button from "../../Components/Button/Button";
 import { StepperHeading } from "../../Components/Stepper/StepperHeading";
@@ -7,20 +7,46 @@ import { DeliveryInformation } from "./OrderSteps/DeliveryInformationStep";
 import { PaymentDetails } from "./OrderSteps/PaymentDetailsStep";
 import { Img, Prescription } from "./OrderSteps/PrescriptionStep";
 import { Summery } from "./OrderSteps/SummeryStep";
+import * as yup from "yup";
 
 //type OrderTypes = {};
 export interface RegisterForm {
   prescriptionImg: Img[] | any[];
-  name: string;
-  email: string;
-  password: string;
-  phoneNumber: string;
-  retypePassword: string;
-  houseNo: string;
-  lineOne: string;
-  lineTwo: string;
-  town: string;
+  deliveryInfo: {
+    name: string;
+    email: string;
+    phoneNumber: string;
+    province: string;
+    district: string;
+    lineOne: string;
+    lineTwo: string;
+  };
+  paymentDetails: {
+    deliveryMethod: string;
+  };
 }
+
+const prescriptionSchema = yup.array().min(1, "Prescription is required");
+
+const deliveryInfoSchema = yup.object().shape({
+  name: yup.string().required("Name is required"),
+  email: yup.string().required("Email is required"),
+  phoneNumber: yup.string().required("Phone number is required"),
+  province: yup.string().required("Province is required"),
+  district: yup.string().required("District is required"),
+  lineOne: yup.string().required("Address line one is required"),
+  lineTwo: yup.string().required("Address line two is required"),
+});
+
+const paymentDetailsSchema = yup.object().shape({
+  deliveryMethod: yup.string().required(),
+});
+
+const validationSchema = yup.object().shape({
+  prescriptionImg: prescriptionSchema,
+  deliveryInfo: deliveryInfoSchema,
+  paymentDetails: paymentDetailsSchema,
+});
 
 const formPages = [Prescription, DeliveryInformation, PaymentDetails, Summery];
 
@@ -33,9 +59,17 @@ export const Order = () => {
 
   const [stepper, setStepper] = useState(0);
 
-  const handleNext = () => {
+  const handleNext = (formErrors: FormikErrors<RegisterForm>) => {
     if (stepper < 3) {
-      setStepper(stepper + 1);
+      if (stepper === 0 && !!!formErrors.prescriptionImg) {
+        setStepper(stepper + 1);
+      }
+      if (stepper === 1 && !!!formErrors.deliveryInfo) {
+        setStepper(stepper + 1);
+      }
+      if (stepper === 2 && !!!formErrors.paymentDetails) {
+        setStepper(stepper + 1);
+      }
     }
   };
   const CurrentStepForm = formPages[stepper];
@@ -71,29 +105,73 @@ export const Order = () => {
             <Formik<RegisterForm>
               initialValues={{
                 prescriptionImg: [],
-                name: "",
-                email: "",
-                password: "",
-                phoneNumber: "",
-                retypePassword: "",
-                houseNo: "",
-                lineOne: "",
-                lineTwo: "",
-                town: "",
+                deliveryInfo: {
+                  name: "",
+                  email: "",
+                  phoneNumber: "",
+                  lineOne: "",
+                  lineTwo: "",
+                  district: "",
+                  province: "",
+                },
+                paymentDetails: {
+                  deliveryMethod: "",
+                },
               }}
               onSubmit={(values, { setSubmitting }) => {
                 setSubmitting(true);
                 console.log(values);
               }}
+              validationSchema={validationSchema}
             >
-              {({ isSubmitting, values, setFieldValue }) => (
+              {({
+                isSubmitting,
+                values,
+                setFieldValue,
+                validateForm,
+                setErrors,
+                errors,
+                setTouched,
+                touched,
+              }) => (
                 <Form className='mt-8 space-y-4'>
                   <CurrentStepForm
                     values={values}
                     setFieldValue={setFieldValue}
                   />
                   <span className='flex justify-end py-4'>
-                    <Button varient='primary' onClick={handleNext}>
+                    <Button
+                      type='button'
+                      varient='primary'
+                      onClick={(e) => {
+                        validateForm().then((v) => {
+                          console.log("here1", v);
+                          setErrors(v);
+                          if (stepper === 0) {
+                            setTouched({
+                              ...touched,
+                              prescriptionImg: true,
+                            } as FormikTouched<RegisterForm>);
+                          }
+                          if (stepper === 1) {
+                            setTouched({
+                              ...touched,
+                              deliveryInfo: {
+                                ...touched.deliveryInfo,
+                                name: true,
+                                email: true,
+                                phoneNumber: true,
+                                province: true,
+                                district: true,
+                                lineOne: true,
+                                lineTwo: true,
+                              },
+                            } as FormikTouched<RegisterForm>);
+                          }
+                          handleNext(v);
+                        });
+                      }}
+                    >
                       Next
                     </Button>
                   </span>

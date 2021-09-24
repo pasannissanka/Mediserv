@@ -1,16 +1,11 @@
-import { ErrorMessage, Field, Form, yupToFormErrors } from "formik";
-import React, { useEffect, useState } from "react";
-import Select from "react-select";
-import Button from "../../../Components/Button/Button";
-import { Card } from "../../../Components/Card/Card";
-import { RegisterForm } from "../Order";
-import { MapContainer, TileLayer, useMap } from "react-leaflet";
-import { GeoSearchControl, OpenStreetMapProvider } from "leaflet-geosearch";
+import { ErrorMessage, Field } from "formik";
 import L from "leaflet";
+import { GeoSearchControl, OpenStreetMapProvider } from "leaflet-geosearch";
 import "leaflet-geosearch/dist/geosearch.css";
 import "leaflet/dist/leaflet.css";
-
-
+import React, { useEffect, useState } from "react";
+import { MapContainer, TileLayer, useMap } from "react-leaflet";
+import { RegisterForm } from "../Order";
 
 export interface DeliveryPageProps<T> {
   values: T;
@@ -25,98 +20,94 @@ export const DeliveryInformation = ({
   values,
   setFieldValue,
 }: DeliveryPageProps<RegisterForm>) => {
-  const [locationData, setLocationData] = useState<{
-    province: any[];
-    district: any[];
-    town: any[];
-  }>({ district: [], province: [], town: [] });
-
-
-
   return (
     <>
       <div className='container grid grid-cols-2 pt-2'>
         <div>
           <div>Add your delivery information here</div>
-          <Form>
-            <Field
-              className='appearance-none rounded-md relative block w-full my-2 sm:text-sm'
-              name='name'
-              type='text'
-              placeholder='Name'
-            />
-            <ErrorMessage name='name' />
+          <Field
+            className='appearance-none rounded-md relative block w-full my-2 sm:text-sm'
+            name='deliveryInfo.name'
+            type='text'
+            placeholder='Name'
+          />
+          <ErrorMessage
+            component='div'
+            className='text-xs text-warn-500'
+            name='deliveryInfo.name'
+          />
 
+          <Field
+            className='appearance-none rounded-md relative block w-full my-2 sm:text-sm'
+            name='deliveryInfo.email'
+            type='email'
+            placeholder='Email'
+          />
+          <ErrorMessage
+            component='div'
+            className='text-xs text-warn-500'
+            name='deliveryInfo.email'
+          />
 
-            <Field
-              className='appearance-none rounded-md relative block w-full my-2 sm:text-sm'
-              name='email'
-              type='email'
-              placeholder='Email'
-            />
-            <ErrorMessage name='email' />
+          <Field
+            className='appearance-none rounded-md relative block w-full my-2 sm:text-sm'
+            name='deliveryInfo.phoneNumber'
+            type='text'
+            placeholder='Phone number'
+          />
+          <ErrorMessage
+            component='div'
+            className='text-xs text-warn-500'
+            name='deliveryInfo.phoneNumber'
+          />
 
-            <Field
-              className='appearance-none rounded-md relative block w-full my-2 sm:text-sm'
-              name='phoneNumber'
-              type='text'
-              placeholder='Phone number'
-            />
-            <ErrorMessage name='phoneNumber' />
+          <Field
+            className='appearance-none rounded-md relative block w-full my-2 sm:text-sm'
+            name='deliveryInfo.province'
+            type='text'
+            placeholder='Province'
+          />
+          <ErrorMessage
+            component='div'
+            className='text-xs text-warn-500'
+            name='deliveryInfo.province'
+          />
 
-            <Select
-              name='province'
-              styles={{
-                input: (base) => ({
-                  ...base,
-                  "input:focus": {
-                    boxShadow: "none",
-                  },
-                }),
-              }}
-              placeholder='Province'
-              onChange={(option) => setFieldValue("province", option)}
-              options={locationData.province}
-              className='appearance-none rounded-md relative block w-1/2 my-2 mr-1 sm:text-sm'
-            />
-            <ErrorMessage name='province' />
+          <Field
+            className='appearance-none rounded-md relative block w-full my-2 sm:text-sm'
+            name='deliveryInfo.district'
+            type='text'
+            placeholder='District'
+          />
+          <ErrorMessage
+            component='div'
+            className='text-xs text-warn-500'
+            name='deliveryInfo.district'
+          />
 
-            <Select
-              name='district'
-              styles={{
-                input: (base) => ({
-                  ...base,
-                  "input:focus": {
-                    boxShadow: "none",
-                  },
-                }),
-              }}
-              placeholder='District'
-              onChange={(option) => setFieldValue("district", option)}
-              options={locationData.province}
-              className='appearance-none rounded-md relative block w-1/2 my-2 mr-1 sm:text-sm'
-            />
-            <ErrorMessage name='district' />
+          <Field
+            className='appearance-none rounded-md relative block w-full my-2 sm:text-sm'
+            name='deliveryInfo.lineOne'
+            type='text'
+            placeholder='Address line 01'
+          />
+          <ErrorMessage
+            component='div'
+            className='text-xs text-warn-500'
+            name='deliveryInfo.lineOne'
+          />
 
-            <Field
-              className='w-full sm:text-sm'
-              name='houseNo'
-              type='text'
-              placeholder='House no'
-            />
-            <ErrorMessage name='houseNo' />
-
-            <Field
-              className='appearance-none rounded-md relative block w-full my-2 sm:text-sm'
-              name='lineOne'
-              type='text'
-              placeholder='Address line 01'
-            />
-            <ErrorMessage name='lineOne' />
-
-
-          </Form>
-
+          <Field
+            className='appearance-none rounded-md relative block w-full my-2 sm:text-sm'
+            name='deliveryInfo.lineTwo'
+            type='text'
+            placeholder='Address line 02'
+          />
+          <ErrorMessage
+            component='div'
+            className='text-xs text-warn-500'
+            name='deliveryInfo.lineTwo'
+          />
         </div>
         <span className='w-3/4 m-auto'>
           <MapContainer
