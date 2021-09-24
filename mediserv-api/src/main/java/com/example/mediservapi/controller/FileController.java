@@ -2,6 +2,7 @@ package com.example.mediservapi.controller;
 
 
 
+import com.example.mediservapi.dto.response.FileResponse;
 import com.example.mediservapi.dto.response.LoadPrescription;
 import com.example.mediservapi.service.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,9 +26,16 @@ public class FileController {
     @Autowired
     private FileService fileService;
 
+
     @PostMapping("/upload")
-    public ResponseEntity<?> upload(@RequestParam("file") MultipartFile file) throws IOException {
-        return new ResponseEntity<>(fileService.addFile(file), HttpStatus.OK);
+    public ResponseEntity<FileResponse> upload(@RequestParam("file") MultipartFile file, Authentication authentication) throws IOException {
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String fileId = fileService.addFile(file, userDetails.getUsername());
+        FileResponse response = new FileResponse()
+                .setFileName(file.getOriginalFilename())
+                .setId(fileId)
+                .setMimeType(file.getContentType());
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/download/{id}")

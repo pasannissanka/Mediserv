@@ -2,6 +2,8 @@ package com.example.mediservapi.service;
 
 
 import com.example.mediservapi.dto.response.LoadPrescription;
+import com.example.mediservapi.model.user.User;
+import com.example.mediservapi.repository.user.UserRepository;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.client.gridfs.model.GridFSFile;
@@ -14,23 +16,34 @@ import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.ValidationException;
 import java.io.IOException;
 
 //service class contains the service to store and retrieve a file from GridFS.
 @Service
 public class FileService {
+    private String fileId;
+
     @Autowired
     private GridFsTemplate template;
 
     @Autowired
     private GridFsOperations operations;
 
-    public String addFile(MultipartFile upload) throws IOException {
+    @Autowired
+    private UserRepository userRepository;
+
+    public String addFile(MultipartFile upload, String userName) throws IOException {
+        User user = userRepository.findByEmail(userName).orElseThrow(
+                () -> new ValidationException("User not found")
+        );
 
         DBObject metadata = new BasicDBObject();
         metadata.put("fileSize", upload.getSize());
 
         Object fileID = template.store(upload.getInputStream(), upload.getOriginalFilename(), upload.getContentType(), metadata);
+        user.getUploadedFiles().add(fileID.toString());
+        userRepository.save(user);
 
         return fileID.toString();
     }
@@ -53,4 +66,5 @@ public class FileService {
 
         return loadFile;
     }
+
 }

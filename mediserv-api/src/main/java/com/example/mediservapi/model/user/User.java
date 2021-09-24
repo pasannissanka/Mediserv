@@ -1,8 +1,10 @@
 package com.example.mediservapi.model.user;
 
 import com.example.mediservapi.model.address.Address;
+import com.example.mediservapi.service.FileService;
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -11,9 +13,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Data
 @Accessors(chain = true)
@@ -40,7 +40,7 @@ public class User implements UserDetails, Serializable {
     // For customer
     private Address deliveryAddress;
     private Address billingAddress;
-
+    private ArrayList<String> uploadedFiles = new ArrayList<>();
 
     public User() {
     }
@@ -75,4 +75,7 @@ public class User implements UserDetails, Serializable {
     public boolean isEnabled() {
         return this.enabled;
     }
+
+
+
 }
