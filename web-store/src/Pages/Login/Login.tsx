@@ -5,7 +5,7 @@ import * as Yup from "yup";
 import Button from "../../Components/Button/Button";
 import { Modal } from "../../Components/Modal/Modal";
 import { AuthContext } from "../../Context/AuthContext";
-import { LoginResponse } from "../../Types/types";
+import { LoginResponse, UserData } from "../../Types/types";
 
 interface ILoginForm {
   email: string;
@@ -241,6 +241,8 @@ const RegisterForm = ({
   registerState,
   setRegisterState,
 }: LoginFormProps) => {
+  const { setUser, setToken } = useContext(AuthContext);
+
   const validate = Yup.object({
     name: Yup.string().required("Full Name is required"),
     email: Yup.string().email("Email is invalid").required("Email is required"),
@@ -254,7 +256,7 @@ const RegisterForm = ({
   });
 
   return (
-    <div>
+    <div className='mt-8 space-y-4'>
       <Formik<IRegisterForm>
         initialValues={{
           name: "",
@@ -265,12 +267,57 @@ const RegisterForm = ({
         onSubmit={async (values, { setSubmitting }) => {
           console.log(values);
           setSubmitting(true);
-          closeModal();
+          try {
+            const response = await fetch(
+              "http://localhost:8080/api/public/register",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  name: values.name,
+                  email: values.email,
+                  password: values.password,
+                  rePassword: values.retypePassword,
+                  authorities: ["REG_CUSTOMER"],
+                }),
+              }
+            );
+            const dataRegister: UserData = await response.json();
+            if (dataRegister) {
+              // Chain login
+              const response = await fetch(
+                "http://localhost:8080/api/public/login",
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    email: dataRegister.email,
+                    password: values.password,
+                  }),
+                }
+              );
+              const data: LoginResponse = await response.json();
+              setSubmitting(false);
+              if (data) {
+                setUser(data.user);
+                localStorage.setItem("auth-token", data.token);
+                setToken(data.token);
+                closeModal();
+              }
+            }
+          } catch (error) {
+            setSubmitting(false);
+            console.log(error);
+          }
         }}
         validationSchema={validate}
       >
         {({ isSubmitting }) => (
-          <Form className='mt-8 space-y-4'>
+          <Form className=''>
             <Field
               className='w-80 mx-auto rounded-md relative block my-2 sm:text-sm'
               name='name'
