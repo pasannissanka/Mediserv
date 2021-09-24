@@ -1,7 +1,8 @@
 import { Form, Formik } from "formik";
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Button from "../../Components/Button/Button";
 import { StepperHeading } from "../../Components/Stepper/StepperHeading";
+import { AuthContext } from "../../Context/AuthContext";
 import { Login } from "../Login/Login";
 import { DeliveryInformation } from "./OrderSteps/DeliveryInformationStep";
 import { PaymentDetails } from "./OrderSteps/PaymentDetailsStep";
@@ -25,11 +26,17 @@ export interface RegisterForm {
 const formPages = [Prescription, DeliveryInformation, PaymentDetails, Summery];
 
 export const Order = () => {
-  const [isOpen, setIsOpen] = useState(UserlogingStatus);
-  //for open login only
-  function UserlogingStatus() {
-    return true;
-  }
+  const { token, user } = useContext(AuthContext);
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    if (token && user) {
+      setIsOpen(false);
+    } else {
+      setIsOpen(true);
+    }
+  }, [token, user]);
 
   const [stepper, setStepper] = useState(0);
 

@@ -1,9 +1,11 @@
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import * as Yup from "yup";
 import Button from "../../Components/Button/Button";
 import { Modal } from "../../Components/Modal/Modal";
+import { AuthContext } from "../../Context/AuthContext";
+import { LoginResponse } from "../../Types/types";
 
 interface ILoginForm {
   email: string;
@@ -68,6 +70,8 @@ const LoginForm = ({
   registerState,
   setRegisterState,
 }: LoginFormProps) => {
+  const { setUser, setToken } = useContext(AuthContext);
+
   const validate = Yup.object({
     email: Yup.string().email("Email is invalid").required("Email is required"),
     password: Yup.string()
@@ -86,7 +90,32 @@ const LoginForm = ({
         onSubmit={async (values, { setSubmitting }) => {
           console.log(values);
           setSubmitting(true);
-          closeModal();
+          try {
+            const response = await fetch(
+              "http://localhost:8080/api/public/login",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  email: values.email,
+                  password: values.password,
+                }),
+              }
+            );
+            const data: LoginResponse = await response.json();
+            setSubmitting(false);
+            if (data) {
+              setUser(data.user);
+              localStorage.setItem("auth-token", data.token);
+              setToken(data.token);
+              closeModal();
+            }
+          } catch (error) {
+            setSubmitting(false);
+            console.log(error);
+          }
         }}
         validationSchema={validate}
       >
