@@ -23,7 +23,6 @@ export type ButtonProps = {
    * Button icons
    */
   children?: React.ReactNode;
-  className?: string;
   rounded?: boolean;
 } & React.ButtonHTMLAttributes<HTMLButtonElement>;
 
