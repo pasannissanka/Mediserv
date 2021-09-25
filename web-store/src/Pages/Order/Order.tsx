@@ -13,6 +13,7 @@ import * as yup from "yup";
 //type OrderTypes = {};
 export interface RegisterForm {
   prescriptionImg: Img[] | any[];
+  prescriptionFileId: string;
   deliveryInfo: {
     name: string;
     email: string;
@@ -24,6 +25,10 @@ export interface RegisterForm {
   };
   paymentDetails: {
     deliveryMethod: string;
+    cardNumber: string;
+    cardholderName: string;
+    validthrough: string;
+    cvv: string;
   };
 }
 
@@ -31,7 +36,7 @@ const prescriptionSchema = yup.array().min(1, "Prescription is required");
 
 const deliveryInfoSchema = yup.object().shape({
   name: yup.string().required("Name is required"),
-  email: yup.string().required("Email is required"),
+  email: yup.string().email("Invalid Email").required("Email is required"),
   phoneNumber: yup.string().required("Phone number is required"),
   province: yup.string().required("Province is required"),
   district: yup.string().required("District is required"),
@@ -112,6 +117,7 @@ export const Order = () => {
             <Formik<RegisterForm>
               initialValues={{
                 prescriptionImg: [],
+                prescriptionFileId: "",
                 deliveryInfo: {
                   name: "",
                   email: "",
@@ -123,6 +129,10 @@ export const Order = () => {
                 },
                 paymentDetails: {
                   deliveryMethod: "",
+                  cardNumber: "",
+                  cardholderName: "",
+                  validthrough: "",
+                  cvv: "",
                 },
               }}
               onSubmit={(values, { setSubmitting }) => {
@@ -145,6 +155,8 @@ export const Order = () => {
                   <CurrentStepForm
                     values={values}
                     setFieldValue={setFieldValue}
+                    errors={errors}
+                    touched={touched}
                   />
                   <span className='flex justify-end py-4'>
                     <Button
@@ -152,7 +164,7 @@ export const Order = () => {
                       varient='primary'
                       onClick={(e) => {
                         validateForm().then((v) => {
-                          console.log("here1", v);
+                          console.log("here1", v, values);
                           setErrors(v);
                           if (stepper === 0) {
                             setTouched({

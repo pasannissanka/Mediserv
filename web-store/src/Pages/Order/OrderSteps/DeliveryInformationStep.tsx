@@ -1,14 +1,17 @@
-import { ErrorMessage, Field } from "formik";
+import { FormikErrors, FormikTouched } from "formik";
 import L from "leaflet";
 import { GeoSearchControl, OpenStreetMapProvider } from "leaflet-geosearch";
 import "leaflet-geosearch/dist/geosearch.css";
 import "leaflet/dist/leaflet.css";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { MapContainer, TileLayer, useMap } from "react-leaflet";
+import { InputField } from "../../../Components/InputField/InputField";
 import { RegisterForm } from "../Order";
 
 export interface DeliveryPageProps<T> {
   values: T;
+  errors: FormikErrors<T>;
+  touched: FormikTouched<T>;
   setFieldValue: (
     field: string,
     value: any,
@@ -19,99 +22,83 @@ export interface DeliveryPageProps<T> {
 export const DeliveryInformation = ({
   values,
   setFieldValue,
+  errors,
+  touched,
 }: DeliveryPageProps<RegisterForm>) => {
+  console.log(errors);
   return (
     <>
       <div className='container grid grid-cols-2 pt-2'>
         <div>
-          <div>Add your delivery information here</div>
-          <Field
+          <div className='mb-4'>Add your delivery information here</div>
+          <InputField
+            errors={errors.deliveryInfo?.name}
+            touched={touched.deliveryInfo?.name}
             className='appearance-none rounded-md relative block w-full my-2 sm:text-sm'
             name='deliveryInfo.name'
             type='text'
             placeholder='Name'
           />
-          <ErrorMessage
-            component='div'
-            className='text-xs text-warn-500'
-            name='deliveryInfo.name'
-          />
 
-          <Field
+          <InputField
+            errors={errors.deliveryInfo?.email}
+            touched={touched.deliveryInfo?.email}
             className='appearance-none rounded-md relative block w-full my-2 sm:text-sm'
             name='deliveryInfo.email'
             type='email'
             placeholder='Email'
           />
-          <ErrorMessage
-            component='div'
-            className='text-xs text-warn-500'
-            name='deliveryInfo.email'
-          />
 
-          <Field
+          <InputField
+            errors={errors.deliveryInfo?.phoneNumber}
+            touched={touched.deliveryInfo?.phoneNumber}
             className='appearance-none rounded-md relative block w-full my-2 sm:text-sm'
             name='deliveryInfo.phoneNumber'
             type='text'
             placeholder='Phone number'
           />
-          <ErrorMessage
-            component='div'
-            className='text-xs text-warn-500'
-            name='deliveryInfo.phoneNumber'
-          />
 
-          <Field
-            className='appearance-none rounded-md relative block w-full my-2 sm:text-sm'
-            name='deliveryInfo.province'
-            type='text'
-            placeholder='Province'
-          />
-          <ErrorMessage
-            component='div'
-            className='text-xs text-warn-500'
-            name='deliveryInfo.province'
-          />
+          <div className='flex justify-between'>
+            <InputField
+              errors={errors.deliveryInfo?.province}
+              touched={touched.deliveryInfo?.province}
+              className='appearance-none rounded-md relative block w-full my-2 sm:text-sm mr-1'
+              name='deliveryInfo.province'
+              type='text'
+              placeholder='Province'
+            />
 
-          <Field
-            className='appearance-none rounded-md relative block w-full my-2 sm:text-sm'
-            name='deliveryInfo.district'
-            type='text'
-            placeholder='District'
-          />
-          <ErrorMessage
-            component='div'
-            className='text-xs text-warn-500'
-            name='deliveryInfo.district'
-          />
+            <InputField
+              errors={errors.deliveryInfo?.district}
+              touched={touched.deliveryInfo?.district}
+              className='appearance-none rounded-md relative block w-full my-2 sm:text-sm ml-1'
+              name='deliveryInfo.district'
+              type='text'
+              placeholder='District'
+            />
+          </div>
 
-          <Field
+          <InputField
+            errors={errors.deliveryInfo?.lineOne}
+            touched={touched.deliveryInfo?.lineOne}
             className='appearance-none rounded-md relative block w-full my-2 sm:text-sm'
             name='deliveryInfo.lineOne'
             type='text'
             placeholder='Address line 01'
           />
-          <ErrorMessage
-            component='div'
-            className='text-xs text-warn-500'
-            name='deliveryInfo.lineOne'
-          />
 
-          <Field
+          <InputField
+            errors={errors.deliveryInfo?.lineTwo}
+            touched={touched.deliveryInfo?.lineTwo}
             className='appearance-none rounded-md relative block w-full my-2 sm:text-sm'
             name='deliveryInfo.lineTwo'
             type='text'
             placeholder='Address line 02'
           />
-          <ErrorMessage
-            component='div'
-            className='text-xs text-warn-500'
-            name='deliveryInfo.lineTwo'
-          />
         </div>
-        <span className='w-3/4 m-auto'>
+        <span className='w-full px-4 m-auto pt-6'>
           <MapContainer
-            className='h-80'
+            className='h-96'
             center={{ lat: 7.8731, lng: 80.7718 }}
             zoom={6}
             scrollWheelZoom={true}
