@@ -1,3 +1,4 @@
+import { ErrorMessage } from "formik";
 import React, { useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import { RegisterForm } from "../Order";
@@ -78,6 +79,11 @@ export const Prescription = ({
             <p className='text-gray-500 py-2'>Drop files to upload or select</p>
           </div>
         </div>
+        <ErrorMessage
+          component='div'
+          className='text-xs text-warn-500 w-11/12 mx-auto my-3'
+          name='prescriptionImg'
+        />
       </div>
     </>
   );

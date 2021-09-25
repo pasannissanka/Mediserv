@@ -23,7 +23,7 @@ function App() {
   );
 
   useEffect(() => {
-    console.log(serverError, data);
+    // console.log(serverError, data);
     if (data) {
       setUser(data);
     }
