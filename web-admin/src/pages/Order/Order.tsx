@@ -1,11 +1,13 @@
-import React, { useContext, useEffect, useState } from "react";
+import { Dialog } from "@headlessui/react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router";
-import { DataFeed } from "../../components";
-import { AuthContext } from "../../Context/AuthContext";
-import { OrderData } from "../../Types/types";
-import { ReactComponent as UndrawEmptyCart } from "../../svg/undraw_empty_cart.svg";
-import Button from "../../components/Button/Button";
 import * as timeago from "timeago.js";
+import { DataFeed } from "../../components";
+import Button from "../../components/Button/Button";
+import ModalPanel from "../../components/ModalPanel/ModelPanel";
+import { AuthContext } from "../../Context/AuthContext";
+import { ReactComponent as UndrawEmptyCart } from "../../svg/undraw_empty_cart.svg";
+import { OrderData } from "../../Types/types";
 import {
   createImageFromInitials,
   getRandomColor,
@@ -15,7 +17,9 @@ type OrderInfoProp = {
   orderInfo: OrderData;
 };
 
-type OrderItemsProps = {} & OrderInfoProp;
+type OrderItemsProps = {
+  onOrderProcess: () => void;
+} & OrderInfoProp;
 type OrderCustomerProps = {} & OrderInfoProp;
 
 const OrderTitle = ({ orderInfo }: OrderInfoProp) => {
@@ -36,18 +40,24 @@ const OrderTitle = ({ orderInfo }: OrderInfoProp) => {
   );
 };
 
-const OrderItems = ({ orderInfo }: OrderItemsProps) => {
+const OrderItems = ({ orderInfo, onOrderProcess }: OrderItemsProps) => {
   return (
     <div className='col-span-2 bg-white rounded-lg border'>
       <div className='mx-6 my-4'>
-        <div className='w-full flex justify-between my-1 text-xl'>
+        <div className='w-full flex justify-between my-1 text-base lg:text-xl'>
           <span>Customer's cart</span>
-          <Button varient='primary'>Process Order</Button>
+          <Button
+            varient='primary'
+            onClick={onOrderProcess}
+            className='text-xs'
+          >
+            Process Order
+          </Button>
         </div>
         <div>
           {orderInfo?.items === null || orderInfo?.items?.length === 0 ? (
             <div>
-              <UndrawEmptyCart className='max-h-72 my-8 mx-auto' />
+              <UndrawEmptyCart className='max-h-72 h-36 md:h-48 lg:h-72 my-8 w-full' />
               <span className='flex justify-center text-gray-600'>
                 Cart is empty, Process order to get started
               </span>
@@ -69,7 +79,7 @@ const OrderCustomer = ({ orderInfo }: OrderCustomerProps) => {
   return (
     <div className='col-span-1 bg-white rounded-lg border'>
       <div className='mx-6 my-4'>
-        <div className='w-full flex justify-between my-1 text-xl'>
+        <div className='w-full flex justify-between my-1 text-base lg:text-xl'>
           <span>Customer</span>
         </div>
         <div className='border bg-black w-full my-2'></div>
@@ -117,7 +127,11 @@ const OrderCustomer = ({ orderInfo }: OrderCustomerProps) => {
 
 export const Order = () => {
   const { token } = useContext(AuthContext);
+
   const { orderId } = useParams<any>();
+
+  const [modalToggle, setmodalToggle] = useState(false);
+  let completeButtonRef = useRef(null);
 
   const [orderInfo, setOrderInfo] = useState<OrderData>();
 
@@ -144,11 +158,57 @@ export const Order = () => {
     <>
       <div className='container mx-auto px-4'>
         {orderInfo && <OrderTitle orderInfo={orderInfo} />}
-        <div className='grid grid-cols-3 gap-4 mt-4'>
-          {orderInfo && <OrderItems orderInfo={orderInfo!} />}
+        <div className='grid grid-cols-1 lg:grid-cols-3 gap-y-4 lg:gap-4 mt-4'>
+          {orderInfo && (
+            <OrderItems
+              orderInfo={orderInfo!}
+              onOrderProcess={() => setmodalToggle(!modalToggle)}
+            />
+          )}
           {orderInfo && <OrderCustomer orderInfo={orderInfo} />}
         </div>
       </div>
+      <Dialog
+        open={modalToggle}
+        onClose={() => setmodalToggle(false)}
+        initialFocus={completeButtonRef}
+      >
+        <Dialog.Overlay className='fixed inset-0 bg-black opacity-30' />
+        <ModalPanel
+          initialFocus={completeButtonRef}
+          title='Process Order'
+          closeAction={setmodalToggle}
+          size='xl'
+          titleSVG={
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              className='h-8 w-8'
+              fill='none'
+              viewBox='0 0 24 24'
+              stroke='currentColor'
+            >
+              <path
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                strokeWidth={2}
+                d='M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z'
+              />
+            </svg>
+          }
+          footerContent={<div>TEST</div>}
+        >
+          <div className='w-full h-full overflow-hidden'>
+            <div className=' flex-auto grid h-full grid-cols-1 lg:grid-cols-5 gap-y-2 lg:gap-2 py-3 px-4'>
+              <div className='col-span-1 lg:col-span-3 bg-white rounded-lg border px-6 py-2 overflow-auto'>
+                <div className=''>Test</div>
+              </div>
+              <div className='col-span-1 lg:col-span-2 bg-white rounded-lg border px-6 py-2 overflow-auto'>
+                <div className=''>Items</div>
+              </div>
+            </div>
+          </div>
+        </ModalPanel>
+      </Dialog>
     </>
   );
 };

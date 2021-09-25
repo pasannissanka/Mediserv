@@ -32,23 +32,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private Logger logger;
 
     @Override @Transactional
-    public User signUp(CreateUpdateUserRequest requestData) {
-        if (userRepository.findByEmail(requestData.getEmail()).isPresent()) {
-            throw new ValidationException("Email already exists");
-        }
-        if (!requestData.getPassword().equals(requestData.getRePassword())) {
-            throw new ValidationException("Passwords don't match");
-        }
-        if (requestData.getAuthorities() == null) {
-            requestData.setAuthorities(new HashSet<>());
-        }
-        User user = userMapper.createUser(requestData);
-        user.setPassword(passwordEncoder.encode((requestData.getPassword())));
-        user = userRepository.save(user);
-        return user;
-    }
-
-    @Override @Transactional
     public UserDto create(CreateUpdateUserRequest requestData) {
         if (userRepository.findByEmail(requestData.getEmail()).isPresent()) {
             throw new ValidationException("Email already exists");
