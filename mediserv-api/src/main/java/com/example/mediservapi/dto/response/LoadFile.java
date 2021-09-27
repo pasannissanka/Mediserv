@@ -5,7 +5,7 @@ import lombok.experimental.Accessors;
 
 @Data
 @Accessors(chain = true)
-public class LoadPrescription {
+public class LoadFile {
     private String filename;
     private String fileType;
     private String fileSize;
