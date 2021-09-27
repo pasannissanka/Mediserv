@@ -7,7 +7,6 @@ import com.example.mediservapi.dto.model.order.OrderDto;
 import com.example.mediservapi.dto.model.order.OrderSearchQuery;
 import com.example.mediservapi.model.order.Order;
 import com.example.mediservapi.repository.order.OrderRepository;
-import com.example.mediservapi.repository.pharmacy.PharmacyRepository;
 import com.example.mediservapi.repository.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,8 +18,7 @@ import java.util.List;
 public class OrderServiceImpl implements OrderService {
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private PharmacyRepository pharmacyRepository;
+
     @Autowired
     private OrderMapper orderMapper;
     @Autowired
