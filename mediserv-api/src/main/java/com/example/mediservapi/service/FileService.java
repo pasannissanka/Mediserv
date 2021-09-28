@@ -1,7 +1,7 @@
 package com.example.mediservapi.service;
 
 
-import com.example.mediservapi.dto.response.LoadPrescription;
+import com.example.mediservapi.dto.response.LoadFile;
 import com.example.mediservapi.model.user.User;
 import com.example.mediservapi.repository.user.UserRepository;
 import com.mongodb.BasicDBObject;
@@ -48,11 +48,11 @@ public class FileService {
         return fileID.toString();
     }
 
-    public LoadPrescription downloadFile(String id) throws IOException {
+    public LoadFile downloadFile(String id) throws IOException {
 
         GridFSFile gridFSFile = template.findOne(new Query(Criteria.where("_id").is(id)));
 
-        LoadPrescription loadFile = new LoadPrescription();
+        LoadFile loadFile = new LoadFile();
 
         if (gridFSFile != null && gridFSFile.getMetadata() != null) {
             loadFile.setFilename(gridFSFile.getFilename());
