@@ -38,10 +38,7 @@ class PharmacyRepoCustomImpl implements PharmacyRepoCustom {
             criteriaList.add(Criteria.where("id").is(query.getId()));
         }
         if (StringUtils.hasText(query.getTitle())) {
-            criteriaList.add(Criteria.where("title").is(query.getTitle()));
-        }
-        if (StringUtils.hasText(query.getPharmacyId())) {
-            criteriaList.add(Criteria.where("pharmacy._id").is(query.getPharmacyId()));
+            criteriaList.add(Criteria.where("title").regex(query.getTitle()));
         }
 
         if (!criteriaList.isEmpty()) {

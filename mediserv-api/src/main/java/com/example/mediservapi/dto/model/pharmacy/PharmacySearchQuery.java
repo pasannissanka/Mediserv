@@ -6,5 +6,4 @@ import lombok.Data;
 public class PharmacySearchQuery {
     private String id;
     private String title;
-    private String pharmacyId;
 }
