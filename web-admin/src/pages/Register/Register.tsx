@@ -36,7 +36,7 @@ export const Register = () => {
   return (
     <>
       <div className="flex-col w-3/5 mx-auto my-24">
-        <h1 className="font-bold text-4xl text-center mb-10">MediServ</h1>
+        <h1 className="font-bold text-4xl text-center mb-8">MediServ</h1>
 
         <StepperHeading
           steps={[
