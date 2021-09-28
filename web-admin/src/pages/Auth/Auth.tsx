@@ -1,9 +1,9 @@
-import React from "react";
-import { Route, Switch, useRouteMatch } from "react-router";
-import { ReactComponent as UnDrawMedicineSVG } from "../../svg/undraw_medicine_red.svg";
-import { Login } from "../Login/Login";
-import { NotFound } from "../NotFound";
-import { Register } from "../Register/Register";
+import React from 'react';
+import { Route, Switch, useRouteMatch } from 'react-router';
+import { ReactComponent as UnDrawMedicineSVG } from '../../svg/undraw_medicine_red.svg';
+import { Login } from '../Login/Login';
+import { NotFound } from '../NotFound';
+import { Register } from '../Register/Register';
 
 export const Auth = () => {
   const { path } = useRouteMatch();

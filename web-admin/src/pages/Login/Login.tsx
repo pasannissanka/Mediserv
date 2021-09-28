@@ -1,9 +1,9 @@
-import { ErrorMessage, Field, Form, Formik } from "formik";
-import React, { useContext } from "react";
-import { Link } from "react-router-dom";
-import Button from "../../components/Button/Button";
-import { AuthContext } from "../../Context/AuthContext";
-import { LoginResponse } from "../../Types/types";
+import { ErrorMessage, Field, Form, Formik } from 'formik';
+import React, { useContext } from 'react';
+import { Link } from 'react-router-dom';
+import Button from '../../components/Button/Button';
+import { AuthContext } from '../../Context/AuthContext';
+import { LoginResponse } from '../../Types/types';
 
 interface LoginForm {
   email: string;
@@ -19,14 +19,14 @@ export const Login = () => {
         <h1 className="font-bold text-4xl text-center">MediServ</h1>
         <div className="">
           <Formik<LoginForm>
-            initialValues={{ email: "", password: "", rememberMe: false }}
+            initialValues={{ email: '', password: '', rememberMe: false }}
             onSubmit={async (values, { setSubmitting }) => {
               setSubmitting(true);
               try {
-                const response = await fetch("http://localhost:8080/api/public/login", {
-                  method: "POST",
+                const response = await fetch('http://localhost:8080/api/public/login', {
+                  method: 'POST',
                   headers: {
-                    "Content-Type": "application/json",
+                    'Content-Type': 'application/json',
                   },
                   body: JSON.stringify({
                     email: values.email,
@@ -37,7 +37,7 @@ export const Login = () => {
                 setSubmitting(false);
                 if (data) {
                   setUser(data.user);
-                  localStorage.setItem("auth-token", data.token);
+                  localStorage.setItem('auth-token', data.token);
                   setToken(data.token);
                 }
               } catch (error) {
