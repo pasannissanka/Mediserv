@@ -78,7 +78,7 @@ export const Register = () => {
               longitude: '',
               latitude: '',
             }}
-            onSubmit={async (values, { setSubmitting }) => {
+            onSubmit={async (values, { setSubmitting, resetForm }) => {
               setSubmitting(true);
               try {
                 const response = await fetch('http://localhost:8080/api/public/register', {
@@ -146,6 +146,7 @@ export const Register = () => {
                 setSubmitting(false);
                 console.log(error);
               }
+              resetForm();
             }}
           >
             {({ isSubmitting, values, setFieldValue }) => (

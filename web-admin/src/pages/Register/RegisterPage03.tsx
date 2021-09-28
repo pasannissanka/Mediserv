@@ -17,7 +17,7 @@ export const RegisterPage03 = (props: RegisterPageProps<RegisterForm>) => {
     <>
       <Field
         className="focus:border-primary-300 focus:ring-primary-700 px-2 py-2 border-gray-300 border shadow-sm focus:ring-1 focus:ring-opacity-50appearance-none rounded-md relative block w-full my-2 sm:text-sm max-h-48"
-        name="Address"
+        name="address"
         type="text"
         placeholder="Address"
         as="textarea"
