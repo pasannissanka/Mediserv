@@ -16,23 +16,18 @@ export const RegisterPage03 = (props: RegisterPageProps<RegisterForm>) => {
   return (
     <>
       <Field
-        className='focus:border-primary-300 focus:ring-primary-700 px-2 py-2 border-gray-300 border shadow-sm focus:ring-1 focus:ring-opacity-50appearance-none rounded-md relative block w-full my-2 sm:text-sm max-h-48'
-        name='Adress'
-        type='text'
-        placeholder='Address'
-        as='textarea'
+        className="focus:border-primary-300 focus:ring-primary-700 px-2 py-2 border-gray-300 border shadow-sm focus:ring-1 focus:ring-opacity-50appearance-none rounded-md relative block w-full my-2 sm:text-sm max-h-48"
+        name="Adress"
+        type="text"
+        placeholder="Address"
+        as="textarea"
         rows={3}
       />
-      <ErrorMessage name='Addres' />
-      <MapContainer
-        className='h-80'
-        center={{ lat: 7.8731, lng: 80.7718 }}
-        zoom={6}
-        scrollWheelZoom={true}
-      >
+      <ErrorMessage name="Addres" />
+      <MapContainer className="h-72" center={{ lat: 7.8731, lng: 80.7718 }} zoom={6} scrollWheelZoom={true}>
         <TileLayer
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-          url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <LeafletgeoSearch />
       </MapContainer>
