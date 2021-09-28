@@ -1,29 +1,35 @@
-import { Form, Formik } from "formik";
-import React, { useState } from "react";
-import Button from "../../components/Button/Button";
-import { StepperHeading } from "../../components/Stepper/StepperHeading";
-import { LocationAPIData } from "../../Types/types";
-import { RegisterPage01 } from "./RegisterPage01";
-import { RegisterPage02 } from "./RegisterPage02";
-import { RegisterPage03 } from "./RegisterPage03";
+import { Form, Formik } from 'formik';
+import React, { useContext, useState } from 'react';
+import Button from '../../components/Button/Button';
+import { StepperHeading } from '../../components/Stepper/StepperHeading';
+import { AuthContext } from '../../Context/AuthContext';
+import { LocationAPIData, LoginResponse, PharmacyData, UserData } from '../../Types/types';
+import { RegisterPage01 } from './RegisterPage01';
+import { RegisterPage02 } from './RegisterPage02';
+import { RegisterPage03 } from './RegisterPage03';
 
 export interface RegisterForm {
   name: string;
   email: string;
   password: string;
   retypePassword: string;
+  title: string;
+  description: string;
   houseNo: string;
   lineOne: string;
   lineTwo: string;
-  province: LocationAPIData | "";
-  district: LocationAPIData | "";
+  province: LocationAPIData | '';
+  district: LocationAPIData | '';
   town: string;
+  longitude: string;
+  latitude: string;
 }
 
 const formPages = [RegisterPage01, RegisterPage02, RegisterPage03];
 
 export const Register = () => {
   const [stepper, setStepper] = useState(0);
+  const { setUser, setToken } = useContext(AuthContext);
 
   const handleNext = () => {
     if (stepper < 2) {
@@ -41,13 +47,13 @@ export const Register = () => {
         <StepperHeading
           steps={[
             {
-              title: "Owner details",
+              title: 'Owner details',
             },
             {
-              title: "Pharmacy details",
+              title: 'Pharmacy details',
             },
             {
-              title: "Location details",
+              title: 'Location details',
             },
           ]}
           selectedIdx={stepper}
@@ -57,20 +63,89 @@ export const Register = () => {
         <div className="w-4/5 m-auto">
           <Formik<RegisterForm>
             initialValues={{
-              name: "",
-              email: "",
-              password: "",
-              retypePassword: "",
-              houseNo: "",
-              lineOne: "",
-              lineTwo: "",
-              province: "",
-              district: "",
-              town: "",
+              name: '',
+              email: '',
+              password: '',
+              retypePassword: '',
+              title: '',
+              description: '',
+              houseNo: '',
+              lineOne: '',
+              lineTwo: '',
+              province: '',
+              district: '',
+              town: '',
+              longitude: '',
+              latitude: '',
             }}
-            onSubmit={(values, { setSubmitting }) => {
+            onSubmit={async (values, { setSubmitting }) => {
               setSubmitting(true);
-              console.log(values);
+              try {
+                const response = await fetch('http://localhost:8080/api/public/register', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    name: values.name,
+                    email: values.email,
+                    password: values.password,
+                    rePassword: values.retypePassword,
+                    authorities: ['PHARMACY_USER'],
+                  }),
+                });
+                const authAuth: UserData = await response.json();
+                setSubmitting(false);
+
+                if (authAuth.id) {
+                  const response = await fetch('http://localhost:8080/api/pharmacies/', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                      title: values.title,
+                      description: values.description,
+                      address: {
+                        houseNo: values.houseNo,
+                        lineOne: values.lineOne,
+                        lineTwo: values.lineTwo,
+                        province: values.province,
+                        district: values.district,
+                        town: values.town,
+                        longitude: values.longitude,
+                        latitude: values.latitude,
+                      },
+                    }),
+                  });
+                  const pharmacyData: PharmacyData = await response.json();
+                  setSubmitting(false);
+
+                  //if success then login
+                  if (pharmacyData) {
+                    const response = await fetch('http://localhost:8080/api/public/login', {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify({
+                        email: authAuth.email,
+                        password: values.password,
+                      }),
+                    });
+                    const data: LoginResponse = await response.json();
+                    if (data) {
+                      setUser(data.user);
+                      localStorage.setItem('auth-token', data.token);
+                      setToken(data.token);
+                      setSubmitting(true);
+                    }
+                  }
+                }
+              } catch (error) {
+                setSubmitting(false);
+                console.log(error);
+              }
             }}
           >
             {({ isSubmitting, values, setFieldValue }) => (
@@ -79,7 +154,7 @@ export const Register = () => {
 
                 {stepper !== 2 ? (
                   <span className="flex justify-end">
-                    <Button varient="primary" onClick={handleNext}>
+                    <Button type="button" varient="primary" onClick={handleNext}>
                       Next
                     </Button>
                   </span>
