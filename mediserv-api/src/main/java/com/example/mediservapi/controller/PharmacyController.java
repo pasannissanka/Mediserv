@@ -62,7 +62,6 @@ public class PharmacyController {
     }
 
     @PostMapping("search")
-    @PreAuthorize("hasAuthority('PHARMACY_USER') or hasAuthority('SUPER_ADMIN')")
     public ResponseEntity<List<Pharmacy>> search(@RequestBody @Valid SearchRequest<PharmacySearchQuery> request) {
         List<Pharmacy> pharmacy = pharmacyService.search(request.getPage(), request.getQuery());
         return ResponseEntity.ok(pharmacy);
