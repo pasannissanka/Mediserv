@@ -94,10 +94,10 @@ export const Register = () => {
                     authorities: ['PHARMACY_USER'],
                   }),
                 });
-                const authAuth: UserData = await response.json();
+                const authData: UserData = await response.json();
                 setSubmitting(false);
 
-                if (authAuth.id) {
+                if (authData.id) {
                   const response = await fetch('http://localhost:8080/api/pharmacies/', {
                     method: 'POST',
                     headers: {
@@ -129,7 +129,7 @@ export const Register = () => {
                         'Content-Type': 'application/json',
                       },
                       body: JSON.stringify({
-                        email: authAuth.email,
+                        email: authData.email,
                         password: values.password,
                       }),
                     });
