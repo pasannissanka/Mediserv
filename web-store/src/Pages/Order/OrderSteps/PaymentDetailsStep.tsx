@@ -56,7 +56,7 @@ export const PaymentDetails = ({
           />
         </svg>
       ),
-      panel: <div>Test</div>,
+      panel: <DeliveryInformation/>,
     },
   ]);
 
@@ -164,5 +164,15 @@ const CardDetails = ({ errors, touched }: CardDetailsProps<RegisterForm>) => {
         placeholder='CVV'
       />
     </>
+
   );
 };
+
+function DeliveryInformation() {
+  return (
+    <label
+      className='appearance-none rounded-md relative block w-3/4 my-2 sm:text-sm'
+    >
+      Delivery Information </label>
+  )
+}

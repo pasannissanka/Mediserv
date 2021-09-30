@@ -158,19 +158,48 @@ export const Order = () => {
                     errors={errors}
                     touched={touched}
                   />
-                  <span className='flex justify-end py-4'>
+
+                  <span className='flex justify-between'>
+
+                    <Button
+                      className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
+                      onClick = {(e) =>{
+                        setStepper(stepper - 1);
+                      }}
+                    >
+                      Back
+                    </Button>
                     <Button
                       type='button'
                       varient='primary'
                       onClick={(e) => {
-                        validateForm().then((v) => {
-                          console.log("here1", v, values);
-                          setErrors(v);
+                        validateForm().then((formErrors) => {
+                          console.log("here1", formErrors, values);
+                          setErrors(formErrors);
                           if (stepper === 0) {
                             setTouched({
                               ...touched,
                               prescriptionImg: true,
                             } as FormikTouched<RegisterForm>);
+                            if (!formErrors.prescriptionImg) {
+                              const imgData = new FormData();
+                              imgData.append("file", values.prescriptionImg[0]);
+
+                              fetch("http://localhost:8080/api/file/upload", {
+                                method: "POST",
+                                headers: {
+                                  Authorization: `Bearer ${token}`,
+                                },
+                                body: imgData
+                              }).then(response => {
+                                response.json().then(data => {
+                                  console.log(data);
+                                  setFieldValue("prescriptionFileId" , data.id)
+                                  setStepper(stepper + 1);
+                                })
+
+                              }).catch(error => console.log(error))
+                            }
                           }
                           if (stepper === 1) {
                             setTouched({
@@ -187,13 +216,15 @@ export const Order = () => {
                               },
                             } as FormikTouched<RegisterForm>);
                           }
-                          handleNext(v);
+
                         });
                       }}
                     >
+
                       Next
                     </Button>
                   </span>
+
                 </Form>
               )}
             </Formik>
