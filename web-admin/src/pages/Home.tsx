@@ -1,13 +1,14 @@
-import React, { useState } from "react";
-import { Route, Switch } from "react-router";
-import { Drawer } from "../components/Drawer/Drawer";
-import { Footer } from "../components/Footer/Footer";
-import { NavBar } from "../components/NavBar/NavBar";
-import { Customers } from "./Customers/Customers";
-import { NotFound } from "./NotFound";
-import { Orders } from "./Order/Orders";
-import { Order } from "./Order/Order";
-import { Users } from "./Users/Users";
+import React, { useState } from 'react';
+import { Route, Switch } from 'react-router';
+import { Drawer } from '../components/Drawer/Drawer';
+import { Footer } from '../components/Footer/Footer';
+import { NavBar } from '../components/NavBar/NavBar';
+import { Customers } from './Customers/Customers';
+import { NotFound } from './NotFound';
+import { Orders } from './Order/Orders';
+import { Order } from './Order/Order';
+import { Users } from './Users/Users';
+import { EditPharmacyDetails } from './EditPharmcyDetails/EditPharmacyDetails';
 
 export const Home = () => {
   const [isDrawerOpen, setDrawerOpenState] = useState(true);
@@ -18,31 +19,34 @@ export const Home = () => {
 
   return (
     <>
-      <div className='flex h-screen overflow-y-hidden bg-gray-50'>
+      <div className="flex h-screen overflow-y-hidden bg-gray-50">
         <Drawer isDrawerOpen={isDrawerOpen} handleDrawerOpen={handelDrawer} />
-        <div className='flex flex-col flex-1 h-full overflow-hidden'>
+        <div className="flex flex-col flex-1 h-full overflow-hidden">
           <NavBar isDrawerOpen={isDrawerOpen} handleDrawerOpen={handelDrawer} />
-          <main className='flex-1 max-h-full p-5 overflow-hidden overflow-y-scroll'>
+          <main className="flex-1 max-h-full p-5 overflow-hidden overflow-y-scroll">
             <Switch>
-              <Route exact path='/'>
+              <Route exact path="/">
                 <div>Dashboard</div>
               </Route>
-              <Route exact path='/users'>
+              <Route exact path="/users">
                 <Users />
               </Route>
-              <Route exact path='/orders'>
+              <Route exact path="/orders">
                 <Orders />
               </Route>
-              <Route exact path='/orders/:orderId'>
+              <Route exact path="/orders/:orderId">
                 <Order />
               </Route>
-              <Route exact path='/customers'>
+              <Route exact path="/customers">
                 <Customers />
               </Route>
-              <Route exact path='/profile'>
+              <Route exact path="/editpharmacydetails">
+                <EditPharmacyDetails />
+              </Route>
+              <Route exact path="/profile">
                 <div>Profile</div>
               </Route>
-              <Route path='*'>
+              <Route path="*">
                 <NotFound />
               </Route>
             </Switch>

@@ -22,7 +22,7 @@ export const Drawer = ({ isDrawerOpen, handleDrawerOpen }: DrawerProps) => {
   return (
     <React.Fragment>
       <aside
-        className={`fixed inset-y-0 z-10 flex flex-col flex-shrink-0 w-48 max-h-screen overflow-hidden transition-all transform bg-white border-r shadow-lg lg:z-auto lg:static lg:shadow-none
+        className={`fixed inset-y-0 z-10 flex flex-col flex-shrink-0 w-56 max-h-screen overflow-hidden transition-all transform bg-white border-r shadow-lg lg:z-auto lg:static lg:shadow-none
 				${isDrawerOpen ? '-translate-x-full lg:translate-x-0 lg:w-20' : ''}`}
       >
         {/* Header */}
@@ -169,7 +169,7 @@ export const Drawer = ({ isDrawerOpen, handleDrawerOpen }: DrawerProps) => {
                 <span className={`${isDrawerOpen ? 'lg:hidden' : ''}`}>Activities</span>
               </RouterLink>
               <RouterLink
-                to="/activities"
+                to="/editpharmacydetails"
                 className={`flex items-center p-2 space-x-2 rounded-md hover:bg-gray-100 ${
                   isDrawerOpen ? 'justify-center' : ''
                 }`}
@@ -186,11 +186,11 @@ export const Drawer = ({ isDrawerOpen, handleDrawerOpen }: DrawerProps) => {
                       stroke-linecap="round"
                       stroke-linejoin="round"
                       stroke-width="2"
-                      d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
                     />
                   </svg>
                 </span>
-                <span className={`${isDrawerOpen ? 'lg:hidden' : ''}`}>Profile</span>
+                <span className={`${isDrawerOpen ? 'lg:hidden' : ''}`}>Edit pharmacy details</span>
               </RouterLink>
             </li>
           </ul>
