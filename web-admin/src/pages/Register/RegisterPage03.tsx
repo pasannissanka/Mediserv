@@ -24,7 +24,7 @@ export const RegisterPage03 = (props: RegisterPageProps<RegisterForm>) => {
         rows={3}
       />
       <ErrorMessage name="Addres" />
-      <MapContainer className="h-72" center={{ lat: 7.8731, lng: 80.7718 }} zoom={6} scrollWheelZoom={true}>
+      <MapContainer className="h-72 z-0" center={{ lat: 7.8731, lng: 80.7718 }} zoom={6} scrollWheelZoom={true}>
         <TileLayer
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -62,7 +62,7 @@ function LeafletgeoSearch() {
     return () => {
       map.removeControl(searchControl);
     };
-  }, []);
+  }, [map]);
 
   return null;
 }

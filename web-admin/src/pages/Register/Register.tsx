@@ -4,6 +4,7 @@ import Button from '../../components/Button/Button';
 import { StepperHeading } from '../../components/Stepper/StepperHeading';
 import { AuthContext } from '../../Context/AuthContext';
 import { LocationAPIData, LoginResponse, PharmacyData, UserData } from '../../Types/types';
+import { ErrorDialog } from '../../components/ErrorDialog/ErrorDialog';
 import { RegisterPage01 } from './RegisterPage01';
 import { RegisterPage02 } from './RegisterPage02';
 import { RegisterPage03 } from './RegisterPage03';
@@ -29,6 +30,9 @@ const formPages = [RegisterPage01, RegisterPage02, RegisterPage03];
 
 export const Register = () => {
   const [stepper, setStepper] = useState(0);
+  const [isErrorModal, setErrorModal] = useState<boolean>(false);
+  const [{ errTitle, errMsg }, setErrData] = useState({ errTitle: '', errMsg: '' });
+
   const { setUser, setToken } = useContext(AuthContext);
 
   const handleNext = () => {
@@ -95,6 +99,10 @@ export const Register = () => {
                   }),
                 });
                 const authData: UserData = await response.json();
+                if (!authData.id) {
+                  setErrorModal(true);
+                  setErrData({ errTitle: 'An error occurred', errMsg: 'Oops something went wrong, Please try again!' });
+                }
                 setSubmitting(false);
 
                 if (authData.id) {
@@ -144,7 +152,12 @@ export const Register = () => {
                 }
               } catch (error) {
                 setSubmitting(false);
-                console.log(error);
+                setErrorModal(true);
+                setErrData({
+                  errTitle: 'Network error',
+                  errMsg: 'Cannot connect the computer to the server, Please try again!',
+                });
+                console.log('catch error-' + error);
               }
               resetForm();
             }}
@@ -152,7 +165,6 @@ export const Register = () => {
             {({ isSubmitting, values, setFieldValue }) => (
               <Form className="mt-8 space-y-4">
                 <CurrentStepForm values={values} setFieldValue={setFieldValue} />
-
                 {stepper !== 2 ? (
                   <span className="flex justify-end">
                     <Button type="button" varient="primary" onClick={handleNext}>
@@ -208,6 +220,7 @@ export const Register = () => {
             )}
           </Formik>
         </div>
+        <ErrorDialog isErrorModal={isErrorModal} setErrorModal={setErrorModal} errMsg={errMsg} errTitle={errTitle} />
       </div>
     </>
   );
