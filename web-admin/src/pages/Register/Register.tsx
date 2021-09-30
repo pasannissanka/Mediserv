@@ -1,10 +1,10 @@
 import { Form, Formik } from 'formik';
 import React, { useContext, useState } from 'react';
 import Button from '../../components/Button/Button';
+import { ErrorDialog } from '../../components/ErrorDialog/ErrorDialog';
 import { StepperHeading } from '../../components/Stepper/StepperHeading';
 import { AuthContext } from '../../Context/AuthContext';
 import { LocationAPIData, LoginResponse, PharmacyData, UserData } from '../../Types/types';
-import { ErrorDialog } from '../../components/ErrorDialog/ErrorDialog';
 import { RegisterPage01 } from './RegisterPage01';
 import { RegisterPage02 } from './RegisterPage02';
 import { RegisterPage03 } from './RegisterPage03';
@@ -157,7 +157,6 @@ export const Register = () => {
                   errTitle: 'Network error',
                   errMsg: 'Cannot connect the computer to the server, Please try again!',
                 });
-                console.log('catch error-' + error);
               }
               resetForm();
             }}
