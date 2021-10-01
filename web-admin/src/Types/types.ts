@@ -1,4 +1,4 @@
-import { ADMIN_TYPES } from "./enums";
+import { ADMIN_TYPES } from './enums';
 
 export interface AuthContextState {
   user?: UserData;
@@ -33,6 +33,12 @@ export interface AddressData {
   town: string;
   longitude: number;
   latitude: number;
+}
+
+export interface PharmacyData {
+  title: string;
+  description: string;
+  address: AddressData;
 }
 
 export interface OrderItemData {

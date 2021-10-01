@@ -3,7 +3,7 @@ package com.example.mediservapi.controller;
 
 
 import com.example.mediservapi.dto.response.FileResponse;
-import com.example.mediservapi.dto.response.LoadPrescription;
+import com.example.mediservapi.dto.response.LoadFile;
 import com.example.mediservapi.service.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -40,7 +40,7 @@ public class FileController {
 
     @GetMapping("/download/{id}")
     public ResponseEntity<ByteArrayResource> download(@PathVariable String id) throws IOException {
-        LoadPrescription loadFile = fileService.downloadFile(id);
+        LoadFile loadFile = fileService.downloadFile(id);
 
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(loadFile.getFileType() ))

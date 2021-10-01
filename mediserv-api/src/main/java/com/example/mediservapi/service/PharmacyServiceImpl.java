@@ -1,7 +1,13 @@
 package com.example.mediservapi.service;
 
+import com.example.mediservapi.dto.mapper.UserMapper;
+import com.example.mediservapi.dto.model.order.OrderDto;
+import com.example.mediservapi.dto.model.order.OrderSearchQuery;
+import com.example.mediservapi.dto.model.pharmacy.PharmacySearchQuery;
 import com.example.mediservapi.dto.model.request.CreateUpdatePharmacyRequest;
+import com.example.mediservapi.dto.model.request.Page;
 import com.example.mediservapi.model.pharmacy.Pharmacy;
+import com.example.mediservapi.repository.order.OrderRepository;
 import com.example.mediservapi.repository.pharmacy.PharmacyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -14,6 +20,9 @@ public class PharmacyServiceImpl implements PharmacyService {
 
     @Autowired
     private PharmacyRepository pharmacyRepository;
+
+    @Autowired
+    private UserMapper userMapper;
 
     @Override
     public Pharmacy createNew(CreateUpdatePharmacyRequest pharmacyData) {
@@ -45,5 +54,10 @@ public class PharmacyServiceImpl implements PharmacyService {
     @Override
     public List<Pharmacy> findAll() {
         return pharmacyRepository.findAll();
+    }
+
+    @Override
+    public List<Pharmacy> search(Page page, PharmacySearchQuery searchQuery) {
+        return pharmacyRepository.searchPharmacy(page, searchQuery);
     }
 }

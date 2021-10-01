@@ -1,11 +1,15 @@
 package com.example.mediservapi.controller;
 
+import com.example.mediservapi.dto.model.pharmacy.PharmacySearchQuery;
 import com.example.mediservapi.dto.model.request.CreateUpdatePharmacyRequest;
+import com.example.mediservapi.dto.model.request.SearchRequest;
 import com.example.mediservapi.dto.response.Response;
 import com.example.mediservapi.model.pharmacy.Pharmacy;
 import com.example.mediservapi.model.user.Role;
 import com.example.mediservapi.service.PharmacyService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
@@ -55,5 +59,11 @@ public class PharmacyController {
             return Response.notFound().setErrors("Pharmacy not found");
         }
         return Response.ok().setPayload(data);
+    }
+
+    @PostMapping("search")
+    public ResponseEntity<List<Pharmacy>> search(@RequestBody @Valid SearchRequest<PharmacySearchQuery> request) {
+        List<Pharmacy> pharmacy = pharmacyService.search(request.getPage(), request.getQuery());
+        return ResponseEntity.ok(pharmacy);
     }
 }
