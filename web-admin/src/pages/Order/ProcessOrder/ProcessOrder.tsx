@@ -135,6 +135,7 @@ const OrderItems = ({
                           <div className='grid grid-cols-4'>
                             <div className='col-span-2'>
                               <InputField
+                                label='Drug'
                                 placeholder='Drug'
                                 className='rounded-md my-2 sm:text-sm mx-2 '
                                 type='text'
@@ -143,6 +144,7 @@ const OrderItems = ({
                             </div>
                             <div className='col-span-1'>
                               <InputField
+                                label='Quantity'
                                 placeholder='Quantity'
                                 className='rounded-md my-2 sm:text-sm mx-2'
                                 type='number'
@@ -151,6 +153,7 @@ const OrderItems = ({
                             </div>
                             <div className='col-span-1'>
                               <InputField
+                                label='Price'
                                 placeholder='Price'
                                 className='rounded-md my-2 sm:text-sm mx-2'
                                 type='number'
@@ -158,7 +161,7 @@ const OrderItems = ({
                               />
                             </div>
                           </div>
-                          <div className='m-auto'>
+                          <div className='m-auto mb-4'>
                             <Button
                               rounded={true}
                               size='sm'

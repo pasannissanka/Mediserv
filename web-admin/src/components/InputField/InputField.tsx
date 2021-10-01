@@ -2,15 +2,24 @@ import { ErrorMessage, Field, FieldAttributes } from "formik";
 import React from "react";
 
 type InputFieldProps = {
+  label: string;
   errors: string;
   touched: boolean;
   name: string;
 } & FieldAttributes<any>;
 
-export const InputField = ({ errors, touched, ...props }: InputFieldProps) => {
+export const InputField = ({
+  label,
+  errors,
+  touched,
+  ...props
+}: InputFieldProps) => {
   return (
     <div className='flex flex-col'>
-      <Field {...props} />
+      <label className='mx-2 text-sm -mb-1' htmlFor='field'>
+        {label}
+      </label>
+      <Field {...props} id='field' />
       {errors && touched ? (
         <ErrorMessage
           component='div'
