@@ -31,11 +31,22 @@ export const OrderItems = ({ orderInfo, onOrderProcess }: OrderItemsProps) => {
               </span>
             </div>
           ) : (
-            <DataFeed
-              dataList={orderInfo?.items as any}
-              loading={false}
-              totalCount={orderInfo?.items?.length}
-            />
+            <div>
+              {orderInfo.items.map((item, idx) => {
+                return (
+                  <div
+                    key={idx}
+                    className='bg-white w-full items-center p-2 rounded-lg shadow my-3'
+                  >
+                    <div className='grid grid-cols-4 text-base m-2'>
+                      <div className='col-span-2'>{item.name}</div>
+                      <div className='col-span-1'>{item.count}</div>
+                      <div className='col-span-1'>{item.total} LKR</div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           )}
         </div>
       </div>

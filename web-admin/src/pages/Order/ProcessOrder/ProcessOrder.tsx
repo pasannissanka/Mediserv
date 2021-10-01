@@ -4,17 +4,20 @@ import Button from "../../../components/Button/Button";
 import { InputField } from "../../../components/InputField/InputField";
 import { AuthContext } from "../../../Context/AuthContext";
 import { ReactComponent as UndrawVoid } from "../../../svg/undraw_void.svg";
+import { OrderItemData } from "../../../Types/types";
 import { OrderInfoProp } from "../Order";
 
 type ProcessOrderProps<T> = {
   submitRef: React.RefObject<FormikProps<any>> | undefined;
   onSubmit(value: T): void;
+  initialValues?: T;
 } & OrderInfoProp;
 
 export const ProcessOrder = <T extends unknown>({
   orderInfo,
   submitRef,
   onSubmit,
+  initialValues,
 }: ProcessOrderProps<T>) => {
   const { token } = useContext(AuthContext);
 
@@ -72,7 +75,11 @@ export const ProcessOrder = <T extends unknown>({
         </div>
         <div className='col-span-1 lg:col-span-2 bg-white rounded-lg border px-6 py-2 overflow-auto'>
           <div className=''>
-            <OrderItems submitRef={submitRef} onSubmit={onSubmit} />
+            <OrderItems
+              initialValues={initialValues as any}
+              submitRef={submitRef}
+              onSubmit={onSubmit}
+            />
           </div>
         </div>
       </div>
@@ -83,36 +90,33 @@ export const ProcessOrder = <T extends unknown>({
 type OrderItemsProps<T> = {
   submitRef: React.RefObject<FormikProps<any>> | undefined;
   onSubmit(value: any): void;
+  initialValues?: OrderItemsType;
 };
 
-interface OrderItemType {
-  name: string;
-  quantity: string;
-  price: string;
-}
-
 export interface OrderItemsType {
-  items: OrderItemType[];
+  items: OrderItemData[];
 }
 
 const OrderItems = ({
   submitRef,
   onSubmit,
+  initialValues = {
+    items: [
+      {
+        name: "",
+        total: 0,
+        count: 0,
+        unitPrice: 0,
+      } as OrderItemData,
+    ],
+  },
 }: OrderItemsProps<OrderItemsType>) => {
   return (
     <div className='m-2 w-full'>
       <div className='text-lg '>Items</div>
       <Formik<OrderItemsType>
         innerRef={submitRef}
-        initialValues={{
-          items: [
-            {
-              name: "",
-              price: "",
-              quantity: "",
-            },
-          ],
-        }}
+        initialValues={initialValues}
         onSubmit={(values) => {
           // console.log(values);
           onSubmit(values);
@@ -126,7 +130,7 @@ const OrderItems = ({
                 <div>
                   {values.items.map((item, index) => (
                     <div key={index}>
-                      <div className='border my-3 rounded-lg'>
+                      <div className='bg-white w-full items-center p-2 rounded-lg shadow my-3'>
                         <div className='flex justify-between my-2 mx-2'>
                           <div className='grid grid-cols-4'>
                             <div className='col-span-2'>
@@ -141,16 +145,16 @@ const OrderItems = ({
                               <InputField
                                 placeholder='Quantity'
                                 className='rounded-md my-2 sm:text-sm mx-2'
-                                type='text'
-                                name={`items.${index}.quantity`}
+                                type='number'
+                                name={`items.${index}.count`}
                               />
                             </div>
                             <div className='col-span-1'>
                               <InputField
                                 placeholder='Price'
                                 className='rounded-md my-2 sm:text-sm mx-2'
-                                type='text'
-                                name={`items.${index}.price`}
+                                type='number'
+                                name={`items.${index}.total`}
                               />
                             </div>
                           </div>
@@ -187,7 +191,13 @@ const OrderItems = ({
                     <Button
                       varient='primary'
                       type='button'
-                      onClick={() => arrayHelpers.push("")}
+                      onClick={() =>
+                        arrayHelpers.push({
+                          name: "",
+                          total: 0,
+                          count: 0,
+                        })
+                      }
                     >
                       <svg
                         xmlns='http://www.w3.org/2000/svg'

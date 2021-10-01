@@ -48,6 +48,34 @@ export const Order = () => {
 
   const handleItemsSubmit = (value: OrderItemsType) => {
     setmodalToggle(false);
+    fetch(`http://localhost:8080/api/orders/${orderId}`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        customerId: orderInfo?.customer.id,
+        pharmacyId: orderInfo?.pharmacyId,
+        items: value.items.map((item) => {
+          return {
+            count: item.count,
+            name: item.name,
+            total: item.total,
+            unitPrice: 10,
+          };
+        }),
+      } as OrderData),
+    })
+      .then((response) => {
+        response
+          .json()
+          .then((data) => {
+            setOrderInfo(data);
+          })
+          .catch((error) => console.log(error));
+      })
+      .catch((error) => console.log(error));
     console.log(value);
   };
 
@@ -93,8 +121,9 @@ export const Order = () => {
             </svg>
           }
           footerContent={
-            <div className='flex content-center'>
+            <div>
               <Button
+                className='m-2'
                 varient='primary'
                 type='button'
                 onClick={() => {
@@ -105,6 +134,16 @@ export const Order = () => {
               >
                 Submit
               </Button>
+              <Button
+                className='m-2'
+                varient='outline-primary'
+                type='button'
+                onClick={() => {
+                  setmodalToggle(false);
+                }}
+              >
+                Close
+              </Button>
             </div>
           }
         >
@@ -113,6 +152,7 @@ export const Order = () => {
               onSubmit={handleItemsSubmit}
               orderInfo={orderInfo}
               submitRef={itemsSubmitRef}
+              initialValues={{ items: orderInfo.items }}
             />
           )}
         </ModalPanel>
