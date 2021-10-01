@@ -9,6 +9,7 @@ import { PaymentDetails } from "./OrderSteps/PaymentDetailsStep";
 import { Img, Prescription } from "./OrderSteps/PrescriptionStep";
 import { Summery } from "./OrderSteps/SummeryStep";
 import * as yup from "yup";
+import { string } from "yup/lib/locale";
 
 //type OrderTypes = {};
 export interface RegisterForm {
@@ -164,7 +165,12 @@ export const Order = () => {
                     <Button
                       className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
                       onClick = {(e) =>{
-                        setStepper(stepper - 1);
+                        if(stepper === 0){
+                          setStepper(stepper);
+                        }
+                        else{
+                          setStepper(stepper - 1);
+                        }
                       }}
                     >
                       Back
@@ -215,6 +221,32 @@ export const Order = () => {
                                 lineTwo: true,
                               },
                             } as FormikTouched<RegisterForm>);
+                            if(!formErrors.deliveryInfo){
+                              const deliveryInform = new FormData();
+                              deliveryInform.append("file" , values.deliveryInfo['name' ] ); 
+                              deliveryInform.append("file" , values.deliveryInfo['email' ] );
+                              deliveryInform.append("file" , values.deliveryInfo['phoneNumber'] );
+                              deliveryInform.append("file" , values.deliveryInfo['province' ] );
+                              deliveryInform.append("file" , values.deliveryInfo['district' ] );
+                              deliveryInform.append("file" , values.deliveryInfo['lineOne' ] );
+                              deliveryInform.append("file" , values.deliveryInfo['lineTwo' ] );
+
+                              fetch("http://localhost:8080/api/orders/",{
+                                method : "POST",
+                                headers: {
+                                  Authorization: `Bearer ${token}`,
+                                },
+                                body: deliveryInform
+                              }).then(response => {
+                                response.json().then(data => {
+                                  console.log(data);
+                                //  setFieldValue("prescriptionFileId" , data.id)
+                                  setStepper(stepper + 1);
+                                })
+
+                              }).catch(error => console.log(error))
+
+                            }
                           }
 
                         });
