@@ -72,19 +72,6 @@ export const Order = () => {
 
   const [stepper, setStepper] = useState(0);
 
-  const handleNext = (formErrors: FormikErrors<RegisterForm>) => {
-    if (stepper < 3) {
-      if (stepper === 0 && !!!formErrors.prescriptionImg) {
-        setStepper(stepper + 1);
-      }
-      if (stepper === 1 && !!!formErrors.deliveryInfo) {
-        setStepper(stepper + 1);
-      }
-      if (stepper === 2 && !!!formErrors.paymentDetails) {
-        setStepper(stepper + 1);
-      }
-    }
-  };
   const CurrentStepForm = formPages[stepper];
 
   return (
@@ -161,14 +148,12 @@ export const Order = () => {
                   />
 
                   <span className='flex justify-between'>
-
                     <Button
-                      className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
-                      onClick = {(e) =>{
-                        if(stepper === 0){
+                      className='bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow'
+                      onClick={(e) => {
+                        if (stepper === 0) {
                           setStepper(stepper);
-                        }
-                        else{
+                        } else {
                           setStepper(stepper - 1);
                         }
                       }}
@@ -180,8 +165,8 @@ export const Order = () => {
                       varient='primary'
                       onClick={(e) => {
                         validateForm().then((formErrors) => {
-                          console.log("here1", formErrors, values);
                           setErrors(formErrors);
+
                           if (stepper === 0) {
                             setTouched({
                               ...touched,
@@ -196,15 +181,19 @@ export const Order = () => {
                                 headers: {
                                   Authorization: `Bearer ${token}`,
                                 },
-                                body: imgData
-                              }).then(response => {
-                                response.json().then(data => {
-                                  console.log(data);
-                                  setFieldValue("prescriptionFileId" , data.id)
-                                  setStepper(stepper + 1);
+                                body: imgData,
+                              })
+                                .then((response) => {
+                                  response.json().then((data) => {
+                                    console.log(data);
+                                    setFieldValue(
+                                      "prescriptionFileId",
+                                      data.id
+                                    );
+                                    setStepper(stepper + 1);
+                                  });
                                 })
-
-                              }).catch(error => console.log(error))
+                                .catch((error) => console.log(error));
                             }
                           }
                           if (stepper === 1) {
@@ -221,42 +210,46 @@ export const Order = () => {
                                 lineTwo: true,
                               },
                             } as FormikTouched<RegisterForm>);
-                            if(!formErrors.deliveryInfo){
-                              const deliveryInform = new FormData();
-                              deliveryInform.append("file" , values.deliveryInfo['name' ] ); 
-                              deliveryInform.append("file" , values.deliveryInfo['email' ] );
-                              deliveryInform.append("file" , values.deliveryInfo['phoneNumber'] );
-                              deliveryInform.append("file" , values.deliveryInfo['province' ] );
-                              deliveryInform.append("file" , values.deliveryInfo['district' ] );
-                              deliveryInform.append("file" , values.deliveryInfo['lineOne' ] );
-                              deliveryInform.append("file" , values.deliveryInfo['lineTwo' ] );
-
-                              fetch("http://localhost:8080/api/orders/",{
-                                method : "POST",
+                          }
+                          if (stepper === 2) {
+                            if (
+                              !formErrors.deliveryInfo &&
+                              !formErrors.paymentDetails
+                            ) {
+                              fetch("http://localhost:8080/api/orders/", {
+                                method: "POST",
                                 headers: {
                                   Authorization: `Bearer ${token}`,
                                 },
-                                body: deliveryInform
-                              }).then(response => {
-                                response.json().then(data => {
-                                  console.log(data);
-                                //  setFieldValue("prescriptionFileId" , data.id)
-                                  setStepper(stepper + 1);
+                                body: JSON.stringify({
+                                  customerId: user?.id,
+                                  pharmacyId: "",
+                                  paymentMethod:
+                                    values.paymentDetails.deliveryMethod,
+                                  prescriptionImgUrl: values.prescriptionFileId,
+                                  deliveryAddress: {
+                                    lineOne: values.deliveryInfo.lineOne,
+                                    lineTwo: values.deliveryInfo.lineTwo,
+                                    province: values.deliveryInfo.province,
+                                    district: values.deliveryInfo.district,
+                                  },
+                                }),
+                              })
+                                .then((response) => {
+                                  response.json().then((data) => {
+                                    console.log(data);
+                                    setStepper(stepper + 1);
+                                  });
                                 })
-
-                              }).catch(error => console.log(error))
-
+                                .catch((error) => console.log(error));
                             }
                           }
-
                         });
                       }}
                     >
-
                       Next
                     </Button>
                   </span>
-
                 </Form>
               )}
             </Formik>
