@@ -1,3 +1,4 @@
+import React from "react";
 import * as timeago from "timeago.js";
 import { OrderInfoProp } from "./Order";
 

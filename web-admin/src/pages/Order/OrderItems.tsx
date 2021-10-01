@@ -1,3 +1,4 @@
+import React from "react";
 import { OrderInfoProp } from "./Order";
 import { ReactComponent as UndrawEmptyCart } from "../../svg/undraw_empty_cart.svg";
 import { DataFeed } from "../../components";

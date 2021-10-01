@@ -52,3 +52,7 @@
     @apply focus:border-primary-300 focus:ring-primary-700 block px-2 py-2 border-gray-300 border rounded shadow-sm focus:ring-1 focus:ring-opacity-50;
   }
 }
+
+.modal-panel-height {
+  height: calc(100vh - theme("spacing.28"));
+}

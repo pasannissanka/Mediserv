@@ -1,13 +1,15 @@
 import { Dialog } from "@headlessui/react";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import { FormikProps } from "formik";
+import React, { Ref, useContext, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router";
+import Button from "../../components/Button/Button";
 import ModalPanel from "../../components/ModalPanel/ModelPanel";
 import { AuthContext } from "../../Context/AuthContext";
 import { OrderData } from "../../Types/types";
 import { OrderCustomer } from "./OrderCustomer";
 import { OrderItems } from "./OrderItems";
 import { OrderTitle } from "./OrderTitle";
-import { ProcessOrder } from "./ProcessOrder/ProcessOrder";
+import { OrderItemsType, ProcessOrder } from "./ProcessOrder/ProcessOrder";
 
 export type OrderInfoProp = {
   orderInfo: OrderData;
@@ -20,6 +22,10 @@ export const Order = () => {
 
   const [modalToggle, setmodalToggle] = useState(false);
   const [orderInfo, setOrderInfo] = useState<OrderData>();
+
+  const itemsSubmitRef = useRef() as React.RefObject<
+    FormikProps<{ items: never[] }>
+  >;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -39,6 +45,11 @@ export const Order = () => {
     };
     fetchData();
   }, [orderId, token]);
+
+  const handleItemsSubmit = (value: OrderItemsType) => {
+    setmodalToggle(false);
+    console.log(value);
+  };
 
   return (
     <>
@@ -81,9 +92,29 @@ export const Order = () => {
               />
             </svg>
           }
-          footerContent={<div>TEST</div>}
+          footerContent={
+            <div className='flex content-center'>
+              <Button
+                varient='primary'
+                type='button'
+                onClick={() => {
+                  if (itemsSubmitRef !== null && itemsSubmitRef.current) {
+                    itemsSubmitRef.current.handleSubmit();
+                  }
+                }}
+              >
+                Submit
+              </Button>
+            </div>
+          }
         >
-          {orderInfo && <ProcessOrder orderInfo={orderInfo} />}
+          {orderInfo && (
+            <ProcessOrder<OrderItemsType>
+              onSubmit={handleItemsSubmit}
+              orderInfo={orderInfo}
+              submitRef={itemsSubmitRef}
+            />
+          )}
         </ModalPanel>
       </Dialog>
     </>
