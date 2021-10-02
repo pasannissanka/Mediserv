@@ -5,8 +5,6 @@ import org.springframework.data.annotation.Id;
 
 @Data
 public class OrderItems {
-    @Id
-    private String id;
     private String name;
     private double count;
     private double unitPrice;
