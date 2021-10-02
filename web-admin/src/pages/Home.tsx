@@ -5,10 +5,10 @@ import { Footer } from '../components/Footer/Footer';
 import { NavBar } from '../components/NavBar/NavBar';
 import { Customers } from './Customers/Customers';
 import { NotFound } from './NotFound';
-import { Orders } from './Order/Orders';
 import { Order } from './Order/Order';
+import { Orders } from './Order/Orders';
+import { Pharmacy } from './Pharmacy/Pharmacy';
 import { Users } from './Users/Users';
-import { EditPharmacyDetails } from './EditPharmcyDetails/EditPharmacyDetails';
 
 export const Home = () => {
   const [isDrawerOpen, setDrawerOpenState] = useState(true);
@@ -40,8 +40,8 @@ export const Home = () => {
               <Route exact path="/customers">
                 <Customers />
               </Route>
-              <Route exact path="/editpharmacydetails">
-                <EditPharmacyDetails />
+              <Route exact path="/pharmacy">
+                <Pharmacy />
               </Route>
               <Route exact path="/profile">
                 <div>Profile</div>
