@@ -152,7 +152,7 @@ export const Order = () => {
               onSubmit={handleItemsSubmit}
               orderInfo={orderInfo}
               submitRef={itemsSubmitRef}
-              initialValues={{ items: orderInfo.items }}
+              initialValues={{ items: orderInfo.items || [] }}
             />
           )}
         </ModalPanel>
