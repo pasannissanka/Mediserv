@@ -22,3 +22,21 @@ export interface LoginResponse {
   user: UserData;
   token: string;
 }
+
+export interface AddressData {
+  houseNo: string;
+  lineOne: string;
+  lineTwo: string;
+  province: string;
+  district: string;
+  town: string;
+  longitude: number;
+  latitude: number;
+}
+
+export interface PharmacyData {
+  address: AddressData;
+  description: string;
+  id: string;
+  title: string;
+}
