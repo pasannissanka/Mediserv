@@ -1,5 +1,7 @@
 import { Form, Formik, FormikErrors, FormikTouched } from "formik";
 import React, { useContext, useEffect, useState } from "react";
+import { useLocation } from "react-router";
+import * as yup from "yup";
 import Button from "../../Components/Button/Button";
 import { StepperHeading } from "../../Components/Stepper/StepperHeading";
 import { AuthContext } from "../../Context/AuthContext";
@@ -8,8 +10,6 @@ import { DeliveryInformation } from "./OrderSteps/DeliveryInformationStep";
 import { PaymentDetails } from "./OrderSteps/PaymentDetailsStep";
 import { Img, Prescription } from "./OrderSteps/PrescriptionStep";
 import { Summery } from "./OrderSteps/SummeryStep";
-import * as yup from "yup";
-import { string } from "yup/lib/locale";
 
 //type OrderTypes = {};
 export interface RegisterForm {
@@ -58,9 +58,10 @@ const validationSchema = yup.object().shape({
 const formPages = [Prescription, DeliveryInformation, PaymentDetails, Summery];
 
 export const Order = () => {
+  const [stepper, setStepper] = useState(0);
   const { token, user } = useContext(AuthContext);
-
   const [isOpen, setIsOpen] = useState(false);
+  const pharmacyId = new URLSearchParams(useLocation().search).get("id");
 
   useEffect(() => {
     if (token && user) {
@@ -70,9 +71,103 @@ export const Order = () => {
     }
   }, [token, user]);
 
-  const [stepper, setStepper] = useState(0);
-
   const CurrentStepForm = formPages[stepper];
+
+  const handleSubmit = (
+    validateForm: (values?: any) => Promise<FormikErrors<RegisterForm>>,
+    setErrors: (errors: FormikErrors<RegisterForm>) => void,
+    setTouched: (
+      touched: FormikTouched<RegisterForm>,
+      shouldValidate?: boolean | undefined
+    ) => void,
+    setFieldValue: (
+      field: string,
+      value: any,
+      shouldValidate?: boolean | undefined
+    ) => void,
+    values: RegisterForm,
+    touched: FormikTouched<RegisterForm>
+  ) => {
+    validateForm().then((formErrors) => {
+      setErrors(formErrors);
+
+      if (stepper === 0) {
+        setTouched({
+          ...touched,
+          prescriptionImg: true,
+        } as FormikTouched<RegisterForm>);
+        if (!formErrors.prescriptionImg) {
+          const imgData = new FormData();
+          imgData.append("file", values.prescriptionImg[0]);
+
+          fetch("http://localhost:8080/api/file/upload", {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            body: imgData,
+          })
+            .then((response) => {
+              response.json().then((data) => {
+                console.log(data);
+                if (data) {
+                  setFieldValue("prescriptionFileId", data.id);
+                  setStepper(stepper + 1);
+                }
+              });
+            })
+            .catch((error) => console.log(error));
+        }
+      }
+      if (stepper === 1) {
+        setTouched({
+          ...touched,
+          deliveryInfo: {
+            ...touched.deliveryInfo,
+            name: true,
+            email: true,
+            phoneNumber: true,
+            province: true,
+            district: true,
+            lineOne: true,
+            lineTwo: true,
+          },
+        } as FormikTouched<RegisterForm>);
+        setStepper(stepper + 1);
+      }
+      if (stepper === 2) {
+        if (!formErrors.deliveryInfo && !formErrors.paymentDetails) {
+          fetch("http://localhost:8080/api/orders/", {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              customerId: user?.id,
+              pharmacyId: pharmacyId,
+              paymentMethod: values.paymentDetails.deliveryMethod,
+              prescriptionImgUrl: values.prescriptionFileId,
+              deliveryAddress: {
+                lineOne: values.deliveryInfo.lineOne,
+                lineTwo: values.deliveryInfo.lineTwo,
+                province: values.deliveryInfo.province,
+                district: values.deliveryInfo.district,
+              },
+            }),
+          })
+            .then((response) => {
+              response.json().then((data) => {
+                if (data) {
+                  setStepper(stepper + 1);
+                }
+              });
+            })
+            .catch((error) => console.log(error));
+        }
+      }
+    });
+  };
 
   return (
     <>
@@ -97,7 +192,7 @@ export const Order = () => {
                 },
               ]}
               selectedIdx={stepper}
-              setStepper={setStepper}
+              linear={true}
             />
           </div>
 
@@ -107,8 +202,8 @@ export const Order = () => {
                 prescriptionImg: [],
                 prescriptionFileId: "",
                 deliveryInfo: {
-                  name: "",
-                  email: "",
+                  name: user?.name || "",
+                  email: user?.email || "",
                   phoneNumber: "",
                   lineOne: "",
                   lineTwo: "",
@@ -130,7 +225,6 @@ export const Order = () => {
               validationSchema={validationSchema}
             >
               {({
-                isSubmitting,
                 values,
                 setFieldValue,
                 validateForm,
@@ -163,89 +257,16 @@ export const Order = () => {
                     <Button
                       type='button'
                       varient='primary'
-                      onClick={(e) => {
-                        validateForm().then((formErrors) => {
-                          setErrors(formErrors);
-
-                          if (stepper === 0) {
-                            setTouched({
-                              ...touched,
-                              prescriptionImg: true,
-                            } as FormikTouched<RegisterForm>);
-                            if (!formErrors.prescriptionImg) {
-                              const imgData = new FormData();
-                              imgData.append("file", values.prescriptionImg[0]);
-
-                              fetch("http://localhost:8080/api/file/upload", {
-                                method: "POST",
-                                headers: {
-                                  Authorization: `Bearer ${token}`,
-                                },
-                                body: imgData,
-                              })
-                                .then((response) => {
-                                  response.json().then((data) => {
-                                    console.log(data);
-                                    setFieldValue(
-                                      "prescriptionFileId",
-                                      data.id
-                                    );
-                                    setStepper(stepper + 1);
-                                  });
-                                })
-                                .catch((error) => console.log(error));
-                            }
-                          }
-                          if (stepper === 1) {
-                            setTouched({
-                              ...touched,
-                              deliveryInfo: {
-                                ...touched.deliveryInfo,
-                                name: true,
-                                email: true,
-                                phoneNumber: true,
-                                province: true,
-                                district: true,
-                                lineOne: true,
-                                lineTwo: true,
-                              },
-                            } as FormikTouched<RegisterForm>);
-                          }
-                          if (stepper === 2) {
-                            if (
-                              !formErrors.deliveryInfo &&
-                              !formErrors.paymentDetails
-                            ) {
-                              fetch("http://localhost:8080/api/orders/", {
-                                method: "POST",
-                                headers: {
-                                  Authorization: `Bearer ${token}`,
-                                },
-                                body: JSON.stringify({
-                                  customerId: user?.id,
-                                  pharmacyId: "",
-                                  paymentMethod:
-                                    values.paymentDetails.deliveryMethod,
-                                  prescriptionImgUrl: values.prescriptionFileId,
-                                  deliveryAddress: {
-                                    lineOne: values.deliveryInfo.lineOne,
-                                    lineTwo: values.deliveryInfo.lineTwo,
-                                    province: values.deliveryInfo.province,
-                                    district: values.deliveryInfo.district,
-                                  },
-                                }),
-                              })
-                                .then((response) => {
-                                  response.json().then((data) => {
-                                    console.log(data);
-                                    setStepper(stepper + 1);
-                                  });
-                                })
-                                .catch((error) => console.log(error));
-                            }
-                          }
-                        });
-                      }}
+                      onClick={(e) =>
+                        handleSubmit(
+                          validateForm,
+                          setErrors,
+                          setTouched,
+                          setFieldValue,
+                          values,
+                          touched
+                        )
+                      }
                     >
                       Next
                     </Button>

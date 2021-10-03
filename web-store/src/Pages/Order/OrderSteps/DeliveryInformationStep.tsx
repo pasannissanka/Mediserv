@@ -25,7 +25,6 @@ export const DeliveryInformation = ({
   errors,
   touched,
 }: DeliveryPageProps<RegisterForm>) => {
-  console.log(errors);
   return (
     <>
       <div className='container grid grid-cols-2 pt-2'>
