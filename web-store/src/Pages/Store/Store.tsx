@@ -9,18 +9,21 @@ export const Store = (props: StoreProps) => {
 
   useEffect(() => {
     async function fetchPharmacyJSON() {
-      const res = await fetch("http://localhost:8080/api/pharmacies/search", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          page: {
-            limit: 10,
+      const res = await fetch(
+        "http://localhost:8080/api/public/pharmacies/search",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
           },
-          query: {},
-        }),
-      });
+          body: JSON.stringify({
+            page: {
+              limit: 10,
+            },
+            query: {},
+          }),
+        }
+      );
       const data: PharmacyData[] = await res.json();
       if (data) {
         setData(data);
