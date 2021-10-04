@@ -1,6 +1,7 @@
 import { ErrorMessage } from "formik";
 import React, { useEffect } from "react";
 import { useDropzone } from "react-dropzone";
+import { OrderData } from "../../../Types/types";
 import { RegisterForm } from "../Order";
 import { DeliveryPageProps } from "./DeliveryInformationStep";
 
@@ -11,7 +12,7 @@ export type Img = {
 export const Prescription = ({
   values,
   setFieldValue,
-}: DeliveryPageProps<RegisterForm>) => {
+}: DeliveryPageProps<RegisterForm, OrderData>) => {
   const { getRootProps, getInputProps } = useDropzone({
     accept: "image/jpeg, image/png",
     onDrop: (acceptedFiles) => {
@@ -53,7 +54,7 @@ export const Prescription = ({
         <div
           {...getRootProps({
             className:
-              "py-14 bg-gray-200 w-11/12 mx-auto sm:px-6 lg:px-8 mt-2 rounded-lg",
+              "py-14 bg-gray-200 w-11/12 mx-auto sm:px-6 lg:px-8 mt-2 rounded-lg cursor-pointer",
           })}
         >
           <input {...getInputProps()} />

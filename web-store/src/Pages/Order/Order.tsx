@@ -1,14 +1,16 @@
 import { Form, Formik, FormikErrors, FormikTouched } from "formik";
 import React, { useContext, useEffect, useState } from "react";
+import { useLocation, useHistory } from "react-router";
+import * as yup from "yup";
 import Button from "../../Components/Button/Button";
 import { StepperHeading } from "../../Components/Stepper/StepperHeading";
 import { AuthContext } from "../../Context/AuthContext";
+import { OrderData } from "../../Types/types";
 import { Login } from "../Login/Login";
 import { DeliveryInformation } from "./OrderSteps/DeliveryInformationStep";
 import { PaymentDetails } from "./OrderSteps/PaymentDetailsStep";
 import { Img, Prescription } from "./OrderSteps/PrescriptionStep";
 import { Summery } from "./OrderSteps/SummeryStep";
-import * as yup from "yup";
 
 //type OrderTypes = {};
 export interface RegisterForm {
@@ -57,9 +59,12 @@ const validationSchema = yup.object().shape({
 const formPages = [Prescription, DeliveryInformation, PaymentDetails, Summery];
 
 export const Order = () => {
+  const [stepper, setStepper] = useState(0);
   const { token, user } = useContext(AuthContext);
-
   const [isOpen, setIsOpen] = useState(false);
+  const pharmacyId = new URLSearchParams(useLocation().search).get("id");
+  const [orderResponse, setOrderResponse] = useState<OrderData>();
+  const history = useHistory();
 
   useEffect(() => {
     if (token && user) {
@@ -69,22 +74,110 @@ export const Order = () => {
     }
   }, [token, user]);
 
-  const [stepper, setStepper] = useState(0);
-
-  const handleNext = (formErrors: FormikErrors<RegisterForm>) => {
-    if (stepper < 3) {
-      if (stepper === 0 && !!!formErrors.prescriptionImg) {
-        setStepper(stepper + 1);
-      }
-      if (stepper === 1 && !!!formErrors.deliveryInfo) {
-        setStepper(stepper + 1);
-      }
-      if (stepper === 2 && !!!formErrors.paymentDetails) {
-        setStepper(stepper + 1);
-      }
-    }
-  };
   const CurrentStepForm = formPages[stepper];
+
+  const handleSubmit = (
+    validateForm: (values?: any) => Promise<FormikErrors<RegisterForm>>,
+    setErrors: (errors: FormikErrors<RegisterForm>) => void,
+    setTouched: (
+      touched: FormikTouched<RegisterForm>,
+      shouldValidate?: boolean | undefined
+    ) => void,
+    setFieldValue: (
+      field: string,
+      value: any,
+      shouldValidate?: boolean | undefined
+    ) => void,
+    values: RegisterForm,
+    touched: FormikTouched<RegisterForm>
+  ) => {
+    validateForm().then((formErrors) => {
+      setErrors(formErrors);
+
+      if (stepper === 0) {
+        setTouched({
+          ...touched,
+          prescriptionImg: true,
+        } as FormikTouched<RegisterForm>);
+        if (!formErrors.prescriptionImg) {
+          const imgData = new FormData();
+          imgData.append("file", values.prescriptionImg[0]);
+
+          fetch("http://localhost:8080/api/file/upload", {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            body: imgData,
+          })
+            .then((response) => {
+              response.json().then((data) => {
+                console.log(data);
+                if (data) {
+                  setFieldValue("prescriptionFileId", data.id);
+                  setStepper(stepper + 1);
+                }
+              });
+            })
+            .catch((error) => console.log(error));
+        }
+      }
+      if (stepper === 1) {
+        setTouched({
+          ...touched,
+          deliveryInfo: {
+            ...touched.deliveryInfo,
+            name: true,
+            email: true,
+            phoneNumber: true,
+            province: true,
+            district: true,
+            lineOne: true,
+            lineTwo: true,
+          },
+        } as FormikTouched<RegisterForm>);
+        setStepper(stepper + 1);
+      }
+      if (stepper === 2) {
+        if (!formErrors.deliveryInfo && !formErrors.paymentDetails) {
+          fetch("http://localhost:8080/api/orders/", {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              customerId: user?.id,
+              pharmacyId: pharmacyId,
+              paymentMethod: values.paymentDetails.deliveryMethod,
+              prescriptionImgUrl: values.prescriptionFileId,
+              deliveryAddress: {
+                lineOne: values.deliveryInfo.lineOne,
+                lineTwo: values.deliveryInfo.lineTwo,
+                province: values.deliveryInfo.province,
+                district: values.deliveryInfo.district,
+              },
+            }),
+          })
+            .then((response) => {
+              response.json().then((data: OrderData) => {
+                if (data) {
+                  setStepper(stepper + 1);
+                  setOrderResponse(data);
+                }
+              });
+            })
+            .catch((error) => console.log(error));
+        }
+      }
+      if (stepper === 3) {
+        values.prescriptionImg.forEach((file) =>
+          URL.revokeObjectURL(file.preview)
+        );
+        history.push("/");
+      }
+    });
+  };
 
   return (
     <>
@@ -109,7 +202,7 @@ export const Order = () => {
                 },
               ]}
               selectedIdx={stepper}
-              setStepper={setStepper}
+              linear={true}
             />
           </div>
 
@@ -119,8 +212,8 @@ export const Order = () => {
                 prescriptionImg: [],
                 prescriptionFileId: "",
                 deliveryInfo: {
-                  name: "",
-                  email: "",
+                  name: user?.name || "",
+                  email: user?.email || "",
                   phoneNumber: "",
                   lineOne: "",
                   lineTwo: "",
@@ -142,7 +235,6 @@ export const Order = () => {
               validationSchema={validationSchema}
             >
               {({
-                isSubmitting,
                 values,
                 setFieldValue,
                 validateForm,
@@ -157,41 +249,43 @@ export const Order = () => {
                     setFieldValue={setFieldValue}
                     errors={errors}
                     touched={touched}
+                    data={orderResponse}
                   />
-                  <span className='flex justify-end py-4'>
+
+                  <span
+                    className={`flex ${
+                      stepper === 1 || stepper === 2
+                        ? "justify-between "
+                        : "justify-end"
+                    }`}
+                  >
+                    {stepper === 1 || stepper === 2 ? (
+                      <Button
+                        varient='outline-primary'
+                        onClick={(e) => {
+                          setStepper(stepper - 1);
+                        }}
+                      >
+                        Back
+                      </Button>
+                    ) : (
+                      <></>
+                    )}
                     <Button
                       type='button'
                       varient='primary'
-                      onClick={(e) => {
-                        validateForm().then((v) => {
-                          console.log("here1", v, values);
-                          setErrors(v);
-                          if (stepper === 0) {
-                            setTouched({
-                              ...touched,
-                              prescriptionImg: true,
-                            } as FormikTouched<RegisterForm>);
-                          }
-                          if (stepper === 1) {
-                            setTouched({
-                              ...touched,
-                              deliveryInfo: {
-                                ...touched.deliveryInfo,
-                                name: true,
-                                email: true,
-                                phoneNumber: true,
-                                province: true,
-                                district: true,
-                                lineOne: true,
-                                lineTwo: true,
-                              },
-                            } as FormikTouched<RegisterForm>);
-                          }
-                          handleNext(v);
-                        });
-                      }}
+                      onClick={(e) =>
+                        handleSubmit(
+                          validateForm,
+                          setErrors,
+                          setTouched,
+                          setFieldValue,
+                          values,
+                          touched
+                        )
+                      }
                     >
-                      Next
+                      {stepper !== 3 ? "Next" : "Done"}
                     </Button>
                   </span>
                 </Form>

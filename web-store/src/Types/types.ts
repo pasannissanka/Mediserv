@@ -22,3 +22,46 @@ export interface LoginResponse {
   user: UserData;
   token: string;
 }
+
+export interface AddressData {
+  houseNo: string;
+  lineOne: string;
+  lineTwo: string;
+  province: string;
+  district: string;
+  town: string;
+  longitude: number;
+  latitude: number;
+}
+
+export interface PharmacyData {
+  address: AddressData;
+  description: string;
+  id: string;
+  title: string;
+}
+
+export interface OrderItemData {
+  name: string;
+  count: number;
+  unitPrice: number;
+  total: number;
+}
+
+export interface OrderData {
+  customer: UserData;
+  customerId?: string;
+  deliveryAddress: AddressData;
+  id: string;
+  items: OrderItemData[];
+  paymentMethod: string;
+  status: string;
+  pharmacyId: string;
+  prescriptionImgUrl: string;
+  shippingCost: number;
+  subTotal: number;
+  tax: number;
+  total: number;
+  createdAt?: Date;
+  modifiedAt?: Date;
+}
