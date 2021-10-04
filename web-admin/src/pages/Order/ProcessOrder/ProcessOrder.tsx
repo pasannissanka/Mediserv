@@ -37,7 +37,7 @@ export const ProcessOrder = <T extends unknown>({
 
       const imageBlob = await response.blob();
 
-      if (imageBlob.type === "image/jpeg") {
+      if (imageBlob.type.includes("image/")) {
         const image = URL.createObjectURL(imageBlob);
         setImage(image);
       } else {
@@ -69,7 +69,7 @@ export const ProcessOrder = <T extends unknown>({
                 </span>
               </div>
             ) : (
-              <img src={image} alt='prescriptionImage' />
+              <img src={image} alt='prescriptionImage' className='w-full' />
             )}
           </div>
         </div>

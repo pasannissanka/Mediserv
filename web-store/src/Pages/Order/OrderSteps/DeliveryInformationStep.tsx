@@ -6,9 +6,10 @@ import "leaflet/dist/leaflet.css";
 import React, { useEffect } from "react";
 import { MapContainer, TileLayer, useMap } from "react-leaflet";
 import { InputField } from "../../../Components/InputField/InputField";
+import { OrderData } from "../../../Types/types";
 import { RegisterForm } from "../Order";
 
-export interface DeliveryPageProps<T> {
+export interface DeliveryPageProps<T, J> {
   values: T;
   errors: FormikErrors<T>;
   touched: FormikTouched<T>;
@@ -17,6 +18,7 @@ export interface DeliveryPageProps<T> {
     value: any,
     shouldValidate?: boolean | undefined
   ) => void;
+  data?: J;
 }
 
 export const DeliveryInformation = ({
@@ -24,8 +26,7 @@ export const DeliveryInformation = ({
   setFieldValue,
   errors,
   touched,
-}: DeliveryPageProps<RegisterForm>) => {
-  console.log(errors);
+}: DeliveryPageProps<RegisterForm, OrderData>) => {
   return (
     <>
       <div className='container grid grid-cols-2 pt-2'>
