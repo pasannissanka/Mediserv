@@ -7,17 +7,15 @@ import lombok.experimental.Accessors;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 
-
 @Data
 @Accessors(chain = true)
-public class CreateUpdatePharmacyRequest {
+public class UpdatePharmacyRequest {
     @NotBlank
     @NotEmpty
     private String title;
+    private String adminId;
 
     private Address address;
 
     private String description;
-
-
 }
