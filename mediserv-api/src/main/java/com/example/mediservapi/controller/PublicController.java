@@ -68,12 +68,9 @@ public class PublicController {
     }
 
     @PostMapping(value = "/pharmacies/")
-    public Response createNewPharmacy(@RequestBody @Valid CreatePharmacyRequest pharmacyData) {
+    public ResponseEntity<PharmacyDto> createNewPharmacy(@RequestBody @Valid CreatePharmacyRequest pharmacyData) {
         PharmacyDto pharmacy = pharmacyService.createNew(pharmacyData);
-        if (pharmacy != null) {
-            return Response.ok().setPayload(pharmacy);
-        }
-        return Response.notFound().setErrors("Pharmacy creation failed!");
+        return ResponseEntity.ok(pharmacy);
     }
 
 }
