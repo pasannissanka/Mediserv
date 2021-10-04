@@ -8,7 +8,8 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 public class PharmacyDto {
-    private String name;
+    private String id;
+    private String title;
     private String description;
     private Address address;
 }

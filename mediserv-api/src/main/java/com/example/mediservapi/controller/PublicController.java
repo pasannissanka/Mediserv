@@ -1,12 +1,18 @@
 package com.example.mediservapi.controller;
 
 import com.example.mediservapi.configuration.security.JwtTokenUtil;
+import com.example.mediservapi.dto.model.pharmacy.PharmacyDto;
+import com.example.mediservapi.dto.model.pharmacy.PharmacySearchQuery;
 import com.example.mediservapi.dto.model.request.AuthRequest;
+import com.example.mediservapi.dto.model.request.CreatePharmacyRequest;
 import com.example.mediservapi.dto.model.request.CreateUpdateUserRequest;
 import com.example.mediservapi.dto.mapper.UserMapper;
+import com.example.mediservapi.dto.model.request.SearchRequest;
 import com.example.mediservapi.dto.model.user.UserDto;
 import com.example.mediservapi.dto.response.AuthResponse;
+import com.example.mediservapi.dto.response.Response;
 import com.example.mediservapi.model.user.User;
+import com.example.mediservapi.service.PharmacyService;
 import com.example.mediservapi.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -22,15 +28,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/public")
 @RequiredArgsConstructor
-public class AuthController {
+public class PublicController {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenUtil jwtTokenUtil;
     private final UserMapper userMapper;
     private final UserService userService;
+    private final PharmacyService pharmacyService;
 
     @PostMapping("login")
     public ResponseEntity<AuthResponse> login(@RequestBody @Valid AuthRequest request) {
@@ -52,4 +60,20 @@ public class AuthController {
     public UserDto register(@RequestBody @Valid CreateUpdateUserRequest request) {
         return userService.create(request);
     }
+
+    @PostMapping("/pharmacies/search")
+    public ResponseEntity<List<PharmacyDto>> search(@RequestBody @Valid SearchRequest<PharmacySearchQuery> request) {
+        List<PharmacyDto> pharmacy = pharmacyService.search(request.getPage(), request.getQuery());
+        return ResponseEntity.ok(pharmacy);
+    }
+
+    @PostMapping(value = "/pharmacies/")
+    public Response createNewPharmacy(@RequestBody @Valid CreatePharmacyRequest pharmacyData) {
+        PharmacyDto pharmacy = pharmacyService.createNew(pharmacyData);
+        if (pharmacy != null) {
+            return Response.ok().setPayload(pharmacy);
+        }
+        return Response.notFound().setErrors("Pharmacy creation failed!");
+    }
+
 }
