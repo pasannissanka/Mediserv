@@ -1,10 +1,11 @@
 import { Form, Formik, FormikErrors, FormikTouched } from "formik";
 import React, { useContext, useEffect, useState } from "react";
-import { useLocation } from "react-router";
+import { useLocation, useHistory } from "react-router";
 import * as yup from "yup";
 import Button from "../../Components/Button/Button";
 import { StepperHeading } from "../../Components/Stepper/StepperHeading";
 import { AuthContext } from "../../Context/AuthContext";
+import { OrderData } from "../../Types/types";
 import { Login } from "../Login/Login";
 import { DeliveryInformation } from "./OrderSteps/DeliveryInformationStep";
 import { PaymentDetails } from "./OrderSteps/PaymentDetailsStep";
@@ -62,6 +63,8 @@ export const Order = () => {
   const { token, user } = useContext(AuthContext);
   const [isOpen, setIsOpen] = useState(false);
   const pharmacyId = new URLSearchParams(useLocation().search).get("id");
+  const [orderResponse, setOrderResponse] = useState<OrderData>();
+  const history = useHistory();
 
   useEffect(() => {
     if (token && user) {
@@ -157,14 +160,21 @@ export const Order = () => {
             }),
           })
             .then((response) => {
-              response.json().then((data) => {
+              response.json().then((data: OrderData) => {
                 if (data) {
                   setStepper(stepper + 1);
+                  setOrderResponse(data);
                 }
               });
             })
             .catch((error) => console.log(error));
         }
+      }
+      if (stepper === 3) {
+        values.prescriptionImg.forEach((file) =>
+          URL.revokeObjectURL(file.preview)
+        );
+        history.push("/");
       }
     });
   };
@@ -239,21 +249,28 @@ export const Order = () => {
                     setFieldValue={setFieldValue}
                     errors={errors}
                     touched={touched}
+                    data={orderResponse}
                   />
 
-                  <span className='flex justify-between'>
-                    <Button
-                      className='bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow'
-                      onClick={(e) => {
-                        if (stepper === 0) {
-                          setStepper(stepper);
-                        } else {
+                  <span
+                    className={`flex ${
+                      stepper === 1 || stepper === 2
+                        ? "justify-between "
+                        : "justify-end"
+                    }`}
+                  >
+                    {stepper === 1 || stepper === 2 ? (
+                      <Button
+                        varient='outline-primary'
+                        onClick={(e) => {
                           setStepper(stepper - 1);
-                        }
-                      }}
-                    >
-                      Back
-                    </Button>
+                        }}
+                      >
+                        Back
+                      </Button>
+                    ) : (
+                      <></>
+                    )}
                     <Button
                       type='button'
                       varient='primary'
@@ -268,7 +285,7 @@ export const Order = () => {
                         )
                       }
                     >
-                      Next
+                      {stepper !== 3 ? "Next" : "Done"}
                     </Button>
                   </span>
                 </Form>

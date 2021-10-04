@@ -29,7 +29,11 @@ export const StepperHeading = ({
           return (
             <React.Fragment key={idx}>
               <div
-                className='flex items-center text-black relative cursor-pointer'
+                className={`flex items-center text-black relative ${
+                  linear && !setStepper
+                    ? "cursor-not-allowed"
+                    : "cursor-pointer"
+                } `}
                 onClick={() => handleStep(idx)}
               >
                 <div

@@ -2,6 +2,7 @@ import { Tab } from "@headlessui/react";
 import { FormikErrors, FormikTouched } from "formik";
 import React, { useState } from "react";
 import { InputField } from "../../../Components/InputField/InputField";
+import { OrderData } from "../../../Types/types";
 import { RegisterForm } from "../Order";
 import { DeliveryPageProps } from "./DeliveryInformationStep";
 
@@ -14,7 +15,7 @@ export const PaymentDetails = ({
   touched,
   setFieldValue,
   values,
-}: DeliveryPageProps<RegisterForm>) => {
+}: DeliveryPageProps<RegisterForm, OrderData>) => {
   let [categories] = useState<any[]>([
     {
       name: "Credit Card",
@@ -56,7 +57,7 @@ export const PaymentDetails = ({
           />
         </svg>
       ),
-      panel: <DeliveryInformation/>,
+      panel: <DeliveryInformation values={values} />,
     },
   ]);
 
@@ -82,11 +83,11 @@ export const PaymentDetails = ({
                 as='button'
                 className={({ selected }) =>
                   classNames(
-                    "w-full py-2.5 text-sm leading-5 font-medium text-gray-500 rounded-lg",
+                    "w-full py-2.5 text-sm leading-5 font-medium  rounded-lg transition duration-300",
                     "focus:outline-none",
                     selected
-                      ? "border text-black "
-                      : "text-blue-100 hover:bg-white/[0.12] hover:text-primary-500"
+                      ? "border text-primary-500 "
+                      : "text-gray-400 hover:bg-white/[0.12] hover:text-gray-500"
                   )
                 }
               >
@@ -164,15 +165,26 @@ const CardDetails = ({ errors, touched }: CardDetailsProps<RegisterForm>) => {
         placeholder='CVV'
       />
     </>
-
   );
 };
 
-function DeliveryInformation() {
+type DeliveryInformationProps = {
+  values: RegisterForm;
+};
+
+function DeliveryInformation({ values }: DeliveryInformationProps) {
   return (
-    <label
-      className='appearance-none rounded-md relative block w-3/4 my-2 sm:text-sm'
-    >
-      Delivery Information </label>
-  )
+    <div>
+      <div className='flex flex-col my-2 mx-auto'>
+        <div className='text-base my-1'>Delivery Information</div>
+        <label className='text-sm text-gray-600 content-end'>
+          {values.deliveryInfo.lineOne || ""}
+        </label>
+        <label className='text-sm text-gray-600'>
+          {values.deliveryInfo.lineTwo || ""}
+        </label>
+        {/* <label className='text-sm'>colombo 7</label> */}
+      </div>
+    </div>
+  );
 }
