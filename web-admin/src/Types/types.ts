@@ -36,6 +36,7 @@ export interface AddressData {
 }
 
 export interface PharmacyData {
+  id: string;
   title: string;
   description: string;
   address: AddressData;
