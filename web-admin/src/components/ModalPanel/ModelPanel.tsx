@@ -60,7 +60,7 @@ export default function ModalPanel({
         </button>
       </div>
       {/* <!-- Panel content --> */}
-      <div className='flex flex-col h-screen'>
+      <div className='flex flex-col modal-panel-height'>
         {/* <!-- Panel header --> */}
         <div className='flex flex-col items-center justify-center flex-shrink-0 px-4 py-2 space-y-2 border-b'>
           <span
@@ -80,10 +80,10 @@ export default function ModalPanel({
         <div className='flex-1 overflow-hidden hover:overflow-y-auto'>
           {/* Content goes here */}
           {children}
-          {/* <!-- Footer content --> */}
         </div>
-        <div className=' h-28 my-1 border-t'>{footerContent}</div>
       </div>
+      {/* <!-- Footer content --> */}
+      <div className=' h-28 my-1 border-t'>{footerContent}</div>
     </section>
   );
 }
