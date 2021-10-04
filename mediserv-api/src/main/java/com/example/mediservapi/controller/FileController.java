@@ -41,10 +41,9 @@ public class FileController {
     @GetMapping("/download/{id}")
     public ResponseEntity<ByteArrayResource> download(@PathVariable String id) throws IOException {
         LoadFile loadFile = fileService.downloadFile(id);
-        // System.out.println(loadFile.getFileType());
-
+        
         return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType("image/jpeg"))
+                .contentType(MediaType.parseMediaType(loadFile.getFileType()))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + loadFile.getFilename() + "\"")
                 .body(new ByteArrayResource(loadFile.getFile()));
     }
