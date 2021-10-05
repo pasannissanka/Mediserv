@@ -15,7 +15,7 @@ export const InputField = ({
   ...props
 }: InputFieldProps) => {
   return (
-    <div className='flex flex-col'>
+    <div className='flex flex-col w-full'>
       <label className='mx-2 text-sm -mb-1' htmlFor='field'>
         {label}
       </label>

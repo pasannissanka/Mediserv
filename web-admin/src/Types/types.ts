@@ -36,9 +36,13 @@ export interface AddressData {
 }
 
 export interface PharmacyData {
+  id: string;
   title: string;
   description: string;
   address: AddressData;
+  contactNumber?: string;
+  email?: string;
+  bannerId?: string;
 }
 
 export interface OrderItemData {
@@ -84,4 +88,10 @@ export interface LocationAPIData {
   name_si: string;
   name_ta: string;
   _id: string;
+}
+
+export interface FileResponse {
+  mimeType: string;
+  id: string;
+  fileName: string;
 }

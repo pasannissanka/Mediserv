@@ -12,11 +12,19 @@ export const Card = ({ data }: CardProps) => {
       <div className='bg-white shadow-md rounded-lg mb-2 tracking-wide hover:shadow-lg'>
         <Link to={`order?id=${data.id}`}>
           <div className='md:flex-shrink-0'>
-            <img
-              src='https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=640&q=80'
-              alt='thumbnail'
-              className='w-full h-40 rounded-lg rounded-b-none'
-            />
+            {data.bannerId ? (
+              <img
+                src={`http://localhost:8080/api/public/banner/download/${data?.bannerId}`}
+                alt='thumbnail'
+                className='w-full h-40 rounded-lg rounded-b-none'
+              />
+            ) : (
+              <img
+                src='https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=640&q=80'
+                alt='thumbnail'
+                className='w-full h-40 rounded-lg rounded-b-none'
+              />
+            )}
           </div>
           <div className='px-4 py-2 mt-1'>
             <div className='mb-2'>

@@ -1,17 +1,21 @@
 package com.example.mediservapi.service;
 
-import com.example.mediservapi.dto.mapper.UserMapper;
-import com.example.mediservapi.dto.model.order.OrderDto;
-import com.example.mediservapi.dto.model.order.OrderSearchQuery;
+import com.example.mediservapi.dto.mapper.PharmacyMapper;
+import com.example.mediservapi.dto.model.pharmacy.PharmacyDto;
 import com.example.mediservapi.dto.model.pharmacy.PharmacySearchQuery;
-import com.example.mediservapi.dto.model.request.CreateUpdatePharmacyRequest;
+import com.example.mediservapi.dto.model.request.CreatePharmacyRequest;
 import com.example.mediservapi.dto.model.request.Page;
+import com.example.mediservapi.dto.model.request.UpdatePharmacyRequest;
 import com.example.mediservapi.model.pharmacy.Pharmacy;
-import com.example.mediservapi.repository.order.OrderRepository;
+import com.example.mediservapi.model.user.User;
 import com.example.mediservapi.repository.pharmacy.PharmacyRepository;
+import com.example.mediservapi.repository.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
+import javax.validation.ValidationException;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,44 +24,57 @@ public class PharmacyServiceImpl implements PharmacyService {
 
     @Autowired
     private PharmacyRepository pharmacyRepository;
-
     @Autowired
-    private UserMapper userMapper;
+    private UserRepository userRepository;
+    @Autowired
+    private PharmacyMapper pharmacyMapper;
 
     @Override
-    public Pharmacy createNew(CreateUpdatePharmacyRequest pharmacyData) {
-        Pharmacy newPharmacy = new Pharmacy()
-                .setTitle(pharmacyData.getTitle())
-                .setAddress(pharmacyData.getAddress())
-                .setDescription(pharmacyData.getDescription());
-        return pharmacyRepository.save(newPharmacy);
+    public PharmacyDto createNew(CreatePharmacyRequest pharmacyData) {
+        Pharmacy pharmacy = pharmacyMapper.createPharmacy(pharmacyData);
+        return pharmacyMapper.toPharmacyDto(pharmacyRepository.save(pharmacy));
     }
 
     @Override
-    public Optional<Pharmacy> findById(String id) {
-        return pharmacyRepository.findById(id);
+    public PharmacyDto findById(String id) {
+        return pharmacyMapper.toPharmacyDto(pharmacyRepository.findById(id).orElseThrow(
+                () -> new ValidationException("Pharmacy not found")
+        ));
     }
 
     @Override
-    public Pharmacy updatePharmacy(String id, CreateUpdatePharmacyRequest pharmacyData) {
-        Optional<Pharmacy> pharmacy = pharmacyRepository.findById(id);
-        if (pharmacy.isPresent()) {
-            pharmacy.get()
-                    .setTitle(pharmacyData.getTitle())
-                    .setAddress(pharmacyData.getAddress())
-                    .setDescription(pharmacyData.getDescription());
-            return pharmacyRepository.save(pharmacy.get());
-        }
-        return null;
+    public PharmacyDto updatePharmacy(String id, UpdatePharmacyRequest pharmacyData) {
+        Pharmacy pharmacy = pharmacyRepository.findById(id).orElseThrow(
+                () -> new ValidationException("Pharmacy not found")
+        );
+        pharmacyMapper.updatePharmacy(pharmacyData, pharmacy);
+        pharmacy = pharmacyRepository.save(pharmacy);
+        return pharmacyMapper.toPharmacyDto(pharmacy);
     }
 
     @Override
-    public List<Pharmacy> findAll() {
-        return pharmacyRepository.findAll();
+    public List<PharmacyDto> findAll() {
+        return pharmacyMapper.toPharmacyDto(pharmacyRepository.findAll());
     }
 
     @Override
-    public List<Pharmacy> search(Page page, PharmacySearchQuery searchQuery) {
-        return pharmacyRepository.searchPharmacy(page, searchQuery);
+    public List<PharmacyDto> search(Page page, PharmacySearchQuery searchQuery) {
+        return pharmacyMapper.toPharmacyDto(pharmacyRepository.searchPharmacy(page, searchQuery));
+    }
+
+    @Override
+    public List<PharmacyDto> getUsersPharmacy(String username) {
+        User admin = userRepository.findByEmail(username).orElseThrow(
+                () -> new ValidationException("Admin not found")
+        );
+        List<Pharmacy> pharmacies = pharmacyRepository.findPharmacyByAdminId(admin.getId());
+        return pharmacyMapper.toPharmacyDto(pharmacies);
+    }
+
+    @Override
+    public Boolean isPharmacyBanner(String bannerId) {
+        Pharmacy pharmacy = pharmacyRepository.findPharmacyByBannerId(bannerId);
+        System.out.println(pharmacy);
+        return pharmacy != null;
     }
 }

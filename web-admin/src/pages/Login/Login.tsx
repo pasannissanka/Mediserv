@@ -1,7 +1,8 @@
 import { ErrorMessage, Field, Form, Formik } from 'formik';
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Button from '../../components/Button/Button';
+import { ErrorDialog } from '../../components/ErrorDialog/ErrorDialog';
 import { AuthContext } from '../../Context/AuthContext';
 import { LoginResponse } from '../../Types/types';
 
@@ -13,6 +14,8 @@ interface LoginForm {
 
 export const Login = () => {
   const { setUser, setToken } = useContext(AuthContext);
+  const [isErrorModal, setErrorModal] = useState<boolean>(false);
+  const [{ errTitle, errMsg }, setErrData] = useState({ errTitle: '', errMsg: '' });
   return (
     <>
       <div className="flex-col w-1/3 m-auto my-52">
@@ -34,6 +37,7 @@ export const Login = () => {
                   }),
                 });
                 const data: LoginResponse = await response.json();
+
                 setSubmitting(false);
                 if (data) {
                   setUser(data.user);
@@ -42,6 +46,8 @@ export const Login = () => {
                 }
               } catch (error) {
                 setSubmitting(false);
+                setErrorModal(true);
+                setErrData({ errTitle: 'An error occurred', errMsg: 'Oops something went wrong, Please try again!' });
                 console.log(error);
               }
             }}
@@ -133,6 +139,7 @@ export const Login = () => {
             )}
           </Formik>
         </div>
+        <ErrorDialog isErrorModal={isErrorModal} setErrorModal={setErrorModal} errMsg={errMsg} errTitle={errTitle} />
       </div>
     </>
   );

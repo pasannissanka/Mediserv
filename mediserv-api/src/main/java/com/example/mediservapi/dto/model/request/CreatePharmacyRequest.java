@@ -10,14 +10,17 @@ import javax.validation.constraints.NotEmpty;
 
 @Data
 @Accessors(chain = true)
-public class CreateUpdatePharmacyRequest {
+public class CreatePharmacyRequest {
     @NotBlank
     @NotEmpty
     private String title;
 
+    @NotBlank
+    @NotEmpty
+    private String adminId;
+
     private Address address;
 
     private String description;
-
-
 }
+

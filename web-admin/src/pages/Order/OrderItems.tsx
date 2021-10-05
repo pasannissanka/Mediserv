@@ -1,8 +1,7 @@
 import React from "react";
-import { OrderInfoProp } from "./Order";
-import { ReactComponent as UndrawEmptyCart } from "../../svg/undraw_empty_cart.svg";
-import { DataFeed } from "../../components";
 import Button from "../../components/Button/Button";
+import { ReactComponent as UndrawEmptyCart } from "../../svg/undraw_empty_cart.svg";
+import { OrderInfoProp } from "./Order";
 
 type OrderItemsProps = {
   onOrderProcess: () => void;
