@@ -64,7 +64,7 @@ export function EditViewField({
               >
                 Cancel
               </Button>
-              <Button varient='primary' onClick={onSubmit}>
+              <Button varient='primary' type='submit' onClick={onSubmit}>
                 Save
               </Button>
             </div>
