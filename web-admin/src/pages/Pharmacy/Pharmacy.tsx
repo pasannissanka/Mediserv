@@ -169,7 +169,7 @@ export const Pharmacy = () => {
                       <div>{data && data?.title}</div>
                     </EditViewField>
                     <EditViewField
-                      title='Discription'
+                      title='Description'
                       onSubmit={(e) => {
                         submitForm();
                       }}
