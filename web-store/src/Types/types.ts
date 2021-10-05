@@ -35,10 +35,13 @@ export interface AddressData {
 }
 
 export interface PharmacyData {
-  address: AddressData;
-  description: string;
   id: string;
   title: string;
+  description: string;
+  address: AddressData;
+  contactNumber?: string;
+  email?: string;
+  bannerId?: string;
 }
 
 export interface OrderItemData {
