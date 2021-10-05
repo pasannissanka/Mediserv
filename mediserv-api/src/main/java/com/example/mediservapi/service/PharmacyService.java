@@ -19,4 +19,5 @@ public interface PharmacyService {
     List<PharmacyDto> findAll();
     List<PharmacyDto> search(Page page, PharmacySearchQuery searchQuery);
     List<PharmacyDto> getUsersPharmacy (String adminId);
+    Boolean isPharmacyBanner(String bannerId);
    }

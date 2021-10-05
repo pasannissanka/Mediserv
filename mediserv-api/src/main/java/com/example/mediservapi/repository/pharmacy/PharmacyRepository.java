@@ -20,6 +20,7 @@ import java.util.List;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 
 public interface PharmacyRepository extends MongoRepository<Pharmacy, String>, PharmacyRepoCustom {
+    Pharmacy findPharmacyByBannerId(String bannerId);
 }
 
 interface PharmacyRepoCustom {

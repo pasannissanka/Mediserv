@@ -11,10 +11,13 @@ import com.example.mediservapi.model.user.User;
 import com.example.mediservapi.repository.pharmacy.PharmacyRepository;
 import com.example.mediservapi.repository.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
 import javax.validation.ValidationException;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class PharmacyServiceImpl implements PharmacyService {
@@ -66,5 +69,12 @@ public class PharmacyServiceImpl implements PharmacyService {
         );
         List<Pharmacy> pharmacies = pharmacyRepository.findPharmacyByAdminId(admin.getId());
         return pharmacyMapper.toPharmacyDto(pharmacies);
+    }
+
+    @Override
+    public Boolean isPharmacyBanner(String bannerId) {
+        Pharmacy pharmacy = pharmacyRepository.findPharmacyByBannerId(bannerId);
+        System.out.println(pharmacy);
+        return pharmacy != null;
     }
 }
