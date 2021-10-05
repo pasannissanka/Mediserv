@@ -30,6 +30,7 @@ export function EditViewField({
             }}
             varient='outline-primary'
             size='sm'
+            type='button'
           >
             <span>
               <svg
@@ -61,10 +62,18 @@ export function EditViewField({
                 onClick={() => {
                   setState((state) => !state);
                 }}
+                type='button'
               >
                 Cancel
               </Button>
-              <Button varient='primary' type='submit' onClick={onSubmit}>
+              <Button
+                varient='primary'
+                type='button'
+                onClick={(e) => {
+                  setState(!state);
+                  onSubmit(e);
+                }}
+              >
                 Save
               </Button>
             </div>

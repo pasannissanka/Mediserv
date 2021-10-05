@@ -24,6 +24,9 @@ public class Pharmacy {
     private String title;
     private String description;
     private Address address;
+    private String contactNumber;
+    private String email;
+    private String bannerId;
 
     @CreatedDate
     private Date createdAt;

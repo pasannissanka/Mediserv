@@ -40,6 +40,9 @@ export interface PharmacyData {
   title: string;
   description: string;
   address: AddressData;
+  contactNumber?: string;
+  email?: string;
+  bannerId?: string;
 }
 
 export interface OrderItemData {

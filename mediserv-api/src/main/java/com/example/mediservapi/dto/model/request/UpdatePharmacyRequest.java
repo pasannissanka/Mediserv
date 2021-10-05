@@ -18,4 +18,8 @@ public class UpdatePharmacyRequest {
     private Address address;
 
     private String description;
+
+    private String contactNumber;
+    private String email;
+    private String bannerId;
 }

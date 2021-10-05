@@ -81,6 +81,15 @@ public class PharmacyMapper {
 //            }
             pharmacy.setAdminIds(adminIds);
         }
+        if (request.getContactNumber() != null) {
+            pharmacy.setContactNumber(request.getContactNumber());
+        }
+        if (request.getEmail() != null) {
+            pharmacy.setEmail(request.getEmail());
+        }
+        if (request.getBannerId() != null) {
+            pharmacy.setBannerId(request.getBannerId());
+        }
     }
 
     public PharmacyDto toPharmacyDto (Pharmacy pharmacy) {
@@ -92,7 +101,10 @@ public class PharmacyMapper {
                 .setTitle(pharmacy.getTitle())
                 .setId(pharmacy.getId())
                 .setDescription(pharmacy.getDescription())
-                .setAddress(pharmacy.getAddress());
+                .setAddress(pharmacy.getAddress())
+                .setContactNumber(pharmacy.getContactNumber())
+                .setEmail(pharmacy.getEmail())
+                .setBannerId(pharmacy.getBannerId());
     }
 
     public List<PharmacyDto> toPharmacyDto (List<Pharmacy> pharmacies) {

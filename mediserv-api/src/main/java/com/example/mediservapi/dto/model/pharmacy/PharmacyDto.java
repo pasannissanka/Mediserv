@@ -12,4 +12,7 @@ public class PharmacyDto {
     private String title;
     private String description;
     private Address address;
+    private String contactNumber;
+    private String email;
+    private String bannerId;
 }
