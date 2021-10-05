@@ -89,3 +89,9 @@ export interface LocationAPIData {
   name_ta: string;
   _id: string;
 }
+
+export interface FileResponse {
+  mimeType: string;
+  id: string;
+  fileName: string;
+}

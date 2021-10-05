@@ -1,15 +1,17 @@
 import { Form, Formik } from "formik";
 import * as React from "react";
 import { useContext } from "react";
+import { DragAndDrop, Img } from "../../components/DragAndDrop/DragAndDrop";
 import { InputField } from "../../components/InputField/InputField";
 import { AuthContext } from "../../Context/AuthContext";
 import { ReactComponent as PharmacySvg } from "../../svg/pharmacy.svg";
-import { PharmacyData } from "../../Types/types";
+import { FileResponse, PharmacyData } from "../../Types/types";
 import { EditViewField } from "./EditViewField";
 
 export const Pharmacy = () => {
   const { token } = useContext(AuthContext);
   const [data, setData] = React.useState<PharmacyData>();
+  const [bannerImg, setBannerImg] = React.useState<Img[]>();
 
   React.useEffect(() => {
     async function fetchData() {
@@ -27,6 +29,42 @@ export const Pharmacy = () => {
     }
     fetchData();
   }, [token]);
+
+  const handleImageUpload = (
+    setFieldValue: (
+      field: string,
+      value: any,
+      shouldValidate?: boolean | undefined
+    ) => void,
+    submitForm: (() => Promise<void>) & (() => Promise<any>)
+  ) => {
+    if (bannerImg) {
+      const imgData = new FormData();
+      imgData.append("file", bannerImg[0]);
+
+      fetch("http://localhost:8080/api/file/upload", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: imgData,
+      })
+        .then((res) => {
+          res
+            .json()
+            .then((resData: FileResponse) => {
+              if (resData) {
+                setFieldValue("bannerId", resData.id);
+                submitForm();
+              } else {
+                console.log(resData);
+              }
+            })
+            .catch((err) => console.log(err));
+        })
+        .catch((err) => console.log(err));
+    }
+  };
 
   console.log(data);
 
@@ -63,6 +101,7 @@ export const Pharmacy = () => {
                       title: values.title,
                       contactNumber: values.contactNumber,
                       email: values.email,
+                      bannerId: values.bannerId,
                     } as PharmacyData),
                   }
                 );
@@ -74,20 +113,39 @@ export const Pharmacy = () => {
               updatePharmacy();
             }}
           >
-            {({ values, submitForm }) => (
+            {({ values, submitForm, setFieldValue }) => (
               <Form>
                 <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
                   <div className='col-span-1'>
                     <EditViewField
                       title='Banner'
-                      onSubmit={(e) => console.log(values)}
-                      editView={<div></div>}
+                      onSubmit={(e) => {
+                        handleImageUpload(setFieldValue, submitForm);
+                      }}
+                      editView={
+                        <div>
+                          <DragAndDrop
+                            values={bannerImg}
+                            setValue={setBannerImg}
+                          />
+                        </div>
+                      }
                     >
-                      <div>
-                        <PharmacySvg className='max-h-44 h- md:h-48 lg:h-60 my-8 w-full' />
-                        <span className='flex justify-center text-gray-600'>
-                          Didn't set a banner yet
-                        </span>
+                      <div className='w-full p-2'>
+                        {data.bannerId ? (
+                          <img
+                            className='rounded-lg'
+                            src={`http://localhost:8080/api/public/banner/download/${data.bannerId}`}
+                            alt='PharmacyBanner'
+                          />
+                        ) : (
+                          <div>
+                            <PharmacySvg className='max-h-44 h- md:h-48 lg:h-60 my-8 w-full' />
+                            <span className='flex justify-center text-gray-600'>
+                              Didn't set a banner yet
+                            </span>
+                          </div>
+                        )}
                       </div>
                     </EditViewField>
                   </div>
