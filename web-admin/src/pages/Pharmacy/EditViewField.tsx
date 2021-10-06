@@ -6,7 +6,8 @@ export type EditViewFieldProps = {
   title: string;
   children: React.ReactNode;
   editView: React.ReactNode;
-  onSubmit(e: any): void;
+  onSubmit(e?: any): void;
+  onCancel?(e?: any): void;
 };
 
 export function EditViewField({
@@ -14,6 +15,7 @@ export function EditViewField({
   children,
   editView,
   onSubmit,
+  onCancel,
 }: EditViewFieldProps) {
   const [state, setState] = useState<boolean>(true);
 
@@ -59,8 +61,11 @@ export function EditViewField({
               <Button
                 varient='outline-primary'
                 className='mr-2'
-                onClick={() => {
-                  setState((state) => !state);
+                onClick={(e) => {
+                  setState(!state);
+                  if (onCancel) {
+                    onCancel(e);
+                  }
                 }}
                 type='button'
               >

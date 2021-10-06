@@ -10,8 +10,6 @@ import javax.validation.constraints.NotEmpty;
 @Data
 @Accessors(chain = true)
 public class UpdatePharmacyRequest {
-    @NotBlank
-    @NotEmpty
     private String title;
     private String adminId;
 

@@ -1,4 +1,4 @@
-import { Form, Formik } from "formik";
+import { Form, Formik, FormikProps } from "formik";
 import * as React from "react";
 import { useContext } from "react";
 import { DragAndDrop, Img } from "../../components/DragAndDrop/DragAndDrop";
@@ -30,14 +30,7 @@ export const Pharmacy = () => {
     fetchData();
   }, [token]);
 
-  const handleImageUpload = (
-    setFieldValue: (
-      field: string,
-      value: any,
-      shouldValidate?: boolean | undefined
-    ) => void,
-    submitForm: (() => Promise<void>) & (() => Promise<any>)
-  ) => {
+  const handleImageUpload = (formikProps: FormikProps<PharmacyData>) => {
     if (bannerImg) {
       const imgData = new FormData();
       imgData.append("file", bannerImg[0]);
@@ -54,8 +47,9 @@ export const Pharmacy = () => {
             .json()
             .then((resData: FileResponse) => {
               if (resData) {
-                setFieldValue("bannerId", resData.id);
-                submitForm();
+                // formikProps.setFieldValue("bannerId", resData.id);
+                handleFormSubmit("bannerId", formikProps, resData.id);
+                setBannerImg([]);
               } else {
                 console.log(resData);
               }
@@ -66,7 +60,68 @@ export const Pharmacy = () => {
     }
   };
 
-  console.log(data);
+  const handleFormSubmit = (
+    field:
+      | "title"
+      | "description"
+      | "contactNumber"
+      | "email"
+      | "address"
+      | "bannerId",
+    formikProps: FormikProps<PharmacyData>,
+    bannerId?: string
+  ) => {
+    const { values, submitForm, setSubmitting } = formikProps;
+    submitForm();
+
+    let body: any = {};
+    if (field === "bannerId" && bannerId) {
+      body = {
+        [field]: bannerId,
+      };
+    } else {
+      body = {
+        [field]: values[field],
+      };
+    }
+
+    const updatePharmacy = async () => {
+      setSubmitting(true);
+      const res = await fetch(
+        `http://localhost:8080/api/pharmacies/${values.id}`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+        }
+      );
+      const responseData: PharmacyData = await res.json();
+      if (responseData) {
+        setSubmitting(false);
+        setData(responseData);
+      }
+    };
+    updatePharmacy();
+  };
+
+  const handleFieldCancel = (
+    field:
+      | "title"
+      | "description"
+      | "contactNumber"
+      | "email"
+      | "address"
+      | "bannerId",
+    formikProps: FormikProps<PharmacyData>
+  ) => {
+    const { setFieldValue } = formikProps;
+    if (data) {
+      setFieldValue(field, data[field]);
+    }
+  };
 
   return (
     <>
@@ -82,183 +137,176 @@ export const Pharmacy = () => {
               title: data.title || "",
               contactNumber: data.contactNumber || "",
               email: data.email || "",
+              bannerId: data.bannerId || "",
             }}
-            onSubmit={(values) => {
-              console.log(values);
-              const updatePharmacy = async () => {
-                console.log(values);
-                const res = await fetch(
-                  `http://localhost:8080/api/pharmacies/${values.id}`,
-                  {
-                    method: "PUT",
-                    headers: {
-                      Authorization: `Bearer ${token}`,
-                      "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                      address: values.address,
-                      description: values.description,
-                      title: values.title,
-                      contactNumber: values.contactNumber,
-                      email: values.email,
-                      bannerId: values.bannerId,
-                    } as PharmacyData),
-                  }
-                );
-                const responseData: PharmacyData = await res.json();
-                if (responseData) {
-                  setData(responseData);
-                }
-              };
-              updatePharmacy();
-            }}
+            onSubmit={(values) => {}}
           >
-            {({ values, submitForm, setFieldValue }) => (
-              <Form>
-                <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
-                  <div className='col-span-1'>
-                    <EditViewField
-                      title='Banner'
-                      onSubmit={(e) => {
-                        handleImageUpload(setFieldValue, submitForm);
-                      }}
-                      editView={
-                        <div>
-                          <DragAndDrop
-                            values={bannerImg}
-                            setValue={setBannerImg}
-                          />
+            {(formikProps) => {
+              return (
+                <Form>
+                  <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
+                    <div className='col-span-1'>
+                      <EditViewField
+                        title='Banner'
+                        onSubmit={(e) => {
+                          handleImageUpload(formikProps);
+                        }}
+                        onCancel={(e) => {
+                          setBannerImg([]);
+                        }}
+                        editView={
+                          <div>
+                            <DragAndDrop
+                              values={bannerImg}
+                              setValue={setBannerImg}
+                            />
+                          </div>
+                        }
+                      >
+                        <div className='w-full p-2'>
+                          {data.bannerId ? (
+                            <img
+                              className='rounded-lg'
+                              src={`http://localhost:8080/api/public/banner/download/${data.bannerId}`}
+                              alt='PharmacyBanner'
+                            />
+                          ) : (
+                            <div>
+                              <PharmacySvg className='max-h-44 h- md:h-48 lg:h-60 my-8 w-full' />
+                              <span className='flex justify-center text-gray-600'>
+                                Didn't set a banner yet
+                              </span>
+                            </div>
+                          )}
                         </div>
-                      }
-                    >
-                      <div className='w-full p-2'>
-                        {data.bannerId ? (
-                          <img
-                            className='rounded-lg'
-                            src={`http://localhost:8080/api/public/banner/download/${data.bannerId}`}
-                            alt='PharmacyBanner'
-                          />
-                        ) : (
-                          <div>
-                            <PharmacySvg className='max-h-44 h- md:h-48 lg:h-60 my-8 w-full' />
-                            <span className='flex justify-center text-gray-600'>
-                              Didn't set a banner yet
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    </EditViewField>
-                  </div>
+                      </EditViewField>
+                    </div>
 
-                  {/* fields */}
-                  <div className='col-span-1 md:col-span-2 flex flex-col w-full mx-auto'>
-                    <EditViewField
-                      title='Title'
-                      onSubmit={(e) => {
-                        submitForm();
-                      }}
-                      editView={
-                        <InputField
-                          placeholder='New title'
-                          className='rounded-md my-2 sm:text-sm mx-2 '
-                          type='text'
-                          name='title'
-                        />
-                      }
-                    >
-                      <div>{data && data?.title}</div>
-                    </EditViewField>
-                    <EditViewField
-                      title='Description'
-                      onSubmit={(e) => {
-                        submitForm();
-                      }}
-                      editView={
-                        <InputField
-                          placeholder='New description'
-                          className='rounded-md my-2 sm:text-sm mx-2 '
-                          type='text'
-                          name='description'
-                        />
-                      }
-                    >
-                      <div>{data && data?.description}</div>
-                    </EditViewField>
-                    <EditViewField
-                      title='Contact number'
-                      onSubmit={(e) => {
-                        submitForm();
-                      }}
-                      editView={
-                        <InputField
-                          placeholder='New Contact number'
-                          className='rounded-md my-2 sm:text-sm mx-2 '
-                          type='text'
-                          name='contactNumber'
-                        />
-                      }
-                    >
-                      <div>{data.contactNumber || "-"}</div>
-                    </EditViewField>
-                    <EditViewField
-                      title='Email'
-                      onSubmit={(e) => {
-                        submitForm();
-                      }}
-                      editView={
-                        <InputField
-                          placeholder='New Email'
-                          className='rounded-md my-2 sm:text-sm mx-2 '
-                          type='text'
-                          name='email'
-                        />
-                      }
-                    >
-                      <div>{data.email || "-"}</div>
-                    </EditViewField>
-                    <EditViewField
-                      title='Address'
-                      onSubmit={(e) => {
-                        submitForm();
-                      }}
-                      editView={
-                        <>
-                          <div className='flex justify-between'>
-                            <InputField
-                              label='Province'
-                              placeholder='Province'
-                              className='rounded-md my-2 sm:text-sm mx-2 '
-                              type='text'
-                              name='address.province'
-                            />
-                            <InputField
-                              label='District'
-                              placeholder='District'
-                              className='rounded-md my-2 sm:text-sm mx-2 '
-                              type='text'
-                              name='address.district'
-                            />
-                          </div>
-                          <div>
-                            <InputField
-                              as='textarea'
-                              rows='4'
-                              placeholder='Address'
-                              className='rounded-md my-2 sm:text-sm mx-2 '
-                              name='address.lineOne'
-                            />
-                          </div>
-                        </>
-                      }
-                    >
-                      <div>{data && data?.address.lineOne}</div>
-                      <div>{data && data?.address.province},</div>
-                      <div>{data && data?.address.district},</div>
-                    </EditViewField>
+                    {/* fields */}
+                    <div className='col-span-1 md:col-span-2 flex flex-col w-full mx-auto'>
+                      <EditViewField
+                        title='Title'
+                        onSubmit={(e) => {
+                          handleFormSubmit("title", formikProps);
+                        }}
+                        onCancel={(e) => {
+                          handleFieldCancel("title", formikProps);
+                        }}
+                        editView={
+                          <InputField
+                            placeholder='New title'
+                            className='rounded-md my-2 sm:text-sm mx-2 '
+                            type='text'
+                            name='title'
+                          />
+                        }
+                      >
+                        <div>{data && data?.title}</div>
+                      </EditViewField>
+                      <EditViewField
+                        title='Description'
+                        onSubmit={(e) => {
+                          handleFormSubmit("description", formikProps);
+                        }}
+                        onCancel={(e) => {
+                          handleFieldCancel("description", formikProps);
+                        }}
+                        editView={
+                          <InputField
+                            placeholder='New description'
+                            className='rounded-md my-2 sm:text-sm mx-2 '
+                            type='text'
+                            name='description'
+                          />
+                        }
+                      >
+                        <div>{data && data?.description}</div>
+                      </EditViewField>
+                      <EditViewField
+                        title='Contact number'
+                        onSubmit={(e) => {
+                          handleFormSubmit("contactNumber", formikProps);
+                        }}
+                        onCancel={(e) => {
+                          handleFieldCancel("contactNumber", formikProps);
+                        }}
+                        editView={
+                          <InputField
+                            placeholder='New Contact number'
+                            className='rounded-md my-2 sm:text-sm mx-2 '
+                            type='text'
+                            name='contactNumber'
+                          />
+                        }
+                      >
+                        <div>{data.contactNumber || "-"}</div>
+                      </EditViewField>
+                      <EditViewField
+                        title='Email'
+                        onSubmit={(e) => {
+                          handleFormSubmit("email", formikProps);
+                        }}
+                        onCancel={(e) => {
+                          handleFieldCancel("email", formikProps);
+                        }}
+                        editView={
+                          <InputField
+                            placeholder='New Email'
+                            className='rounded-md my-2 sm:text-sm mx-2 '
+                            type='text'
+                            name='email'
+                          />
+                        }
+                      >
+                        <div>{data.email || "-"}</div>
+                      </EditViewField>
+                      <EditViewField
+                        title='Address'
+                        onSubmit={(e) => {
+                          handleFormSubmit("address", formikProps);
+                        }}
+                        onCancel={(e) => {
+                          handleFieldCancel("address", formikProps);
+                        }}
+                        editView={
+                          <>
+                            <div className='flex justify-between'>
+                              <InputField
+                                label='Province'
+                                placeholder='Province'
+                                className='rounded-md my-2 sm:text-sm mx-2 '
+                                type='text'
+                                name='address.province'
+                              />
+                              <InputField
+                                label='District'
+                                placeholder='District'
+                                className='rounded-md my-2 sm:text-sm mx-2 '
+                                type='text'
+                                name='address.district'
+                              />
+                            </div>
+                            <div>
+                              <InputField
+                                as='textarea'
+                                rows='4'
+                                placeholder='Address'
+                                className='rounded-md my-2 sm:text-sm mx-2 '
+                                name='address.lineOne'
+                              />
+                            </div>
+                          </>
+                        }
+                      >
+                        <div>{data && data?.address.lineOne}</div>
+                        <div>{data && data?.address.province},</div>
+                        <div>{data && data?.address.district},</div>
+                      </EditViewField>
+                    </div>
                   </div>
-                </div>
-              </Form>
-            )}
+                </Form>
+              );
+            }}
           </Formik>
         )}
       </div>
