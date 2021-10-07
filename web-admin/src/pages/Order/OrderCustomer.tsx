@@ -40,7 +40,10 @@ export const OrderCustomer = ({ orderInfo }: OrderCustomerProps) => {
           <span className='text-base text-gray-600 flex flex-col my-2'>
             <span>{orderInfo.customer.name}</span>
             <span>{orderInfo.deliveryAddress.lineOne}</span>
-            <span>{orderInfo.deliveryAddress.lineTwo}</span>
+            <span>
+              {orderInfo.deliveryAddress.province},{" "}
+              {orderInfo.deliveryAddress.district}
+            </span>
           </span>
         </div>
         <div className='border bg-black w-full my-2'></div>
@@ -49,7 +52,10 @@ export const OrderCustomer = ({ orderInfo }: OrderCustomerProps) => {
           <span className='text-base text-gray-600 flex flex-col my-2'>
             <span>{orderInfo.customer.name}</span>
             <span>{orderInfo.deliveryAddress.lineOne}</span>
-            <span>{orderInfo.deliveryAddress.lineTwo}</span>
+            <span>
+              {orderInfo.deliveryAddress.province},{" "}
+              {orderInfo.deliveryAddress.district}
+            </span>
           </span>
         </div>
       </div>

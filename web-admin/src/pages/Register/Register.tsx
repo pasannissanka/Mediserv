@@ -1,19 +1,19 @@
 import { Form, Formik } from "formik";
 import React, { useContext, useState } from "react";
 import Button from "../../components/Button/Button";
+import { ErrorDialog } from "../../components/ErrorDialog/ErrorDialog";
 import { StepperHeading } from "../../components/Stepper/StepperHeading";
 import { AuthContext } from "../../Context/AuthContext";
+import { ADMIN_TYPES } from "../../Types/enums";
 import {
-  LocationAPIData,
   LoginResponse,
   PharmacyData,
+  SelectValue,
   UserData,
 } from "../../Types/types";
-import { ErrorDialog } from "../../components/ErrorDialog/ErrorDialog";
 import { RegisterPage01 } from "./RegisterPage01";
 import { RegisterPage02 } from "./RegisterPage02";
 import { RegisterPage03 } from "./RegisterPage03";
-import { ADMIN_TYPES } from "../../Types/enums";
 
 export interface RegisterForm {
   name: string;
@@ -22,12 +22,9 @@ export interface RegisterForm {
   retypePassword: string;
   title: string;
   description: string;
-  houseNo: string;
   lineOne: string;
-  lineTwo: string;
-  province: LocationAPIData | "";
-  district: LocationAPIData | "";
-  town: string;
+  province: SelectValue | null;
+  district: SelectValue | null;
   longitude: string;
   latitude: string;
 }
@@ -82,12 +79,9 @@ export const Register = () => {
               retypePassword: "",
               title: "",
               description: "",
-              houseNo: "",
               lineOne: "",
-              lineTwo: "",
-              province: "",
-              district: "",
-              town: "",
+              province: null,
+              district: null,
               longitude: "",
               latitude: "",
             }}
@@ -132,12 +126,9 @@ export const Register = () => {
                         title: values.title,
                         description: values.description,
                         address: {
-                          houseNo: values.houseNo,
                           lineOne: values.lineOne,
-                          lineTwo: values.lineTwo,
-                          province: values.province,
-                          district: values.district,
-                          town: values.town,
+                          province: values.province?.value,
+                          district: values.district?.value,
                           longitude: values.longitude,
                           latitude: values.latitude,
                         },
@@ -164,13 +155,7 @@ export const Register = () => {
                       }
                     );
                     const data: LoginResponse = await response.json();
-                    if (
-                      data &&
-                      (data.user.authorities.includes(
-                        ADMIN_TYPES.PHARMACY_USER
-                      ) ||
-                        data.user.authorities.includes(ADMIN_TYPES.SUPER_ADMIN))
-                    ) {
+                    if (data) {
                       setUser(data.user);
                       localStorage.setItem("auth-token", data.token);
                       setToken(data.token);
@@ -187,6 +172,7 @@ export const Register = () => {
                     "Cannot connect the computer to the server, Please try again!",
                 });
               }
+              console.log(values);
               resetForm();
             }}
           >

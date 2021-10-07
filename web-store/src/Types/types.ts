@@ -24,12 +24,9 @@ export interface LoginResponse {
 }
 
 export interface AddressData {
-  houseNo: string;
   lineOne: string;
-  lineTwo: string;
   province: string;
   district: string;
-  town: string;
   longitude: number;
   latitude: number;
 }

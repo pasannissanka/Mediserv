@@ -23,7 +23,6 @@ export interface RegisterForm {
     province: string;
     district: string;
     lineOne: string;
-    lineTwo: string;
   };
   paymentDetails: {
     deliveryMethod: string;
@@ -153,7 +152,6 @@ export const Order = () => {
               prescriptionImgUrl: values.prescriptionFileId,
               deliveryAddress: {
                 lineOne: values.deliveryInfo.lineOne,
-                lineTwo: values.deliveryInfo.lineTwo,
                 province: values.deliveryInfo.province,
                 district: values.deliveryInfo.district,
               },
@@ -216,7 +214,6 @@ export const Order = () => {
                   email: user?.email || "",
                   phoneNumber: "",
                   lineOne: "",
-                  lineTwo: "",
                   district: "",
                   province: "",
                 },

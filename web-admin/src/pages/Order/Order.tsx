@@ -1,6 +1,6 @@
 import { Dialog } from "@headlessui/react";
 import { FormikProps } from "formik";
-import React, { Ref, useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router";
 import Button from "../../components/Button/Button";
 import ModalPanel from "../../components/ModalPanel/ModelPanel";

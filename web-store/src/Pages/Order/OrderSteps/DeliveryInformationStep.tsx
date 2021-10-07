@@ -85,16 +85,7 @@ export const DeliveryInformation = ({
             className='appearance-none rounded-md relative block w-full my-2 sm:text-sm'
             name='deliveryInfo.lineOne'
             type='text'
-            placeholder='Address line 01'
-          />
-
-          <InputField
-            errors={errors.deliveryInfo?.lineTwo}
-            touched={touched.deliveryInfo?.lineTwo}
-            className='appearance-none rounded-md relative block w-full my-2 sm:text-sm'
-            name='deliveryInfo.lineTwo'
-            type='text'
-            placeholder='Address line 02'
+            placeholder='Address'
           />
         </div>
         <span className='w-full px-4 m-auto pt-6'>

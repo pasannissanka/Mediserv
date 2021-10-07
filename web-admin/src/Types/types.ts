@@ -25,12 +25,9 @@ export interface ErrorResponse {
 }
 
 export interface AddressData {
-  houseNo: string;
   lineOne: string;
-  lineTwo: string;
   province: string;
   district: string;
-  town: string;
   longitude: number;
   latitude: number;
 }
@@ -88,6 +85,12 @@ export interface LocationAPIData {
   name_si: string;
   name_ta: string;
   _id: string;
+}
+
+export interface SelectValue {
+  id?: string;
+  value: string;
+  label: string;
 }
 
 export interface FileResponse {
