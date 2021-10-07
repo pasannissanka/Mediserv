@@ -7,7 +7,10 @@ import { StepperHeading } from "../../Components/Stepper/StepperHeading";
 import { AuthContext } from "../../Context/AuthContext";
 import { OrderData, SelectValue } from "../../Types/types";
 import { Login } from "../Login/Login";
-import { DeliveryInformation } from "./OrderSteps/DeliveryInformationStep";
+import {
+  DeliveryInformation,
+  OpenMapsLocationData,
+} from "./OrderSteps/DeliveryInformationStep";
 import { PaymentDetails } from "./OrderSteps/PaymentDetailsStep";
 import { Img, Prescription } from "./OrderSteps/PrescriptionStep";
 import { Summery } from "./OrderSteps/SummeryStep";
@@ -23,6 +26,9 @@ export interface RegisterForm {
     province: SelectValue | null;
     district: SelectValue | null;
     lineOne: string;
+    locationSelected?: OpenMapsLocationData | null;
+    longitude?: number | null;
+    latitude?: number | null;
   };
   paymentDetails: {
     deliveryMethod: string;
@@ -157,6 +163,8 @@ export const Order = () => {
                 lineOne: values.deliveryInfo.lineOne,
                 province: values.deliveryInfo.province?.value,
                 district: values.deliveryInfo.district?.value,
+                longitude: values.deliveryInfo.locationSelected?.coord.lng,
+                latitude: values.deliveryInfo.locationSelected?.coord.lat,
               },
             }),
           })
@@ -219,6 +227,9 @@ export const Order = () => {
                   lineOne: "",
                   district: null,
                   province: null,
+                  locationSelected: null,
+                  longitude: null,
+                  latitude: null,
                 },
                 paymentDetails: {
                   deliveryMethod: "",

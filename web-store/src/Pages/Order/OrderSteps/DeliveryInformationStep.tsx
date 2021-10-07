@@ -29,17 +29,18 @@ export interface DeliveryPageProps<T, J> {
   data?: J;
 }
 
+export type OpenMapsLocationData = {
+  coord: L.LatLng;
+  input: string;
+} & SearchResult<RawResult>;
+
 let DefaultIcon = L.icon({
   iconUrl: icon,
   shadowUrl: iconShadow,
 });
 
-type OpenMapsLocationData = {
-  coord: L.LatLng;
-  input: string;
-} & SearchResult<RawResult>;
-
 L.Marker.prototype.options.icon = DefaultIcon;
+
 export const DeliveryInformation = ({
   values,
   setFieldValue,
@@ -73,7 +74,11 @@ export const DeliveryInformation = ({
         }) as any[]),
       ]);
     }
-    fetchData();
+    try {
+      fetchData();
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
 
   useEffect(() => {
@@ -99,7 +104,11 @@ export const DeliveryInformation = ({
         ]);
       }
     }
-    fetchData();
+    try {
+      fetchData();
+    } catch (error) {
+      console.log(error);
+    }
   }, [values.deliveryInfo.province]);
 
   const provider: OpenStreetMapProvider = new OpenStreetMapProvider({
@@ -127,6 +136,18 @@ export const DeliveryInformation = ({
         });
     }
   }, [debouncedSearchTerm]);
+
+  useEffect(() => {
+    if (location) {
+      setFieldValue("deliveryInfo.locationSelected", location);
+    }
+  }, [location]);
+
+  useEffect(() => {
+    if (values.deliveryInfo.locationSelected !== undefined) {
+      setLocation(values.deliveryInfo.locationSelected);
+    }
+  }, []);
 
   return (
     <>
@@ -249,7 +270,7 @@ export const DeliveryInformation = ({
                     />
                   </svg>
                 </Menu.Button>
-                <Menu.Items className='h-80 overflow-auto z-50 absolute right-0 w-56 mt-2 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
+                <Menu.Items className='max-h-80 overflow-auto z-50 absolute right-0 w-56 mt-2 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
                   {locationList?.map((locations, idx) => (
                     <Menu.Item as='div' key={idx}>
                       <div
@@ -307,7 +328,12 @@ export const DeliveryInformation = ({
               attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
               url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
             />
-            <LeafletMap location={location} setLocation={setLocation} />
+            {values.deliveryInfo.locationSelected && (
+              <LeafletMap
+                location={values.deliveryInfo.locationSelected}
+                setLocation={setLocation}
+              />
+            )}
           </MapContainer>
         </span>
       </div>
