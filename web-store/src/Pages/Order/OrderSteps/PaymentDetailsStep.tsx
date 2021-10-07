@@ -182,7 +182,8 @@ function DeliveryInformation({ values }: DeliveryInformationProps) {
         </label>
         {values.deliveryInfo.province && values.deliveryInfo.district && (
           <label className='text-sm text-gray-600'>
-            {values.deliveryInfo.province}, {values.deliveryInfo.district}
+            {values.deliveryInfo.province.value},{" "}
+            {values.deliveryInfo.district.value}
           </label>
         )}
         {/* <label className='text-sm'>colombo 7</label> */}

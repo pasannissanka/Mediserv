@@ -65,3 +65,17 @@ export interface OrderData {
   createdAt?: Date;
   modifiedAt?: Date;
 }
+
+export interface LocationAPIData {
+  id: number;
+  name_en: string;
+  name_si: string;
+  name_ta: string;
+  _id: string;
+}
+
+export interface SelectValue {
+  id?: string;
+  value: string;
+  label: string;
+}
