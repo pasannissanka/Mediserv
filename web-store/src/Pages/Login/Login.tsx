@@ -1,11 +1,12 @@
-import { ErrorMessage, Field, Form, Formik } from "formik";
+import { Form, Formik } from "formik";
 import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import * as Yup from "yup";
 import Button from "../../Components/Button/Button";
+import { InputField } from "../../Components/InputField/InputField";
 import { Modal } from "../../Components/Modal/Modal";
 import { AuthContext } from "../../Context/AuthContext";
-import { LoginResponse, UserData } from "../../Types/types";
+import { ADMIN_TYPES, LoginResponse, UserData } from "../../Types/types";
 
 interface ILoginForm {
   email: string;
@@ -87,7 +88,7 @@ const LoginForm = ({
           password: "",
           rememberMe: false,
         }}
-        onSubmit={async (values, { setSubmitting }) => {
+        onSubmit={async (values, { setSubmitting, setFieldError }) => {
           console.log(values);
           setSubmitting(true);
           try {
@@ -105,12 +106,20 @@ const LoginForm = ({
               }
             );
             const data: LoginResponse = await response.json();
+            console.log(data);
             setSubmitting(false);
-            if (data) {
+            if (
+              data &&
+              data.user &&
+              data.user.authorities.includes(ADMIN_TYPES.REG_CUSTOMER)
+            ) {
               setUser(data.user);
               localStorage.setItem("auth-token", data.token);
               setToken(data.token);
               closeModal();
+            } else if (data.error) {
+              console.log(data.error);
+              setFieldError("password", "Invalid Email/ Password");
             }
           } catch (error) {
             setSubmitting(false);
@@ -119,33 +128,27 @@ const LoginForm = ({
         }}
         validationSchema={validate}
       >
-        {({ isSubmitting }) => (
-          <Form className='mt-8 space-y-4'>
-            <Field
-              className='w-80 mx-auto sm:text-sm'
+        {({ isSubmitting, errors, touched }) => (
+          <Form className='mt-8 space-y-4 w-80 mx-auto'>
+            <InputField
+              label='Email'
+              className='rounded-md relative block my-2 sm:text-sm'
               name='email'
               type='email'
               placeholder='Email'
+              errors={errors.email}
+              touched={touched.password}
             />
-            <ErrorMessage name='email'>
-              {(msg) => (
-                <div style={{ color: "red", paddingLeft: "3rem" }}>{msg}</div>
-              )}
-            </ErrorMessage>
-
-            <Field
-              className='w-80 mx-auto sm:text-sm'
+            <InputField
+              label='Password'
+              className='rounded-md relative block my-2 sm:text-sm'
               name='password'
               type='password'
               placeholder='Password'
+              errors={errors.password}
+              touched={touched.password}
             />
-            <ErrorMessage name='password' className='pl-80'>
-              {(msg) => (
-                <div style={{ color: "red", paddingLeft: "3rem" }}>{msg}</div>
-              )}
-            </ErrorMessage>
-
-            <div className='w-80 mx-auto flex items-center justify-between'>
+            <div className='flex items-center justify-between'>
               <div className='flex items-center'>
                 <input
                   id='remember_me'
@@ -174,7 +177,8 @@ const LoginForm = ({
             <div className='w-80 mx-auto text-sm'>
               <Button
                 onClick={() => setRegisterState("REGISTER")}
-                className='font-medium text-indigo-600 hover:text-indigo-500'
+                className='font-medium w-full'
+                type='button'
               >
                 Doesn't have an account? Sign up.
               </Button>
@@ -264,7 +268,7 @@ const RegisterForm = ({
           password: "",
           retypePassword: "",
         }}
-        onSubmit={async (values, { setSubmitting }) => {
+        onSubmit={async (values, { setSubmitting, setFieldError }) => {
           console.log(values);
           setSubmitting(true);
           try {
@@ -285,7 +289,7 @@ const RegisterForm = ({
               }
             );
             const dataRegister: UserData = await response.json();
-            if (dataRegister) {
+            if (dataRegister && dataRegister.email) {
               // Chain login
               const response = await fetch(
                 "http://localhost:8080/api/public/login",
@@ -302,12 +306,18 @@ const RegisterForm = ({
               );
               const data: LoginResponse = await response.json();
               setSubmitting(false);
-              if (data) {
+              if (
+                data &&
+                data.user &&
+                data.user.authorities.includes(ADMIN_TYPES.REG_CUSTOMER)
+              ) {
                 setUser(data.user);
                 localStorage.setItem("auth-token", data.token);
                 setToken(data.token);
                 closeModal();
               }
+            } else {
+              setFieldError("email", "Email already taken");
             }
           } catch (error) {
             setSubmitting(false);
@@ -316,49 +326,52 @@ const RegisterForm = ({
         }}
         validationSchema={validate}
       >
-        {({ isSubmitting }) => (
-          <Form className=''>
-            <Field
-              className='w-80 mx-auto rounded-md relative block my-2 sm:text-sm'
+        {({ isSubmitting, errors, touched }) => (
+          <Form className='w-80 mx-auto'>
+            <InputField
+              label='Full Name'
+              className='rounded-md relative block my-2 sm:text-sm'
               name='name'
               type='text'
               placeholder='Full Name'
+              touched={touched.name}
             />
-            <ErrorMessage name='name' />
-            <Field
-              className='w-80 mx-auto rounded-md relative block my-2 sm:text-sm'
+            <InputField
+              label='Email'
+              className='rounded-md relative block my-2 sm:text-sm'
               name='email'
               type='email'
               placeholder='Email'
+              touched={touched.email}
             />
-            <ErrorMessage name='email' />
-
-            <Field
-              className='w-80 mx-auto rounded-md relative block my-2 sm:text-sm'
+            <InputField
+              label='Password'
+              className='rounded-md relative block my-2 sm:text-sm'
               name='password'
               type='password'
               placeholder='Password'
+              touched={touched.password}
             />
-            <ErrorMessage name='password' />
-
-            <Field
-              className='w-80 mx-auto rounded-md relative block my-2 sm:text-sm'
+            <InputField
+              label='Re-enter Password'
+              className='rounded-md relative block my-2 sm:text-sm'
               name='retypePassword'
               type='password'
               placeholder='Re-enter Password'
+              touched={touched.retypePassword}
             />
-            <ErrorMessage name='retypePassword' />
 
-            <div className='w-80 mx-auto text-sm'>
+            <div className='text-sm mb-2'>
               <Button
                 onClick={() => setRegisterState("LOGIN")}
-                className='font-medium text-indigo-600 hover:text-indigo-500'
+                className='font-medium w-full'
+                type='button'
               >
                 Already have an account? Sign in
               </Button>
             </div>
 
-            <div className='w-80 mx-auto'>
+            <div>
               <Button
                 type='submit'
                 varient='primary'
@@ -367,7 +380,7 @@ const RegisterForm = ({
                 {!isSubmitting ? (
                   <span className='absolute left-0 inset-y-0 flex items-center pl-3'>
                     <svg
-                      className='h-5 w-5 text-indigo-500 group-hover:text-indigo-400'
+                      className='h-5 w-5'
                       xmlns='http://www.w3.org/2000/svg'
                       viewBox='0 0 20 20'
                       fill='currentColor'

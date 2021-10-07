@@ -1,6 +1,5 @@
 export enum ADMIN_TYPES {
-  SUPER_ADMIN,
-  PHARMACY_USER,
+  REG_CUSTOMER = "REG_CUSTOMER",
 }
 
 export interface AuthContextState {
@@ -21,6 +20,7 @@ export interface UserData {
 export interface LoginResponse {
   user: UserData;
   token: string;
+  error?: string;
 }
 
 export interface AddressData {

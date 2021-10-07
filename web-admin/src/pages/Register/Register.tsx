@@ -1,18 +1,19 @@
-import { Form, Formik } from 'formik';
-import React, { useContext, useState } from 'react';
-import Button from '../../components/Button/Button';
-import { StepperHeading } from '../../components/Stepper/StepperHeading';
-import { AuthContext } from '../../Context/AuthContext';
+import { Form, Formik } from "formik";
+import React, { useContext, useState } from "react";
+import Button from "../../components/Button/Button";
+import { StepperHeading } from "../../components/Stepper/StepperHeading";
+import { AuthContext } from "../../Context/AuthContext";
 import {
   LocationAPIData,
   LoginResponse,
   PharmacyData,
   UserData,
-} from '../../Types/types';
-import { ErrorDialog } from '../../components/ErrorDialog/ErrorDialog';
-import { RegisterPage01 } from './RegisterPage01';
-import { RegisterPage02 } from './RegisterPage02';
-import { RegisterPage03 } from './RegisterPage03';
+} from "../../Types/types";
+import { ErrorDialog } from "../../components/ErrorDialog/ErrorDialog";
+import { RegisterPage01 } from "./RegisterPage01";
+import { RegisterPage02 } from "./RegisterPage02";
+import { RegisterPage03 } from "./RegisterPage03";
+import { ADMIN_TYPES } from "../../Types/enums";
 
 export interface RegisterForm {
   name: string;
@@ -24,8 +25,8 @@ export interface RegisterForm {
   houseNo: string;
   lineOne: string;
   lineTwo: string;
-  province: LocationAPIData | '';
-  district: LocationAPIData | '';
+  province: LocationAPIData | "";
+  district: LocationAPIData | "";
   town: string;
   longitude: string;
   latitude: string;
@@ -37,8 +38,8 @@ export const Register = () => {
   const [stepper, setStepper] = useState(0);
   const [isErrorModal, setErrorModal] = useState<boolean>(false);
   const [{ errTitle, errMsg }, setErrData] = useState({
-    errTitle: '',
-    errMsg: '',
+    errTitle: "",
+    errMsg: "",
   });
 
   const { setUser, setToken } = useContext(AuthContext);
@@ -59,13 +60,13 @@ export const Register = () => {
         <StepperHeading
           steps={[
             {
-              title: 'Owner details',
+              title: "Owner details",
             },
             {
-              title: 'Pharmacy details',
+              title: "Pharmacy details",
             },
             {
-              title: 'Location details',
+              title: "Location details",
             },
           ]}
           selectedIdx={stepper}
@@ -75,37 +76,37 @@ export const Register = () => {
         <div className='w-4/5 m-auto'>
           <Formik<RegisterForm>
             initialValues={{
-              name: '',
-              email: '',
-              password: '',
-              retypePassword: '',
-              title: '',
-              description: '',
-              houseNo: '',
-              lineOne: '',
-              lineTwo: '',
-              province: '',
-              district: '',
-              town: '',
-              longitude: '',
-              latitude: '',
+              name: "",
+              email: "",
+              password: "",
+              retypePassword: "",
+              title: "",
+              description: "",
+              houseNo: "",
+              lineOne: "",
+              lineTwo: "",
+              province: "",
+              district: "",
+              town: "",
+              longitude: "",
+              latitude: "",
             }}
             onSubmit={async (values, { setSubmitting, resetForm }) => {
               setSubmitting(true);
               try {
                 const response = await fetch(
-                  'http://localhost:8080/api/public/register',
+                  "http://localhost:8080/api/public/register",
                   {
-                    method: 'POST',
+                    method: "POST",
                     headers: {
-                      'Content-Type': 'application/json',
+                      "Content-Type": "application/json",
                     },
                     body: JSON.stringify({
                       name: values.name,
                       email: values.email,
                       password: values.password,
                       rePassword: values.retypePassword,
-                      authorities: ['PHARMACY_USER'],
+                      authorities: ["PHARMACY_USER"],
                     }),
                   }
                 );
@@ -113,19 +114,19 @@ export const Register = () => {
                 if (!authData.id) {
                   setErrorModal(true);
                   setErrData({
-                    errTitle: 'An error occurred',
-                    errMsg: 'Oops something went wrong, Please try again!',
+                    errTitle: "An error occurred",
+                    errMsg: "Oops something went wrong, Please try again!",
                   });
                 }
                 setSubmitting(false);
 
                 if (authData.id) {
                   const response = await fetch(
-                    'http://localhost:8080/api/public/pharmacies/',
+                    "http://localhost:8080/api/public/pharmacies/",
                     {
-                      method: 'POST',
+                      method: "POST",
                       headers: {
-                        'Content-Type': 'application/json',
+                        "Content-Type": "application/json",
                       },
                       body: JSON.stringify({
                         title: values.title,
@@ -150,11 +151,11 @@ export const Register = () => {
                   //if success then login
                   if (pharmacyData) {
                     const response = await fetch(
-                      'http://localhost:8080/api/public/login',
+                      "http://localhost:8080/api/public/login",
                       {
-                        method: 'POST',
+                        method: "POST",
                         headers: {
-                          'Content-Type': 'application/json',
+                          "Content-Type": "application/json",
                         },
                         body: JSON.stringify({
                           email: authData.email,
@@ -163,9 +164,15 @@ export const Register = () => {
                       }
                     );
                     const data: LoginResponse = await response.json();
-                    if (data) {
+                    if (
+                      data &&
+                      (data.user.authorities.includes(
+                        ADMIN_TYPES.PHARMACY_USER
+                      ) ||
+                        data.user.authorities.includes(ADMIN_TYPES.SUPER_ADMIN))
+                    ) {
                       setUser(data.user);
-                      localStorage.setItem('auth-token', data.token);
+                      localStorage.setItem("auth-token", data.token);
                       setToken(data.token);
                       setSubmitting(true);
                     }
@@ -175,9 +182,9 @@ export const Register = () => {
                 setSubmitting(false);
                 setErrorModal(true);
                 setErrData({
-                  errTitle: 'Network error',
+                  errTitle: "Network error",
                   errMsg:
-                    'Cannot connect the computer to the server, Please try again!',
+                    "Cannot connect the computer to the server, Please try again!",
                 });
               }
               resetForm();
