@@ -4,7 +4,6 @@ import Button from "../../components/Button/Button";
 import { ErrorDialog } from "../../components/ErrorDialog/ErrorDialog";
 import { StepperHeading } from "../../components/Stepper/StepperHeading";
 import { AuthContext } from "../../Context/AuthContext";
-import { ADMIN_TYPES } from "../../Types/enums";
 import {
   LoginResponse,
   PharmacyData,
@@ -13,8 +12,7 @@ import {
 } from "../../Types/types";
 import { RegisterPage01 } from "./RegisterPage01";
 import { RegisterPage02 } from "./RegisterPage02";
-import { RegisterPage03 } from "./RegisterPage03";
-
+import { OpenMapsLocationData, RegisterPage03 } from "./RegisterPage03";
 export interface RegisterForm {
   name: string;
   email: string;
@@ -25,6 +23,7 @@ export interface RegisterForm {
   lineOne: string;
   province: SelectValue | null;
   district: SelectValue | null;
+  locationSelected?: OpenMapsLocationData | null;
   longitude: string;
   latitude: string;
 }
@@ -84,6 +83,7 @@ export const Register = () => {
               district: null,
               longitude: "",
               latitude: "",
+              locationSelected: null,
             }}
             onSubmit={async (values, { setSubmitting, resetForm }) => {
               setSubmitting(true);
@@ -129,8 +129,8 @@ export const Register = () => {
                           lineOne: values.lineOne,
                           province: values.province?.value,
                           district: values.district?.value,
-                          longitude: values.longitude,
-                          latitude: values.latitude,
+                          longitude: values.locationSelected?.coord.lng,
+                          latitude: values.locationSelected?.coord.lat,
                         },
                         adminId: authData.id,
                       }),
