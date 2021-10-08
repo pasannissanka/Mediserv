@@ -1,4 +1,5 @@
 import { ADMIN_TYPES } from "./enums";
+import L from "leaflet";
 
 export interface AuthContextState {
   user?: UserData;
@@ -57,6 +58,7 @@ export interface OrderData {
   items: OrderItemData[];
   paymentMethod: string;
   status: string;
+  pharmacy: PharmacyData;
   pharmacyId: string;
   prescriptionImgUrl: string;
   shippingCost: number;
@@ -98,4 +100,10 @@ export interface FileResponse {
   mimeType: string;
   id: string;
   fileName: string;
+}
+
+export interface CoordinateData {
+  coord: L.LatLng;
+  input?: string;
+  label: string;
 }

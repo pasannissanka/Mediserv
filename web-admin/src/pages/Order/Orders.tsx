@@ -45,6 +45,7 @@ export const Orders = () => {
             ...order,
             selected: false,
             customerName: order?.customer.name,
+            pharmacyId: order.pharmacy.id,
           };
         }),
       ]);

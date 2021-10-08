@@ -2,26 +2,16 @@ import { Menu } from "@headlessui/react";
 import { ErrorMessage, Field } from "formik";
 import L from "leaflet";
 import { OpenStreetMapProvider } from "leaflet-geosearch";
-import "leaflet-geosearch/dist/geosearch.css";
 import { RawResult } from "leaflet-geosearch/dist/providers/bingProvider";
 import { SearchResult } from "leaflet-geosearch/dist/providers/provider";
-import icon from "leaflet/dist/images/marker-icon.png";
-import iconShadow from "leaflet/dist/images/marker-shadow.png";
-import "leaflet/dist/leaflet.css";
 import React, { useEffect, useState } from "react";
-import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 import Select from "react-select";
 import Button from "../../components/Button/Button";
+import { MapView } from "../../components/Leaflet/MapView";
+import { LeafletMap } from "../../components/Leaflet/Marker";
 import useDebounce from "../../Hooks/useDebounce";
 import { LocationAPIData, SelectValue } from "../../Types/types";
 import { RegisterForm } from "./Register";
-
-let DefaultIcon = L.icon({
-  iconUrl: icon,
-  shadowUrl: iconShadow,
-});
-
-L.Marker.prototype.options.icon = DefaultIcon;
 
 export interface RegisterPageProps<T> {
   values: T;
@@ -31,6 +21,7 @@ export interface RegisterPageProps<T> {
 export type OpenMapsLocationData = {
   coord: L.LatLng;
   input: string;
+  label: string;
 } & SearchResult<RawResult>;
 
 export const RegisterPage03 = ({
@@ -43,7 +34,7 @@ export const RegisterPage03 = ({
   const [locationList, setLocationList] = useState<
     OpenMapsLocationData[] | null
   >(null);
-  const [isSearching, setIsSearching] = useState<boolean>(false);
+  const [isSearching, setIsSearching] = useState<boolean>(true);
 
   useEffect(() => {
     async function fetchData() {
@@ -172,7 +163,7 @@ export const RegisterPage03 = ({
       </div>
 
       <div className='flex justify-between'>
-        <div>
+        <div className='w-full'>
           <Field
             className='focus:border-primary-300 focus:ring-primary-700 px-2 py-2 border-gray-300 border shadow-sm focus:ring-1 focus:ring-opacity-50appearance-none rounded-md relative block w-full my-2 sm:text-sm max-h-48'
             name='lineOne'
@@ -253,61 +244,20 @@ export const RegisterPage03 = ({
           </Menu>
         </div>
       </div>
-      <MapContainer
+      <MapView
         className='h-72 z-0'
         center={{ lat: 7.8731, lng: 80.7718 }}
         zoom={6}
         scrollWheelZoom={true}
       >
-        <TileLayer
-          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-          url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-        />
         {values.locationSelected && (
-          <LeafletMap
+          <LeafletMap<OpenMapsLocationData>
             location={values.locationSelected}
             setLocation={setLocation}
+            draggable={true}
           />
         )}
-      </MapContainer>
-    </>
-  );
-};
-
-type LeafletMapProps = {
-  location: OpenMapsLocationData | null;
-  setLocation: React.Dispatch<
-    React.SetStateAction<OpenMapsLocationData | null>
-  >;
-};
-
-const LeafletMap = ({ location, setLocation }: LeafletMapProps) => {
-  const map = useMap();
-
-  useEffect(() => {
-    if (location !== null) {
-      map.flyTo(location.coord, 17);
-    }
-  }, [map, location]);
-
-  return (
-    <>
-      {location !== null && (
-        <Marker
-          position={location.coord}
-          draggable
-          eventHandlers={{
-            dragend: (e) => {
-              setLocation({
-                ...location,
-                coord: e.target.getLatLng(),
-              });
-            },
-          }}
-        >
-          <Popup>{location.label}</Popup>
-        </Marker>
-      )}
+      </MapView>
     </>
   );
 };

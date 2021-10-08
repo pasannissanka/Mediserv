@@ -25,6 +25,8 @@ public class OrderMapper {
     private PharmacyRepository pharmacyRepository;
     @Autowired
     private CustomerMapper customerMapper;
+    @Autowired
+    private PharmacyMapper pharmacyMapper;
 
     public Order createOrder(OrderRequest request) {
         if (request == null) {
@@ -94,7 +96,7 @@ public class OrderMapper {
                 .setTax(order.getTax())
                 .setStatus(order.getStatus())
                 .setItems(order.getItems())
-                .setPharmacyId(order.getPharmacy().getId())
+                .setPharmacy(pharmacyMapper.toPharmacyDto(order.getPharmacy()))
                 .setCustomer(customerMapper.toCustomerDto(order.getCustomer()))
                 .setCreatedAt(order.getCreatedAt())
                 .setModifiedAt(order.getModifiedAt());

@@ -1,5 +1,6 @@
 package com.example.mediservapi.dto.model.order;
 
+import com.example.mediservapi.dto.model.pharmacy.PharmacyDto;
 import com.example.mediservapi.dto.model.user.CustomerDto;
 import com.example.mediservapi.model.address.Address;
 import com.example.mediservapi.model.order.OrderItems;
@@ -19,7 +20,7 @@ public class OrderDto {
     private String id;
 
     private CustomerDto customer;
-    private String pharmacyId;
+    private PharmacyDto pharmacy;
 
     private Address deliveryAddress;
 

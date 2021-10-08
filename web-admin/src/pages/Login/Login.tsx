@@ -46,11 +46,7 @@ export const Login = () => {
                 const data: LoginResponse = await response.json();
 
                 setSubmitting(false);
-                if (
-                  data &&
-                  (data.user.authorities.includes(ADMIN_TYPES.PHARMACY_USER) ||
-                    data.user.authorities.includes(ADMIN_TYPES.SUPER_ADMIN))
-                ) {
+                if (data) {
                   setUser(data.user);
                   localStorage.setItem("auth-token", data.token);
                   setToken(data.token);
