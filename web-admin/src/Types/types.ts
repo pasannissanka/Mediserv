@@ -72,6 +72,7 @@ export interface UserData {
   email: string;
   name: string;
   authorities: ADMIN_TYPES[];
+  pharmacies: string[];
 }
 
 export interface LoginResponse {

@@ -2,8 +2,10 @@ package com.example.mediservapi.dto.mapper;
 
 import com.example.mediservapi.dto.model.request.CreateUpdateUserRequest;
 import com.example.mediservapi.dto.model.user.UserDto;
+import com.example.mediservapi.model.pharmacy.Pharmacy;
 import com.example.mediservapi.model.user.Role;
 import com.example.mediservapi.model.user.User;
+import com.example.mediservapi.repository.pharmacy.PharmacyRepository;
 import com.example.mediservapi.repository.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -12,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toSet;
 
@@ -19,16 +22,28 @@ import static java.util.stream.Collectors.toSet;
 public class UserMapper {
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private PharmacyRepository pharmacyRepository;
 
     public UserDto toUserDto(User user) {
         if ( user == null ) {
             return null;
         }
+
         UserDto userDto = new UserDto();
         userDto.setId( user.getId() );
         userDto.setEmail( user.getEmail() );
         userDto.setName( user.getName() );
         userDto.setAuthorities( mapAuthorities( user.getAuthorities() ) );
+
+        Role pAdminRole = new Role(Role.PHARMACY_USER);
+        if (user.getAuthorities().contains(pAdminRole)) {
+            List<Pharmacy> pharmacies = pharmacyRepository.findPharmacyByAdminId(user.getId());
+            List<String> ids = pharmacies.stream().map(
+                    (Pharmacy::getId)
+            ).collect(Collectors.toList());
+            userDto.setPharmacies(ids);
+        }
 
         return userDto;
     }
