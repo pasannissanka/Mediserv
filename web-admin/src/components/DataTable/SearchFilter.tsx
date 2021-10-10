@@ -192,8 +192,8 @@ export function SearchFilter(props: SearchFilterProps) {
         <div className='md:flex-1'></div>
         <div>
           {/* Row display */}
-          <div className='relative'>
-            <Menu as='div' className='flex'>
+          <div className='flex'>
+            <Menu as='div' className='relative inline-block text-left'>
               <Menu.Button
                 as={Button}
                 varient='outline'
@@ -234,18 +234,18 @@ export function SearchFilter(props: SearchFilterProps) {
                   <polyline points='6 9 12 15 18 9' />
                 </svg>
               </Menu.Button>
-              <Menu.Items className='z-10 absolute top-0 left-0 w-40 bg-white rounded-lg shadow-lg mt-12 -mr-1 block py-1 overflow-hidden'>
+              <Menu.Items className='max-h-80 overflow-auto z-50 absolute right-0 w-56 mt-2 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
                 {labelState!.map(({ value, selected, key }, index) => (
                   <Menu.Item
                     as='div'
                     key={index}
-                    className='flex justify-start items-center text-truncate hover:bg-gray-100 px-4 py-2'
+                    className='flex justify-start items-center text-truncate hover:bg-gray-100 px-2 py-2'
                     onClick={() => handleCheckOnChange(index, key, "filter")}
                   >
                     {() => (
                       <label
                         key={index}
-                        className={`flex justify-start items-center text-truncate hover:bg-gray-100 px-4 py-2`}
+                        className={`flex justify-start items-center text-truncate hover:bg-gray-100 px-2 py-1`}
                       >
                         <div className='text-teal-600 mr-3'>
                           <input

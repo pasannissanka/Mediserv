@@ -1,6 +1,5 @@
 export enum ADMIN_TYPES {
-  SUPER_ADMIN,
-  PHARMACY_USER,
+  REG_CUSTOMER = "REG_CUSTOMER",
 }
 
 export interface AuthContextState {
@@ -21,15 +20,13 @@ export interface UserData {
 export interface LoginResponse {
   user: UserData;
   token: string;
+  error?: string;
 }
 
 export interface AddressData {
-  houseNo: string;
   lineOne: string;
-  lineTwo: string;
   province: string;
   district: string;
-  town: string;
   longitude: number;
   latitude: number;
 }
@@ -67,4 +64,18 @@ export interface OrderData {
   total: number;
   createdAt?: Date;
   modifiedAt?: Date;
+}
+
+export interface LocationAPIData {
+  id: number;
+  name_en: string;
+  name_si: string;
+  name_ta: string;
+  _id: string;
+}
+
+export interface SelectValue {
+  id?: string;
+  value: string;
+  label: string;
 }

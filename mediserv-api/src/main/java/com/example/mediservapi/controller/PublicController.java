@@ -54,9 +54,14 @@ public class PublicController {
             String authToken = jwtTokenUtil.generateAccessToken(user);
             return ResponseEntity.ok()
                     .header(HttpHeaders.AUTHORIZATION, authToken)
-                    .body(new AuthResponse(userMapper.toUserDto(user), authToken));
+                    .body(new AuthResponse()
+                            .setUser(userMapper.toUserDto(user))
+                            .setToken(authToken)
+                    );
         } catch (BadCredentialsException ex) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AuthResponse()
+                    .setError("Invalid credentials")
+            );
         }
     }
 

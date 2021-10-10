@@ -3,15 +3,19 @@ import * as React from "react";
 import { useContext } from "react";
 import { DragAndDrop, Img } from "../../components/DragAndDrop/DragAndDrop";
 import { InputField } from "../../components/InputField/InputField";
+import { MapView } from "../../components/Leaflet/MapView";
 import { AuthContext } from "../../Context/AuthContext";
 import { ReactComponent as PharmacySvg } from "../../svg/pharmacy.svg";
-import { FileResponse, PharmacyData } from "../../Types/types";
+import { CoordinateData, FileResponse, PharmacyData } from "../../Types/types";
 import { EditViewField } from "./EditViewField";
+import { latLng } from "leaflet";
+import { LeafletMap } from "../../components/Leaflet/Marker";
 
 export const Pharmacy = () => {
   const { token } = useContext(AuthContext);
   const [data, setData] = React.useState<PharmacyData>();
   const [bannerImg, setBannerImg] = React.useState<Img[]>();
+  const [location, setLocation] = React.useState<CoordinateData>();
 
   React.useEffect(() => {
     async function fetchData() {
@@ -25,6 +29,16 @@ export const Pharmacy = () => {
       const pharmacyData: PharmacyData[] = await res.json();
       if (pharmacyData) {
         setData(pharmacyData[0]);
+        setLocation({
+          coord: latLng(
+            pharmacyData[0].address.latitude,
+            pharmacyData[0].address.longitude
+          ),
+          label: `${pharmacyData[0].title}, 
+          ${pharmacyData[0].address.lineOne}, 
+          ${pharmacyData[0].address.province}, 
+          ${pharmacyData[0].address.district}`,
+        });
       }
     }
     fetchData();
@@ -301,6 +315,26 @@ export const Pharmacy = () => {
                         <div>{data && data?.address.lineOne}</div>
                         <div>{data && data?.address.province},</div>
                         <div>{data && data?.address.district},</div>
+                      </EditViewField>
+                      <EditViewField
+                        title='Location'
+                        onSubmit={(e) => {}}
+                        onCancel={(e) => {}}
+                        editView={<></>}
+                      >
+                        <MapView
+                          className='w-full h-96 lg:h-72 z-0 rounded-lg'
+                          center={{ lat: 7.8731, lng: 80.7718 }}
+                          zoom={6}
+                          scrollWheelZoom={true}
+                        >
+                          {location && (
+                            <LeafletMap<CoordinateData>
+                              draggable={false}
+                              location={location}
+                            />
+                          )}
+                        </MapView>
                       </EditViewField>
                     </div>
                   </div>

@@ -37,6 +37,7 @@ export const Store = (props: StoreProps) => {
       <div className='container mx-auto'>
         <div className='grid grid-cols-1 gap-6 xl:grid-cols-6 sm:grid-cols-4'>
           {data &&
+            data.length > 0 &&
             data.map((item) => {
               return <Card key={item.id} data={item} />;
             })}

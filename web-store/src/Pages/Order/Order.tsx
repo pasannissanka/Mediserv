@@ -5,9 +5,12 @@ import * as yup from "yup";
 import Button from "../../Components/Button/Button";
 import { StepperHeading } from "../../Components/Stepper/StepperHeading";
 import { AuthContext } from "../../Context/AuthContext";
-import { OrderData } from "../../Types/types";
+import { OrderData, SelectValue } from "../../Types/types";
 import { Login } from "../Login/Login";
-import { DeliveryInformation } from "./OrderSteps/DeliveryInformationStep";
+import {
+  DeliveryInformation,
+  OpenMapsLocationData,
+} from "./OrderSteps/DeliveryInformationStep";
 import { PaymentDetails } from "./OrderSteps/PaymentDetailsStep";
 import { Img, Prescription } from "./OrderSteps/PrescriptionStep";
 import { Summery } from "./OrderSteps/SummeryStep";
@@ -20,10 +23,12 @@ export interface RegisterForm {
     name: string;
     email: string;
     phoneNumber: string;
-    province: string;
-    district: string;
+    province: SelectValue | null;
+    district: SelectValue | null;
     lineOne: string;
-    lineTwo: string;
+    locationSelected?: OpenMapsLocationData | null;
+    longitude?: number | null;
+    latitude?: number | null;
   };
   paymentDetails: {
     deliveryMethod: string;
@@ -40,10 +45,13 @@ const deliveryInfoSchema = yup.object().shape({
   name: yup.string().required("Name is required"),
   email: yup.string().email("Invalid Email").required("Email is required"),
   phoneNumber: yup.string().required("Phone number is required"),
-  province: yup.string().required("Province is required"),
-  district: yup.string().required("District is required"),
+  province: yup.object({
+    value: yup.string().required("Province is required"),
+  }),
+  district: yup.object({
+    value: yup.string().required("District is required"),
+  }),
   lineOne: yup.string().required("Address line one is required"),
-  lineTwo: yup.string().required("Address line two is required"),
 });
 
 const paymentDetailsSchema = yup.object().shape({
@@ -133,12 +141,12 @@ export const Order = () => {
             province: true,
             district: true,
             lineOne: true,
-            lineTwo: true,
           },
         } as FormikTouched<RegisterForm>);
         setStepper(stepper + 1);
       }
       if (stepper === 2) {
+        console.log(formErrors);
         if (!formErrors.deliveryInfo && !formErrors.paymentDetails) {
           fetch("http://localhost:8080/api/orders/", {
             method: "POST",
@@ -153,9 +161,10 @@ export const Order = () => {
               prescriptionImgUrl: values.prescriptionFileId,
               deliveryAddress: {
                 lineOne: values.deliveryInfo.lineOne,
-                lineTwo: values.deliveryInfo.lineTwo,
-                province: values.deliveryInfo.province,
-                district: values.deliveryInfo.district,
+                province: values.deliveryInfo.province?.value,
+                district: values.deliveryInfo.district?.value,
+                longitude: values.deliveryInfo.locationSelected?.coord.lng,
+                latitude: values.deliveryInfo.locationSelected?.coord.lat,
               },
             }),
           })
@@ -216,9 +225,11 @@ export const Order = () => {
                   email: user?.email || "",
                   phoneNumber: "",
                   lineOne: "",
-                  lineTwo: "",
-                  district: "",
-                  province: "",
+                  district: null,
+                  province: null,
+                  locationSelected: null,
+                  longitude: null,
+                  latitude: null,
                 },
                 paymentDetails: {
                   deliveryMethod: "",

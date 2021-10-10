@@ -81,9 +81,13 @@ export const Summery = ({
               <label className='text-sm content-end'>
                 {data?.deliveryAddress?.lineOne}
               </label>
-              <label className='text-sm'>
-                {data?.deliveryAddress?.lineTwo}
-              </label>
+              {data?.deliveryAddress.province &&
+                data?.deliveryAddress.district && (
+                  <label className='text-sm'>
+                    {data?.deliveryAddress.province},{" "}
+                    {data?.deliveryAddress.district}
+                  </label>
+                )}
               {/* <label className='text-sm'>colombo 7</label> */}
             </div>
           </div>

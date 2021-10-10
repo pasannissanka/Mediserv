@@ -1,11 +1,15 @@
 import { Dialog } from "@headlessui/react";
 import { FormikProps } from "formik";
-import React, { Ref, useContext, useEffect, useRef, useState } from "react";
+import { latLng } from "leaflet";
+import "leaflet/dist/leaflet.css";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router";
 import Button from "../../components/Button/Button";
+import { MapView } from "../../components/Leaflet/MapView";
+import { LeafletMap } from "../../components/Leaflet/Marker";
 import ModalPanel from "../../components/ModalPanel/ModelPanel";
 import { AuthContext } from "../../Context/AuthContext";
-import { OrderData } from "../../Types/types";
+import { CoordinateData, OrderData } from "../../Types/types";
 import { OrderCustomer } from "./OrderCustomer";
 import { OrderItems } from "./OrderItems";
 import { OrderTitle } from "./OrderTitle";
@@ -15,6 +19,11 @@ export type OrderInfoProp = {
   orderInfo: OrderData;
 };
 
+interface LocationInfo {
+  pointA: CoordinateData;
+  pointB: CoordinateData;
+}
+
 export const Order = () => {
   const { token } = useContext(AuthContext);
   const { orderId } = useParams<any>();
@@ -22,6 +31,7 @@ export const Order = () => {
 
   const [modalToggle, setmodalToggle] = useState(false);
   const [orderInfo, setOrderInfo] = useState<OrderData>();
+  const [locations, setLocations] = useState<LocationInfo>();
 
   const itemsSubmitRef = useRef() as React.RefObject<
     FormikProps<{ items: never[] }>
@@ -40,7 +50,31 @@ export const Order = () => {
           }
         );
         const data: OrderData = await response.json();
-        setOrderInfo(data);
+        if (data) {
+          setOrderInfo(data);
+          setLocations({
+            pointA: {
+              coord: latLng(
+                data.pharmacy.address.latitude,
+                data.pharmacy.address.longitude
+              ),
+              label: `${data.pharmacy.title}, 
+              ${data.pharmacy.address.lineOne}, 
+              ${data.pharmacy.address.province}, 
+              ${data.pharmacy.address.district}`,
+            },
+            pointB: {
+              coord: latLng(
+                data.deliveryAddress.latitude,
+                data.deliveryAddress.longitude
+              ),
+              label: `${data.customer.name}, 
+              ${data.deliveryAddress.lineOne}, 
+              ${data.deliveryAddress.province}, 
+              ${data.deliveryAddress.district}`,
+            },
+          });
+        }
       }
     };
     fetchData();
@@ -56,7 +90,7 @@ export const Order = () => {
       },
       body: JSON.stringify({
         customerId: orderInfo?.customer.id,
-        pharmacyId: orderInfo?.pharmacyId,
+        pharmacyId: orderInfo?.pharmacy.id,
         items: value.items.map((item) => {
           return {
             count: item.count,
@@ -91,6 +125,27 @@ export const Order = () => {
             />
           )}
           {orderInfo && <OrderCustomer orderInfo={orderInfo} />}
+        </div>
+        <div className='grid grid-cols-1 lg:grid-cols-2 gap-y-4 lg:gap-4  my-4'>
+          <div className='col-span-1 bg-white rounded-lg border'>Amount</div>
+          <div className='col-span-1 bg-white rounded-lg border'>
+            <div className='p-2'>
+              <MapView
+                className='w-full h-96 lg:h-72 z-0 rounded-lg'
+                center={{ lat: 7.8731, lng: 80.7718 }}
+                zoom={6}
+                scrollWheelZoom={true}
+              >
+                {locations &&
+                  Object.values(locations).map((point, idx) => (
+                    <LeafletMap<CoordinateData>
+                      draggable={false}
+                      location={point}
+                    />
+                  ))}
+              </MapView>
+            </div>
+          </div>
         </div>
       </div>
       <Dialog

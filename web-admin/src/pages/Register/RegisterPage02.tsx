@@ -1,10 +1,14 @@
-import { ErrorMessage, Field } from 'formik';
-import React from 'react';
-import { RegisterForm } from './Register';
+import { ErrorMessage, Field } from "formik";
+import React from "react";
+import { RegisterForm } from "./Register";
 
 export interface RegisterPageProps<T> {
   values: T;
-  setFieldValue: (field: string, value: any, shouldValidate?: boolean | undefined) => void;
+  setFieldValue: (
+    field: string,
+    value: any,
+    shouldValidate?: boolean | undefined
+  ) => void;
 }
 
 export const RegisterPage02 = (props: RegisterPageProps<RegisterForm>) => {
@@ -12,21 +16,21 @@ export const RegisterPage02 = (props: RegisterPageProps<RegisterForm>) => {
   return (
     <>
       <Field
-        className="appearance-none rounded-md relative block w-full my-2 sm:text-sm"
-        name="title"
-        type="text"
-        placeholder="Title"
+        className='appearance-none rounded-md relative block w-full my-2 sm:text-sm'
+        name='title'
+        type='text'
+        placeholder='Title'
       />
-      <ErrorMessage name="title" />
+      <ErrorMessage name='title' />
       <Field
-        className="focus:border-primary-300 focus:ring-primary-700 px-2 py-2 border-gray-300 border shadow-sm focus:ring-1 focus:ring-opacity-50appearance-none rounded-md relative block w-full my-2 sm:text-sm"
-        name="description"
-        type="text"
-        placeholder="Discription"
-        as="textarea"
+        className='focus:border-primary-300 focus:ring-primary-700 px-2 py-2 border-gray-300 border shadow-sm focus:ring-1 focus:ring-opacity-50appearance-none rounded-md relative block w-full my-2 sm:text-sm'
+        name='description'
+        type='text'
+        placeholder='Description'
+        as='textarea'
         rows={8}
       />
-      <ErrorMessage name="email" />
+      <ErrorMessage name='email' />
     </>
   );
 };
