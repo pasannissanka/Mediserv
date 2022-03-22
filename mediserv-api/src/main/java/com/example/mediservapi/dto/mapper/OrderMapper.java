@@ -3,6 +3,7 @@ package com.example.mediservapi.dto.mapper;
 import com.example.mediservapi.dto.model.request.OrderRequest;
 import com.example.mediservapi.dto.model.order.OrderDto;
 import com.example.mediservapi.model.order.Order;
+import com.example.mediservapi.model.order.OrderStatus;
 import com.example.mediservapi.model.pharmacy.Pharmacy;
 import com.example.mediservapi.model.user.User;
 import com.example.mediservapi.repository.order.OrderRepository;
@@ -48,7 +49,7 @@ public class OrderMapper {
                 .setSubTotal(request.getSubTotal())
                 .setShippingCost(request.getShippingCost())
                 .setTax(request.getTax())
-                .setStatus(request.getStatus())
+                .setStatus(OrderStatus.NEW)
                 .setPharmacy(pharmacy)
                 .setCustomer(customer);
     }
@@ -61,7 +62,7 @@ public class OrderMapper {
             order.setDeliveryAddress(request.getDeliveryAddress());
         }
         if (request.getStatus() != null) {
-            order.setStatus(request.getStatus());
+            order.setStatus(OrderStatus.valueOf(request.getStatus()));
         }
         if (request.getItems() != null) {
             order.setItems(request.getItems());
@@ -75,8 +76,8 @@ public class OrderMapper {
         if (request.getTax() != order.getTax()) {
             order.setTax(request.getTax());
         }
-        if (request.getTotal() != order.getTax()) {
-            order.setTax(request.getTax());
+        if (request.getTotal() != order.getTotal()) {
+            order.setTotal(request.getTotal());
         }
 
     }
@@ -99,7 +100,8 @@ public class OrderMapper {
                 .setPharmacy(pharmacyMapper.toPharmacyDto(order.getPharmacy()))
                 .setCustomer(customerMapper.toCustomerDto(order.getCustomer()))
                 .setCreatedAt(order.getCreatedAt())
-                .setModifiedAt(order.getModifiedAt());
+                .setModifiedAt(order.getModifiedAt())
+                .setTotal(order.getTotal());
     }
 
     public List<OrderDto> toOrderDto(List<Order> orders) {

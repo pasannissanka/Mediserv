@@ -56,8 +56,8 @@ export interface OrderData {
   deliveryAddress: AddressData;
   id: string;
   items: OrderItemData[];
-  paymentMethod: string;
-  status: string;
+  paymentMethod: PaymentMethod;
+  status: OrderStatus;
   pharmacy: PharmacyData;
   pharmacyId: string;
   prescriptionImgUrl: string;
@@ -67,6 +67,19 @@ export interface OrderData {
   total: number;
   createdAt?: Date;
   modifiedAt?: Date;
+}
+
+export enum OrderStatus {
+  NEW = "NEW",
+  PROCESSED = "PROCESSED",
+  DISPATCHED = "DISPATCHED",
+  DELIVERED = "DELIVERED",
+  REJECTED = "REJECTED",
+}
+
+export enum PaymentMethod {
+  CASH_ON_DELIVERY = "CASH_ON_DELIVERY",
+  BANK_TRANSFER = "BANK_TRANSFER"
 }
 
 export interface UserData {

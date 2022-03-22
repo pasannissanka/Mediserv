@@ -2,8 +2,8 @@ package com.example.mediservapi.model.order;
 
 public enum OrderStatus {
     NEW,
-    PROCESSING,
-    ON_TRANSIT,
+    PROCESSED,
+    DISPATCHED,
     DELIVERED,
     REJECTED,
 }

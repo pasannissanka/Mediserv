@@ -29,5 +29,5 @@ public class OrderRequest {
     private double tax;
     private double total;
 
-    private OrderStatus status = OrderStatus.NEW;
+    private String status;
 }

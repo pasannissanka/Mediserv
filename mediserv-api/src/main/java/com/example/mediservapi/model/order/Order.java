@@ -39,11 +39,9 @@ public class Order {
     private double total;
     private OrderStatus status;
 
-    @DateTimeFormat(style = "M-")
     @CreatedDate
     private Date createdAt;
 
-    @DateTimeFormat(style = "M-")
     @LastModifiedDate
     private Date modifiedAt;
 }

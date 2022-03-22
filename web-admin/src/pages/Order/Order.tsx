@@ -9,9 +9,9 @@ import { MapView } from "../../components/Leaflet/MapView";
 import { LeafletMap } from "../../components/Leaflet/Marker";
 import ModalPanel from "../../components/ModalPanel/ModelPanel";
 import { AuthContext } from "../../Context/AuthContext";
-import { CoordinateData, OrderData } from "../../Types/types";
+import { CoordinateData, OrderData, OrderStatus } from "../../Types/types";
 import { OrderCustomer } from "./OrderCustomer";
-import { OrderItems } from "./OrderItems";
+import { OrderAmount, OrderItems } from "./OrderItems";
 import { OrderTitle } from "./OrderTitle";
 import { OrderItemsType, ProcessOrder } from "./ProcessOrder/ProcessOrder";
 
@@ -82,6 +82,15 @@ export const Order = () => {
 
   const handleItemsSubmit = (value: OrderItemsType) => {
     setmodalToggle(false);
+
+    const total = value.items.reduce((p, c) => {
+      const temp = p + c.total;
+      return temp;
+    }, 0);
+    const tax = total * 0.1;
+    const shippingCost = 250;
+    const subTotal = total + shippingCost + tax;
+
     fetch(`${process.env.REACT_APP_API_URL}/api/orders/${orderId}`, {
       method: "PUT",
       headers: {
@@ -96,9 +105,14 @@ export const Order = () => {
             count: item.count,
             name: item.name,
             total: item.total,
-            unitPrice: 10,
+            unitPrice: 0,
           };
         }),
+        total: total,
+        tax: tax,
+        shippingCost: shippingCost,
+        subTotal: subTotal,
+        status: OrderStatus.PROCESSED,
       } as OrderData),
     })
       .then((response) => {
@@ -111,6 +125,32 @@ export const Order = () => {
       })
       .catch((error) => console.log(error));
     console.log(value);
+  };
+  const handleDispatchOrder = () => {
+    setmodalToggle(false);
+
+    fetch(`${process.env.REACT_APP_API_URL}/api/orders/${orderId}`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        customerId: orderInfo?.customer.id,
+        pharmacyId: orderInfo?.pharmacy.id,
+        ...orderInfo,
+        status: OrderStatus.DISPATCHED,
+      } as OrderData),
+    })
+      .then((response) => {
+        response
+          .json()
+          .then((data) => {
+            setOrderInfo(data);
+          })
+          .catch((error) => console.log(error));
+      })
+      .catch((error) => console.log(error));
   };
 
   return (
@@ -127,25 +167,32 @@ export const Order = () => {
           {orderInfo && <OrderCustomer orderInfo={orderInfo} />}
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-y-4 lg:gap-4  my-4">
-          <div className="col-span-1 bg-white rounded-lg border">Amount</div>
-          <div className="col-span-1 bg-white rounded-lg border">
-            <div className="p-2">
-              <MapView
-                className="w-full h-96 lg:h-72 z-0 rounded-lg"
-                center={{ lat: 7.8731, lng: 80.7718 }}
-                zoom={6}
-                scrollWheelZoom={true}
-              >
-                {locations &&
-                  Object.values(locations).map((point, idx) => (
-                    <LeafletMap<CoordinateData>
-                      draggable={false}
-                      location={point}
-                    />
-                  ))}
-              </MapView>
+          {orderInfo && (
+            <OrderAmount
+              orderInfo={orderInfo}
+              dispatchOrder={handleDispatchOrder}
+            />
+          )}
+          {orderInfo && (
+            <div className="col-span-1 bg-white rounded-lg border">
+              <div className="p-2">
+                <MapView
+                  className="w-full h-96 lg:h-72 z-0 rounded-lg"
+                  center={{ lat: 7.8731, lng: 80.7718 }}
+                  zoom={6}
+                  scrollWheelZoom={true}
+                >
+                  {locations &&
+                    Object.values(locations).map((point, idx) => (
+                      <LeafletMap<CoordinateData>
+                        draggable={false}
+                        location={point}
+                      />
+                    ))}
+                </MapView>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
       <Dialog
