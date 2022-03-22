@@ -1,7 +1,9 @@
 package com.example.mediservapi.configuration.security;
 
 import com.example.mediservapi.repository.user.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -30,6 +32,9 @@ import javax.servlet.http.HttpServletResponse;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserRepository userRepository;
     private final JwtTokenFilter jwtTokenFilter;
+
+    @Autowired
+    private Environment env;
 
     public SecurityConfig(UserRepository userRepository, JwtTokenFilter jwtTokenFilter) {
         super();
@@ -93,8 +98,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.addAllowedOrigin("http://localhost:3000");
-        config.addAllowedOrigin("http://localhost:3001");
+        config.addAllowedOrigin(env.getProperty("react.app.admin"));
+        config.addAllowedOrigin(env.getProperty("react.app.store"));
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         source.registerCorsConfiguration("/api/**", config);

@@ -12,7 +12,7 @@ function App() {
   const [user, setUser] = useState<UserData>();
 
   const { data, isLoading, serverError } = useFetch<UserData>(
-    "http://localhost:8080/api/users/user",
+    `${process.env.REACT_APP_API_URL}/api/users/user`,
     {
       method: "GET",
       headers: {
@@ -42,16 +42,16 @@ function App() {
       >
         <Router>
           <Switch>
-            <Route exact path='/login'>
+            <Route exact path="/login">
               <div>Login</div>
             </Route>
-            <Route exact path='/register'>
+            <Route exact path="/register">
               <div>Register</div>
             </Route>
-            <Route path='/'>
+            <Route path="/">
               <Home />
             </Route>
-            <Route path='*'>
+            <Route path="*">
               <div>Not Found 404</div>
             </Route>
           </Switch>

@@ -11,13 +11,10 @@ import com.example.mediservapi.model.user.User;
 import com.example.mediservapi.repository.pharmacy.PharmacyRepository;
 import com.example.mediservapi.repository.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
 import javax.validation.ValidationException;
 import java.util.List;
-import java.util.Optional;
 
 @Component
 public class PharmacyServiceImpl implements PharmacyService {

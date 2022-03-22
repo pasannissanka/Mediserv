@@ -21,7 +21,7 @@ import static java.lang.String.format;
 @RequiredArgsConstructor
 public class JwtTokenUtil {
 
-    private final String jwtSecret = "zdtlD3JK56m6wTTgsNFhqzjqP";
+    private final String jwtSecret = "secret";
     private final String jwtIssuer = "example.mediservapi";
 
     private final Logger logger;

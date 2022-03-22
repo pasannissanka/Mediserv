@@ -50,8 +50,8 @@ export const Register = () => {
 
   return (
     <>
-      <div className='flex-col w-3/5 mx-auto my-24'>
-        <h1 className='font-bold text-4xl text-center mb-8'>MediServ</h1>
+      <div className="flex-col w-3/5 mx-auto my-24">
+        <h1 className="font-bold text-4xl text-center mb-8">MediServ</h1>
 
         <StepperHeading
           steps={[
@@ -69,7 +69,7 @@ export const Register = () => {
           setStepper={setStepper}
         />
 
-        <div className='w-4/5 m-auto'>
+        <div className="w-4/5 m-auto">
           <Formik<RegisterForm>
             initialValues={{
               name: "",
@@ -89,7 +89,7 @@ export const Register = () => {
               setSubmitting(true);
               try {
                 const response = await fetch(
-                  "http://localhost:8080/api/public/register",
+                  `${process.env.REACT_APP_API_URL}/api/public/register`,
                   {
                     method: "POST",
                     headers: {
@@ -116,7 +116,7 @@ export const Register = () => {
 
                 if (authData.id) {
                   const response = await fetch(
-                    "http://localhost:8080/api/public/pharmacies/",
+                    `${process.env.REACT_APP_API_URL}/api/public/pharmacies/`,
                     {
                       method: "POST",
                       headers: {
@@ -142,7 +142,7 @@ export const Register = () => {
                   //if success then login
                   if (pharmacyData) {
                     const response = await fetch(
-                      "http://localhost:8080/api/public/login",
+                      `${process.env.REACT_APP_API_URL}/api/public/login`,
                       {
                         method: "POST",
                         headers: {
@@ -177,16 +177,16 @@ export const Register = () => {
             }}
           >
             {({ isSubmitting, values, setFieldValue }) => (
-              <Form className='mt-8 space-y-4'>
+              <Form className="mt-8 space-y-4">
                 <CurrentStepForm
                   values={values}
                   setFieldValue={setFieldValue}
                 />
                 {stepper !== 2 ? (
-                  <span className='flex justify-end'>
+                  <span className="flex justify-end">
                     <Button
-                      type='button'
-                      varient='primary'
+                      type="button"
+                      varient="primary"
                       onClick={handleNext}
                     >
                       Next
@@ -194,46 +194,46 @@ export const Register = () => {
                   </span>
                 ) : (
                   <Button
-                    type='submit'
-                    varient='primary'
-                    className='w-full group relative'
+                    type="submit"
+                    varient="primary"
+                    className="w-full group relative"
                   >
                     {!isSubmitting ? (
-                      <span className='absolute left-0 inset-y-0 flex items-center pl-3'>
+                      <span className="absolute left-0 inset-y-0 flex items-center pl-3">
                         <svg
-                          className='h-5 w-5 text-indigo-500 group-hover:text-indigo-400'
-                          xmlns='http://www.w3.org/2000/svg'
-                          viewBox='0 0 20 20'
-                          fill='currentColor'
-                          aria-hidden='true'
+                          className="h-5 w-5 text-indigo-500 group-hover:text-indigo-400"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                          aria-hidden="true"
                         >
                           <path
-                            fillRule='evenodd'
-                            d='M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z'
-                            clipRule='evenodd'
+                            fillRule="evenodd"
+                            d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                            clipRule="evenodd"
                           />
                         </svg>
                       </span>
                     ) : (
-                      <span className='absolute left-0 inset-y-0 flex items-center pl-3'>
+                      <span className="absolute left-0 inset-y-0 flex items-center pl-3">
                         <svg
-                          className='animate-spin -ml-1 mr-3 h-5 w-5 text-white'
-                          xmlns='http://www.w3.org/2000/svg'
-                          fill='none'
-                          viewBox='0 0 24 24'
+                          className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
                         >
                           <circle
-                            className='opacity-25'
-                            cx='12'
-                            cy='12'
-                            r='10'
-                            stroke='currentColor'
-                            strokeWidth='4'
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
                           ></circle>
                           <path
-                            className='opacity-75'
-                            fill='currentColor'
-                            d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                           ></path>
                         </svg>
                       </span>

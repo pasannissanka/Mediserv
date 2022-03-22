@@ -41,7 +41,7 @@ export const Order = () => {
     const fetchData = async () => {
       if (orderId) {
         const response = await fetch(
-          `http://localhost:8080/api/orders/${orderId}`,
+          `${process.env.REACT_APP_API_URL}/api/orders/${orderId}`,
           {
             method: "GET",
             headers: {
@@ -82,7 +82,7 @@ export const Order = () => {
 
   const handleItemsSubmit = (value: OrderItemsType) => {
     setmodalToggle(false);
-    fetch(`http://localhost:8080/api/orders/${orderId}`, {
+    fetch(`${process.env.REACT_APP_API_URL}/api/orders/${orderId}`, {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -115,9 +115,9 @@ export const Order = () => {
 
   return (
     <>
-      <div className='container mx-auto px-4'>
+      <div className="container mx-auto px-4">
         {orderInfo && <OrderTitle orderInfo={orderInfo} />}
-        <div className='grid grid-cols-1 lg:grid-cols-3 gap-y-4 lg:gap-4 mt-4'>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-y-4 lg:gap-4 mt-4">
           {orderInfo && (
             <OrderItems
               orderInfo={orderInfo!}
@@ -126,12 +126,12 @@ export const Order = () => {
           )}
           {orderInfo && <OrderCustomer orderInfo={orderInfo} />}
         </div>
-        <div className='grid grid-cols-1 lg:grid-cols-2 gap-y-4 lg:gap-4  my-4'>
-          <div className='col-span-1 bg-white rounded-lg border'>Amount</div>
-          <div className='col-span-1 bg-white rounded-lg border'>
-            <div className='p-2'>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-y-4 lg:gap-4  my-4">
+          <div className="col-span-1 bg-white rounded-lg border">Amount</div>
+          <div className="col-span-1 bg-white rounded-lg border">
+            <div className="p-2">
               <MapView
-                className='w-full h-96 lg:h-72 z-0 rounded-lg'
+                className="w-full h-96 lg:h-72 z-0 rounded-lg"
                 center={{ lat: 7.8731, lng: 80.7718 }}
                 zoom={6}
                 scrollWheelZoom={true}
@@ -153,34 +153,34 @@ export const Order = () => {
         onClose={() => setmodalToggle(false)}
         initialFocus={completeButtonRef}
       >
-        <Dialog.Overlay className='fixed inset-0 bg-black opacity-30' />
+        <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
         <ModalPanel
           initialFocus={completeButtonRef}
-          title='Process Order'
+          title="Process Order"
           closeAction={setmodalToggle}
-          size='xl'
+          size="xl"
           titleSVG={
             <svg
-              xmlns='http://www.w3.org/2000/svg'
-              className='h-8 w-8'
-              fill='none'
-              viewBox='0 0 24 24'
-              stroke='currentColor'
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-8 w-8"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
             >
               <path
-                strokeLinecap='round'
-                strokeLinejoin='round'
+                strokeLinecap="round"
+                strokeLinejoin="round"
                 strokeWidth={2}
-                d='M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z'
+                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
               />
             </svg>
           }
           footerContent={
             <div>
               <Button
-                className='m-2'
-                varient='primary'
-                type='button'
+                className="m-2"
+                varient="primary"
+                type="button"
                 onClick={() => {
                   if (itemsSubmitRef !== null && itemsSubmitRef.current) {
                     itemsSubmitRef.current.handleSubmit();
@@ -190,9 +190,9 @@ export const Order = () => {
                 Submit
               </Button>
               <Button
-                className='m-2'
-                varient='outline-primary'
-                type='button'
+                className="m-2"
+                varient="outline-primary"
+                type="button"
                 onClick={() => {
                   setmodalToggle(false);
                 }}

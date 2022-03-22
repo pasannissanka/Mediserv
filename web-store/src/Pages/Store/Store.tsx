@@ -10,7 +10,7 @@ export const Store = (props: StoreProps) => {
   useEffect(() => {
     async function fetchPharmacyJSON() {
       const res = await fetch(
-        "http://localhost:8080/api/public/pharmacies/search",
+        `${process.env.REACT_APP_API_URL}/api/public/pharmacies/search`,
         {
           method: "POST",
           headers: {
@@ -29,13 +29,17 @@ export const Store = (props: StoreProps) => {
         setData(data);
       }
     }
-    fetchPharmacyJSON();
+    try {
+      fetchPharmacyJSON();
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
 
   return (
     <>
-      <div className='container mx-auto'>
-        <div className='grid grid-cols-1 gap-6 xl:grid-cols-6 sm:grid-cols-4'>
+      <div className="container mx-auto">
+        <div className="grid grid-cols-1 gap-6 xl:grid-cols-6 sm:grid-cols-4">
           {data &&
             data.length > 0 &&
             data.map((item) => {

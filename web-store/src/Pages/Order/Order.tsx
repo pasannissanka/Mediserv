@@ -111,7 +111,7 @@ export const Order = () => {
           const imgData = new FormData();
           imgData.append("file", values.prescriptionImg[0]);
 
-          fetch("http://localhost:8080/api/file/upload", {
+          fetch(`${process.env.REACT_APP_API_URL}/api/file/upload`, {
             method: "POST",
             headers: {
               Authorization: `Bearer ${token}`,
@@ -148,7 +148,7 @@ export const Order = () => {
       if (stepper === 2) {
         console.log(formErrors);
         if (!formErrors.deliveryInfo && !formErrors.paymentDetails) {
-          fetch("http://localhost:8080/api/orders/", {
+          fetch(`${process.env.REACT_APP_API_URL}/api/orders/`, {
             method: "POST",
             headers: {
               Authorization: `Bearer ${token}`,
@@ -190,11 +190,11 @@ export const Order = () => {
 
   return (
     <>
-      <div className='container mx-auto p-0'>
+      <div className="container mx-auto p-0">
         <Login isOpen={isOpen} setIsOpen={setIsOpen} />
         {/* stepper */}
-        <div className='flex-col w-3/5 mx-auto bg-white rounded-lg'>
-          <div className='mx-4 py-4'>
+        <div className="flex-col w-3/5 mx-auto bg-white rounded-lg">
+          <div className="mx-4 py-4">
             <StepperHeading
               steps={[
                 {
@@ -215,7 +215,7 @@ export const Order = () => {
             />
           </div>
 
-          <div className='w-4/5 m-auto'>
+          <div className="w-4/5 m-auto">
             <Formik<RegisterForm>
               initialValues={{
                 prescriptionImg: [],
@@ -254,7 +254,7 @@ export const Order = () => {
                 setTouched,
                 touched,
               }) => (
-                <Form className='mt-8 space-y-4'>
+                <Form className="mt-8 space-y-4">
                   <CurrentStepForm
                     values={values}
                     setFieldValue={setFieldValue}
@@ -272,7 +272,7 @@ export const Order = () => {
                   >
                     {stepper === 1 || stepper === 2 ? (
                       <Button
-                        varient='outline-primary'
+                        varient="outline-primary"
                         onClick={(e) => {
                           setStepper(stepper - 1);
                         }}
@@ -283,8 +283,8 @@ export const Order = () => {
                       <></>
                     )}
                     <Button
-                      type='button'
-                      varient='primary'
+                      type="button"
+                      varient="primary"
                       onClick={(e) =>
                         handleSubmit(
                           validateForm,

@@ -19,13 +19,16 @@ export const Pharmacy = () => {
 
   React.useEffect(() => {
     async function fetchData() {
-      const res = await fetch("http://localhost:8080/api/pharmacies/user", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
+      const res = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/pharmacies/user`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
       const pharmacyData: PharmacyData[] = await res.json();
       if (pharmacyData) {
         setData(pharmacyData[0]);
@@ -49,7 +52,7 @@ export const Pharmacy = () => {
       const imgData = new FormData();
       imgData.append("file", bannerImg[0]);
 
-      fetch("http://localhost:8080/api/file/upload", {
+      fetch(`${process.env.REACT_APP_API_URL}/api/file/upload`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -102,7 +105,7 @@ export const Pharmacy = () => {
     const updatePharmacy = async () => {
       setSubmitting(true);
       const res = await fetch(
-        `http://localhost:8080/api/pharmacies/${values.id}`,
+        `${process.env.REACT_APP_API_URL}/api/pharmacies/${values.id}`,
         {
           method: "PUT",
           headers: {
@@ -139,8 +142,8 @@ export const Pharmacy = () => {
 
   return (
     <>
-      <div className='container mx-auto px-4'>
-        <h1 className='text-2xl py-4 mb-2'>Pharmacy</h1>
+      <div className="container mx-auto px-4">
+        <h1 className="text-2xl py-4 mb-2">Pharmacy</h1>
         {/* banner  */}
         {data && (
           <Formik<PharmacyData>
@@ -158,10 +161,10 @@ export const Pharmacy = () => {
             {(formikProps) => {
               return (
                 <Form>
-                  <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
-                    <div className='col-span-1'>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="col-span-1">
                       <EditViewField
-                        title='Banner'
+                        title="Banner"
                         onSubmit={(e) => {
                           handleImageUpload(formikProps);
                         }}
@@ -177,17 +180,17 @@ export const Pharmacy = () => {
                           </div>
                         }
                       >
-                        <div className='w-full p-2'>
+                        <div className="w-full p-2">
                           {data.bannerId ? (
                             <img
-                              className='rounded-lg'
-                              src={`http://localhost:8080/api/public/banner/download/${data.bannerId}`}
-                              alt='PharmacyBanner'
+                              className="rounded-lg"
+                              src={`${process.env.REACT_APP_API_URL}/api/public/banner/download/${data.bannerId}`}
+                              alt="PharmacyBanner"
                             />
                           ) : (
                             <div>
-                              <PharmacySvg className='max-h-44 h- md:h-48 lg:h-60 my-8 w-full' />
-                              <span className='flex justify-center text-gray-600'>
+                              <PharmacySvg className="max-h-44 h- md:h-48 lg:h-60 my-8 w-full" />
+                              <span className="flex justify-center text-gray-600">
                                 Didn't set a banner yet
                               </span>
                             </div>
@@ -197,9 +200,9 @@ export const Pharmacy = () => {
                     </div>
 
                     {/* fields */}
-                    <div className='col-span-1 md:col-span-2 flex flex-col w-full mx-auto'>
+                    <div className="col-span-1 md:col-span-2 flex flex-col w-full mx-auto">
                       <EditViewField
-                        title='Title'
+                        title="Title"
                         onSubmit={(e) => {
                           handleFormSubmit("title", formikProps);
                         }}
@@ -208,17 +211,17 @@ export const Pharmacy = () => {
                         }}
                         editView={
                           <InputField
-                            placeholder='New title'
-                            className='rounded-md my-2 sm:text-sm mx-2 '
-                            type='text'
-                            name='title'
+                            placeholder="New title"
+                            className="rounded-md my-2 sm:text-sm mx-2 "
+                            type="text"
+                            name="title"
                           />
                         }
                       >
                         <div>{data && data?.title}</div>
                       </EditViewField>
                       <EditViewField
-                        title='Description'
+                        title="Description"
                         onSubmit={(e) => {
                           handleFormSubmit("description", formikProps);
                         }}
@@ -227,17 +230,17 @@ export const Pharmacy = () => {
                         }}
                         editView={
                           <InputField
-                            placeholder='New description'
-                            className='rounded-md my-2 sm:text-sm mx-2 '
-                            type='text'
-                            name='description'
+                            placeholder="New description"
+                            className="rounded-md my-2 sm:text-sm mx-2 "
+                            type="text"
+                            name="description"
                           />
                         }
                       >
                         <div>{data && data?.description}</div>
                       </EditViewField>
                       <EditViewField
-                        title='Contact number'
+                        title="Contact number"
                         onSubmit={(e) => {
                           handleFormSubmit("contactNumber", formikProps);
                         }}
@@ -246,17 +249,17 @@ export const Pharmacy = () => {
                         }}
                         editView={
                           <InputField
-                            placeholder='New Contact number'
-                            className='rounded-md my-2 sm:text-sm mx-2 '
-                            type='text'
-                            name='contactNumber'
+                            placeholder="New Contact number"
+                            className="rounded-md my-2 sm:text-sm mx-2 "
+                            type="text"
+                            name="contactNumber"
                           />
                         }
                       >
                         <div>{data.contactNumber || "-"}</div>
                       </EditViewField>
                       <EditViewField
-                        title='Email'
+                        title="Email"
                         onSubmit={(e) => {
                           handleFormSubmit("email", formikProps);
                         }}
@@ -265,17 +268,17 @@ export const Pharmacy = () => {
                         }}
                         editView={
                           <InputField
-                            placeholder='New Email'
-                            className='rounded-md my-2 sm:text-sm mx-2 '
-                            type='text'
-                            name='email'
+                            placeholder="New Email"
+                            className="rounded-md my-2 sm:text-sm mx-2 "
+                            type="text"
+                            name="email"
                           />
                         }
                       >
                         <div>{data.email || "-"}</div>
                       </EditViewField>
                       <EditViewField
-                        title='Address'
+                        title="Address"
                         onSubmit={(e) => {
                           handleFormSubmit("address", formikProps);
                         }}
@@ -284,29 +287,29 @@ export const Pharmacy = () => {
                         }}
                         editView={
                           <>
-                            <div className='flex justify-between'>
+                            <div className="flex justify-between">
                               <InputField
-                                label='Province'
-                                placeholder='Province'
-                                className='rounded-md my-2 sm:text-sm mx-2 '
-                                type='text'
-                                name='address.province'
+                                label="Province"
+                                placeholder="Province"
+                                className="rounded-md my-2 sm:text-sm mx-2 "
+                                type="text"
+                                name="address.province"
                               />
                               <InputField
-                                label='District'
-                                placeholder='District'
-                                className='rounded-md my-2 sm:text-sm mx-2 '
-                                type='text'
-                                name='address.district'
+                                label="District"
+                                placeholder="District"
+                                className="rounded-md my-2 sm:text-sm mx-2 "
+                                type="text"
+                                name="address.district"
                               />
                             </div>
                             <div>
                               <InputField
-                                as='textarea'
-                                rows='4'
-                                placeholder='Address'
-                                className='rounded-md my-2 sm:text-sm mx-2 '
-                                name='address.lineOne'
+                                as="textarea"
+                                rows="4"
+                                placeholder="Address"
+                                className="rounded-md my-2 sm:text-sm mx-2 "
+                                name="address.lineOne"
                               />
                             </div>
                           </>
@@ -317,13 +320,13 @@ export const Pharmacy = () => {
                         <div>{data && data?.address.district},</div>
                       </EditViewField>
                       <EditViewField
-                        title='Location'
+                        title="Location"
                         onSubmit={(e) => {}}
                         onCancel={(e) => {}}
                         editView={<></>}
                       >
                         <MapView
-                          className='w-full h-96 lg:h-72 z-0 rounded-lg'
+                          className="w-full h-96 lg:h-72 z-0 rounded-lg"
                           center={{ lat: 7.8731, lng: 80.7718 }}
                           zoom={6}
                           scrollWheelZoom={true}

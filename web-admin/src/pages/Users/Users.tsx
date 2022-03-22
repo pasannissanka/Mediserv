@@ -1,21 +1,29 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { DataTable, ElementAction, LabelKeyValue, SearchFields } from '../../components';
-import Button from '../../components/Button/Button';
-import { AuthContext } from '../../Context/AuthContext';
-import { useFetch } from '../../Hooks/useFetch';
-import { UserData } from '../../Types/types';
+import React, { useContext, useEffect, useState } from "react";
+import {
+  DataTable,
+  ElementAction,
+  LabelKeyValue,
+  SearchFields,
+} from "../../components";
+import Button from "../../components/Button/Button";
+import { AuthContext } from "../../Context/AuthContext";
+import { useFetch } from "../../Hooks/useFetch";
+import { UserData } from "../../Types/types";
 
 export const Users = () => {
   const { token } = useContext(AuthContext);
 
   const [dataList, setdataList] = useState<any>([]);
 
-  const { data, isLoading } = useFetch<UserData[]>('http://localhost:8080/api/users/', {
-    method: 'GET',
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const { data, isLoading } = useFetch<UserData[]>(
+    `${process.env.REACT_APP_API_URL}/api/users/`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
 
   useEffect(() => {
     if (!!data) {
@@ -31,44 +39,44 @@ export const Users = () => {
   }, [data]);
 
   const [search, setSearch] = useState<SearchFields>({
-    search: '',
-    searchBy: 'name',
+    search: "",
+    searchBy: "name",
     limit: 10,
     offset: 0,
   });
 
   const [labelState, setLabelState] = useState<LabelKeyValue[]>([
     {
-      key: 'email',
-      value: 'Email',
+      key: "email",
+      value: "Email",
       selected: true,
     },
     {
-      key: 'name',
-      value: 'Name',
+      key: "name",
+      value: "Name",
       selected: true,
     },
     {
-      key: 'id',
-      value: 'ID',
+      key: "id",
+      value: "ID",
       selected: false,
     },
   ]);
 
   const [searchFields, setSearchFields] = useState<LabelKeyValue[]>([
     {
-      key: 'name',
-      value: 'Name',
+      key: "name",
+      value: "Name",
       selected: false,
     },
     {
-      key: 'email',
-      value: 'Email',
+      key: "email",
+      value: "Email",
       selected: false,
     },
     {
-      key: 'all',
-      value: 'All',
+      key: "all",
+      value: "All",
       selected: false,
     },
   ]);
@@ -76,9 +84,9 @@ export const Users = () => {
   const eleActions: ElementAction[] = [
     {
       action: (key: number, event?: any) => {
-        console.log('1', key);
+        console.log("1", key);
       },
-      title: 'Test Action 1',
+      title: "Test Action 1",
       svg: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -98,9 +106,9 @@ export const Users = () => {
     },
     {
       action: (key?: number, event?: any) => {
-        console.log('2', key);
+        console.log("2", key);
       },
-      title: 'Test Action 2',
+      title: "Test Action 2",
       svg: (
         <svg
           xmlns="http://www.w3.org/2000/svg"

@@ -16,7 +16,7 @@ export const Orders = () => {
   const [dataList, setdataList] = useState<any>([]);
 
   const { data, isLoading } = useFetch<OrderData[]>(
-    "http://localhost:8080/api/orders/search",
+    `${process.env.REACT_APP_API_URL}/api/orders/search`,
     {
       method: "POST",
       headers: {
@@ -109,17 +109,17 @@ export const Orders = () => {
       title: "View Order",
       svg: (
         <svg
-          xmlns='http://www.w3.org/2000/svg'
-          fill='none'
-          viewBox='0 0 24 24'
-          stroke='currentColor'
-          className='w-4 h-4' // Required!
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          className="w-4 h-4" // Required!
         >
           <path
-            strokeLinecap='round'
-            strokeLinejoin='round'
+            strokeLinecap="round"
+            strokeLinejoin="round"
             strokeWidth={2}
-            d='M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14'
+            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
           />
         </svg>
       ),
@@ -131,17 +131,17 @@ export const Orders = () => {
       title: "Test Action 2",
       svg: (
         <svg
-          xmlns='http://www.w3.org/2000/svg'
-          fill='none'
-          viewBox='0 0 24 24'
-          stroke='currentColor'
-          className='w-4 h-4' // Required!
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          className="w-4 h-4" // Required!
         >
           <path
-            strokeLinecap='round'
-            strokeLinejoin='round'
+            strokeLinecap="round"
+            strokeLinejoin="round"
             strokeWidth={2}
-            d='M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14'
+            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
           />
         </svg>
       ),
@@ -149,8 +149,8 @@ export const Orders = () => {
   ];
 
   return (
-    <div className='container mx-auto px-4'>
-      <h1 className='text-2xl py-4 mb-1'>Orders</h1>
+    <div className="container mx-auto px-4">
+      <h1 className="text-2xl py-4 mb-1">Orders</h1>
       <DataTable
         {...{
           eleActions,
